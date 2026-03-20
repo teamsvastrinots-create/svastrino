@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Svastrino - Powerful tools for modern teams">
+  <title>Svastrino</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .landing-container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .landing-logo {
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+      animation: cardEnter 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .landing-logo span {
+      opacity: 0.5;
+    }
+
+    .landing-tagline {
+      font-size: 1.25rem;
+      color: var(--text-secondary);
+      max-width: 460px;
+      line-height: 1.6;
+      margin-bottom: 48px;
+      animation: cardEnter 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.1s both;
+    }
+
+    .landing-buttons {
+      display: flex;
+      gap: 16px;
+      animation: cardEnter 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+    }
+
+    .btn-landing {
+      padding: 16px 36px;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: var(--transition);
+      border: none;
+      letter-spacing: 0.3px;
+    }
+
+    .btn-primary {
+      background: var(--accent-gradient);
+      color: #fff;
+      box-shadow: 0 4px 20px -4px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px -4px var(--accent-glow);
+    }
+
+    .btn-secondary {
+      background: var(--glass-bg);
+      color: var(--text-primary);
+      border: 1.5px solid var(--glass-border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--glass-hover);
+      border-color: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 480px) {
+      .landing-logo { font-size: 2.5rem; }
+      .landing-tagline { font-size: 1rem; }
+      .landing-buttons { flex-direction: column; width: 100%; max-width: 300px; }
+      .btn-landing { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-animation">
+    <div class="orb"></div>
+    <div class="orb"></div>
+    <div class="orb"></div>
+  </div>
+  <div class="grid-overlay"></div>
+
+  <!-- Landing Content -->
+  <div class="landing-container">
+    <div class="landing-logo">Svastrino<span>.</span></div>
+    <p class="landing-tagline">
+      Powerful tools for modern teams. Collaborate, build, and ship faster than ever before.
+    </p>
+    <div class="landing-buttons">
+      <a href="signup.html">
+        <button class="btn-landing btn-primary">Get Started</button>
+      </a>
+      <a href="signin.html">
+        <button class="btn-landing btn-secondary">Sign In</button>
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>
