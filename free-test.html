@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Career Personality Test | Svastrino</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "surface-variant": "#e5e2dd",
+          "inverse-primary": "#b7c4ff",
+          "primary-fixed": "#dce1ff",
+          "on-secondary-fixed-variant": "#3e4565",
+          "error": "#ba1a1a",
+          "surface-bright": "#fcf9f4",
+          "secondary-fixed": "#dce1ff",
+          "on-tertiary-fixed-variant": "#624000",
+          "surface-dim": "#dcdad5",
+          "on-secondary-container": "#565e7f",
+          "surface-tint": "#4359aa",
+          "on-primary-fixed-variant": "#294190",
+          "tertiary-fixed": "#ffddb3",
+          "background": "#fcf9f4",
+          "primary-container": "#002173",
+          "surface-container-low": "#f6f3ee",
+          "on-tertiary-container": "#c68400",
+          "on-surface-variant": "#444651",
+          "on-primary-container": "#778de1",
+          "on-tertiary": "#ffffff",
+          "inverse-surface": "#31302d",
+          "surface-container-highest": "#e5e2dd",
+          "surface": "#fcf9f4",
+          "surface-container-high": "#ebe8e3",
+          "primary-fixed-dim": "#b7c4ff",
+          "tertiary": "#211300",
+          "primary": "#001044",
+          "on-tertiary-fixed": "#291800",
+          "surface-container": "#f0ede8",
+          "outline": "#757682",
+          "on-secondary-fixed": "#121a37",
+          "on-error-container": "#93000a",
+          "on-background": "#1c1c19",
+          "outline-variant": "#c5c5d3",
+          "on-secondary": "#ffffff",
+          "on-primary": "#ffffff",
+          "secondary": "#555d7e",
+          "secondary-fixed-dim": "#bdc5eb",
+          "tertiary-fixed-dim": "#ffb950",
+          "surface-container-lowest": "#ffffff",
+          "on-surface": "#1c1c19",
+          "tertiary-container": "#3c2500",
+          "on-error": "#ffffff",
+          "secondary-container": "#d1d8ff",
+          "inverse-on-surface": "#f3f0eb",
+          "on-primary-fixed": "#001551",
+          "error-container": "#ffdad6"
+        },
+        fontFamily: {
+          "headline": ["Inter"],
+          "body": ["Inter"],
+          "label": ["Inter"]
+        },
+        borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  body { font-family: 'Inter', sans-serif; background-color: #fcf9f4; }
+  .editorial-shadow { box-shadow: 0 20px 40px rgba(0, 33, 115, 0.06); }
+</style>
+</head>
+<body class="text-on-surface selection:bg-primary-fixed">
+
+<header class="sticky top-0 z-50 bg-[#fcf9f4] w-full">
+  <div class="flex justify-between items-center w-full px-8 py-6 max-w-[1100px] mx-auto">
+    <a href="index.html" class="text-xl font-black text-primary tracking-tight hover:opacity-80 transition-opacity">Svastrino</a>
+    <a href="signin.html" class="text-sm font-semibold text-primary hover:text-primary-container transition-colors">Sign In</a>
+  </div>
+</header>
+
+<main class="max-w-[1100px] mx-auto px-6 pb-24">
+  <!-- Hero -->
+  <section class="flex flex-col items-center text-center pt-16 pb-20">
+    <div class="inline-flex items-center px-6 py-2 rounded-full bg-[#e7f5ed] text-[#1a5336] font-bold text-sm tracking-wide mb-8">
+      Free Psychometric Test
+    </div>
+    <h1 class="text-4xl md:text-[3.5rem] font-extrabold text-primary leading-[1.1] tracking-tighter mb-6 max-w-3xl">
+      Find out what career is truly made for you
+    </h1>
+    <p class="text-lg md:text-xl text-on-surface-variant font-medium mb-12 max-w-2xl opacity-80">
+      Answer 8 science-backed questions to unlock your professional archetype and discover the paths where your unique talents will flourish.
+    </p>
+    <div class="flex flex-col items-center gap-6">
+      <a href="test.html">
+        <button class="text-on-primary px-12 py-5 rounded-full font-bold text-lg hover:scale-95 transition-transform duration-150 editorial-shadow bg-gradient-to-r from-primary to-primary-container cursor-pointer">
+          Start My Free Test
+        </button>
+      </a>
+      <div class="flex items-center gap-2 text-on-surface-variant/60 text-sm">
+        <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+        <span>No registration required to start. Private &amp; Confidential.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Stats -->
+  <section class="mb-24">
+    <div class="bg-surface-container-low rounded-lg p-8 md:p-10 flex flex-col md:flex-row justify-around items-center gap-8">
+      <div class="flex flex-col items-center text-center">
+        <span class="text-3xl font-extrabold text-primary tracking-tight">10,847</span>
+        <span class="text-sm font-semibold text-on-surface-variant uppercase tracking-widest opacity-60">Students Tested</span>
+      </div>
+      <div class="h-12 w-px bg-outline-variant/20 hidden md:block"></div>
+      <div class="flex flex-col items-center text-center">
+        <div class="flex items-center gap-1 mb-1">
+          <span class="material-symbols-outlined text-amber-500" style="font-variation-settings: 'FILL' 1;">star</span>
+          <span class="text-2xl font-extrabold text-primary">4.8/5</span>
+        </div>
+        <span class="text-sm font-semibold text-on-surface-variant uppercase tracking-widest opacity-60">User Rating</span>
+      </div>
+      <div class="h-12 w-px bg-outline-variant/20 hidden md:block"></div>
+      <div class="flex flex-col items-center text-center">
+        <div class="flex items-center gap-2 mb-1">
+          <span class="material-symbols-outlined text-primary">timer</span>
+          <span class="text-2xl font-extrabold text-primary">3 min</span>
+        </div>
+        <span class="text-sm font-semibold text-on-surface-variant uppercase tracking-widest opacity-60">Average Time</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Two Column Info -->
+  <section class="grid md:grid-cols-2 gap-12 md:gap-16 mb-24 items-start">
+    <div class="space-y-6">
+      <h2 class="text-3xl font-bold text-primary tracking-tight">What is a psychometric test?</h2>
+      <div class="h-1 w-12 bg-primary-container rounded-full"></div>
+      <p class="text-lg leading-relaxed text-on-surface-variant">
+        Unlike standard exams, psychometric tests aren't about right or wrong answers. They are sophisticated diagnostic tools designed to measure your cognitive abilities, personality traits, and behavioral style.
+      </p>
+      <p class="text-lg leading-relaxed text-on-surface-variant">
+        By analyzing your responses through an editorial lens, we provide a map of how you process information and interact with professional environments.
+      </p>
+    </div>
+    <div class="bg-surface-container-high rounded-lg p-8 md:p-12 space-y-8">
+      <h2 class="text-3xl font-bold text-primary tracking-tight">How it works</h2>
+      <div class="space-y-8">
+        <div class="flex gap-6">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">1</span>
+          <div>
+            <h3 class="font-bold text-xl mb-2 text-primary">Deep Intuition</h3>
+            <p class="text-on-surface-variant">Respond to curated prompts that bypass surface-level preferences.</p>
+          </div>
+        </div>
+        <div class="flex gap-6">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">2</span>
+          <div>
+            <h3 class="font-bold text-xl mb-2 text-primary">Algorithmic Match</h3>
+            <p class="text-on-surface-variant">Our engine maps your data against thousands of career trajectories.</p>
+          </div>
+        </div>
+        <div class="flex gap-6">
+          <span class="flex-shrink-0 w-10 h-10 rounded-full bg-primary text-on-primary flex items-center justify-center font-bold">3</span>
+          <div>
+            <h3 class="font-bold text-xl mb-2 text-primary">Editorial Insight</h3>
+            <p class="text-on-surface-variant">Receive a bespoke career report designed for your future self.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Pills -->
+  <section class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-24 md:mb-32">
+    <div class="flex items-center gap-3 bg-surface-container-lowest py-4 px-5 md:px-6 rounded-full border border-outline-variant/10">
+      <span class="material-symbols-outlined text-primary-container">psychology</span>
+      <span class="text-xs md:text-sm font-bold text-primary">Evidence Based</span>
+    </div>
+    <div class="flex items-center gap-3 bg-surface-container-lowest py-4 px-5 md:px-6 rounded-full border border-outline-variant/10">
+      <span class="material-symbols-outlined text-primary-container">lock</span>
+      <span class="text-xs md:text-sm font-bold text-primary">Secure &amp; Private</span>
+    </div>
+    <div class="flex items-center gap-3 bg-surface-container-lowest py-4 px-5 md:px-6 rounded-full border border-outline-variant/10">
+      <span class="material-symbols-outlined text-primary-container">rocket_launch</span>
+      <span class="text-xs md:text-sm font-bold text-primary">Instant Results</span>
+    </div>
+    <div class="flex items-center gap-3 bg-surface-container-lowest py-4 px-5 md:px-6 rounded-full border border-outline-variant/10">
+      <span class="material-symbols-outlined text-primary-container">school</span>
+      <span class="text-xs md:text-sm font-bold text-primary">Expert Verified</span>
+    </div>
+  </section>
+
+  <!-- Final CTA -->
+  <section class="relative overflow-hidden bg-primary rounded-lg p-10 md:p-16 text-center">
+    <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle at 20% 50%, #778de1 0%, transparent 50%);"></div>
+    <div class="relative z-10">
+      <h2 class="text-3xl md:text-4xl font-extrabold text-on-primary mb-6 tracking-tight">Ready to curate your future?</h2>
+      <p class="text-on-primary-container text-lg mb-10 max-w-xl mx-auto">
+        Join over 10,000 students who have found their professional purpose.
+      </p>
+      <a href="test.html">
+        <button class="bg-surface-container-lowest text-primary px-12 py-5 rounded-full font-bold text-lg hover:bg-surface-bright transition-colors duration-200 cursor-pointer">
+          Start My Free Test
+        </button>
+      </a>
+      <p class="mt-8 text-on-primary-container/60 text-sm font-medium">Takes less than 3 minutes — No credit card required</p>
+    </div>
+  </section>
+</main>
+
+<footer class="bg-surface-container-low py-12 w-full">
+  <div class="flex flex-col md:flex-row justify-between items-center px-8 md:px-12 w-full max-w-[1100px] mx-auto gap-6">
+    <div class="text-lg font-bold text-primary-container">Svastrino</div>
+    <div class="flex gap-8">
+      <a class="text-sm text-on-surface/60 hover:text-primary-container transition-all" href="#">Privacy Policy</a>
+      <a class="text-sm text-on-surface/60 hover:text-primary-container transition-all" href="#">Terms of Service</a>
+    </div>
+    <div class="text-sm text-on-surface/60">© 2024 Svastrino. All rights reserved.</div>
+  </div>
+</footer>
+</body></html>
