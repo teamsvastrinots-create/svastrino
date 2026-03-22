@@ -163,4 +163,17 @@
 <footer class="fixed bottom-8 left-0 w-full text-center pointer-events-none">
 <p class="text-[10px] font-label uppercase tracking-[0.2em] text-outline-variant">© 2024 The Academic Atelier — Dedicated to Mastery</p>
 </footer>
+<script>
+  document.querySelector('form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    if (email && password) {
+      const btn = this.querySelector('button[type="submit"]');
+      btn.textContent = 'Signing in...';
+      btn.disabled = true;
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 800);
+    }
+  });
+</script>
 </body></html>

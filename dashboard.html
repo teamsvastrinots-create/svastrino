@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>The Academic Atelier | Dashboard</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-variant": "#e5e2dd",
+            "on-tertiary-container": "#929191",
+            "inverse-on-surface": "#f3f0eb",
+            "secondary-fixed-dim": "#f3bc83",
+            "error": "#ba1a1a",
+            "surface-dim": "#dcdad5",
+            "primary-fixed-dim": "#b7c4ff",
+            "tertiary": "#151616",
+            "on-primary-fixed-variant": "#294190",
+            "on-tertiary-fixed-variant": "#474747",
+            "background": "#fcf9f4",
+            "secondary-fixed": "#ffdcbb",
+            "on-secondary-fixed": "#2c1700",
+            "on-primary-container": "#778de1",
+            "tertiary-fixed-dim": "#c8c6c6",
+            "surface-bright": "#fcf9f4",
+            "on-secondary-container": "#795122",
+            "outline-variant": "#c5c5d3",
+            "surface-tint": "#4359aa",
+            "primary": "#001044",
+            "inverse-primary": "#b7c4ff",
+            "on-error": "#ffffff",
+            "on-secondary-fixed-variant": "#643f10",
+            "on-primary": "#ffffff",
+            "on-tertiary-fixed": "#1b1c1c",
+            "inverse-surface": "#31302d",
+            "secondary-container": "#ffc78d",
+            "on-tertiary": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-surface": "#1c1c19",
+            "surface-container-lowest": "#ffffff",
+            "surface": "#fcf9f4",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#2a2a2a",
+            "secondary": "#7f5626",
+            "surface-container-highest": "#e5e2dd",
+            "error-container": "#ffdad6",
+            "surface-container-high": "#ebe8e3",
+            "outline": "#757682",
+            "surface-container": "#f0ede9",
+            "surface-container-low": "#f6f3ee",
+            "on-primary-fixed": "#001551",
+            "on-background": "#1c1c19",
+            "on-surface-variant": "#444651",
+            "primary-fixed": "#dce1ff",
+            "tertiary-fixed": "#e4e2e1",
+            "primary-container": "#002173"
+          },
+          fontFamily: {
+            "headline": ["Newsreader", "serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Inter", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #fcf9f4;
+      color: #1c1c19;
+      font-family: 'Inter', sans-serif;
+    }
+    .font-serif { font-family: 'Newsreader', serif; }
+    .font-sans { font-family: 'Inter', sans-serif; }
+
+    /* Sidebar transition for mobile */
+    #sidebar {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #sidebar.sidebar-closed {
+      transform: translateX(-100%);
+    }
+    #sidebar-overlay {
+      transition: opacity 0.3s ease;
+    }
+
+    /* Smooth hover for nav items */
+    .nav-item {
+      position: relative;
+      transition: all 0.2s ease;
+    }
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: #001044;
+      border-radius: 0 4px 4px 0;
+      transform: scaleY(0);
+      transition: transform 0.2s ease;
+    }
+    .nav-item.active::before,
+    .nav-item:hover::before {
+      transform: scaleY(1);
+    }
+
+    /* Card hover lift */
+    .card-hover {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(28, 28, 25, 0.08);
+    }
+
+    @media (min-width: 1024px) {
+      #sidebar {
+        transform: translateX(0) !important;
+      }
+      #sidebar-overlay {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface">
+
+  <!-- Mobile Sidebar Overlay -->
+  <div class="fixed inset-0 bg-black/30 z-40 hidden" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- SideNavBar -->
+  <nav id="sidebar" class="h-screen w-64 fixed left-0 top-0 bg-surface-container-low flex flex-col py-8 gap-4 z-50 sidebar-closed lg:!translate-x-0">
+    <div class="px-8 mb-8">
+      <a href="index.html" class="font-serif text-lg text-primary hover:text-primary-container transition-colors italic">The Academic Atelier</a>
+      <p class="font-sans tracking-wide uppercase text-[11px] text-slate-500 mt-1">Mastery Track</p>
+    </div>
+    <div class="flex flex-col gap-1">
+      <a class="nav-item active flex items-center gap-4 px-8 py-3 bg-background text-primary font-bold rounded-r-full transition-all duration-200" href="dashboard.html">
+        <span class="material-symbols-outlined">dashboard</span>
+        <span class="font-sans tracking-wide uppercase text-[11px]">Overview</span>
+      </a>
+      <a class="nav-item flex items-center gap-4 px-8 py-3 text-slate-600 hover:text-secondary hover:bg-surface-container-high rounded-r-full transition-all duration-200" href="#">
+        <span class="material-symbols-outlined">play_circle</span>
+        <span class="font-sans tracking-wide uppercase text-[11px]">Videos</span>
+      </a>
+      <a class="nav-item flex items-center gap-4 px-8 py-3 text-slate-600 hover:text-secondary hover:bg-surface-container-high rounded-r-full transition-all duration-200" href="#">
+        <span class="material-symbols-outlined">assignment</span>
+        <span class="font-sans tracking-wide uppercase text-[11px]">Assignments</span>
+      </a>
+      <a class="nav-item flex items-center gap-4 px-8 py-3 text-slate-600 hover:text-secondary hover:bg-surface-container-high rounded-r-full transition-all duration-200" href="#">
+        <span class="material-symbols-outlined">trending_up</span>
+        <span class="font-sans tracking-wide uppercase text-[11px]">Progress</span>
+      </a>
+      <a class="nav-item flex items-center gap-4 px-8 py-3 text-slate-600 hover:text-secondary hover:bg-surface-container-high rounded-r-full transition-all duration-200" href="#">
+        <span class="material-symbols-outlined">person</span>
+        <span class="font-sans tracking-wide uppercase text-[11px]">Profile</span>
+      </a>
+    </div>
+    <div class="mt-auto flex flex-col gap-1">
+      <a class="nav-item flex items-center gap-4 px-8 py-3 text-slate-600 hover:text-secondary hover:bg-surface-container-high rounded-r-full transition-all duration-200" href="#">
+        <span class="material-symbols-outlined">settings</span>
+        <span class="font-sans tracking-wide uppercase text-[11px]">Settings</span>
+      </a>
+      <a class="nav-item flex items-center gap-4 px-8 py-3 text-slate-600 hover:text-red-600 hover:bg-red-50 rounded-r-full transition-all duration-200" href="signin.html" id="logoutBtn">
+        <span class="material-symbols-outlined">logout</span>
+        <span class="font-sans tracking-wide uppercase text-[11px]">Logout</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- TopAppBar -->
+  <header class="fixed top-0 left-0 lg:left-64 right-0 flex justify-between items-center px-6 lg:px-8 h-16 bg-background/90 backdrop-blur-xl z-40 border-b border-outline-variant/10">
+    <!-- Mobile menu button -->
+    <button class="lg:hidden text-primary p-1" onclick="toggleSidebar()" id="menuBtn" aria-label="Toggle menu">
+      <span class="material-symbols-outlined text-2xl">menu</span>
+    </button>
+
+    <!-- Mobile title -->
+    <div class="lg:hidden text-lg font-serif italic text-primary">The Academic Atelier</div>
+
+    <!-- Search bar (desktop) -->
+    <div class="hidden lg:flex items-center bg-surface-container-low px-4 py-2.5 rounded-xl flex-1 max-w-md">
+      <span class="material-symbols-outlined text-slate-400 text-sm">search</span>
+      <input class="bg-transparent border-none focus:ring-0 text-sm w-full font-sans ml-2 outline-none" placeholder="Search curriculum..." type="text"/>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Search icon mobile -->
+      <button class="lg:hidden text-slate-500 hover:text-secondary transition-colors p-1">
+        <span class="material-symbols-outlined">search</span>
+      </button>
+      <button class="text-slate-500 hover:text-secondary transition-colors active:scale-95 duration-200 relative p-1">
+        <span class="material-symbols-outlined">notifications</span>
+        <!-- Notification dot -->
+        <span class="absolute top-1 right-1 w-2 h-2 bg-secondary rounded-full"></span>
+      </button>
+      <img alt="User profile avatar of Julian, a professional student" class="w-9 h-9 rounded-full object-cover ring-2 ring-outline-variant/20 cursor-pointer hover:ring-secondary/40 transition-all" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB7yq7n0zWLz1MZ2FJumQtFb7dZs1VGKs3uL84GBginnCkWxwq1EKuMWUt-aICSxW01dBgjY3fUog_0kdWJ05H0f1TBSIK6AFOEUVlvFxLJWSYBvU9UwfptBPej3OD3iEkCp5xHafAk3TsPpuUDxrvTUckXvmvD6TAqLD0NvmNES0L4Ts-TBt2PRcbmE6Ae75t1b_D3UwxIImt637g8592onqWI917DUwddltH_ps45qAK6J_QQxozPx2T9gATzw1H7wX49IZoaUvI"/>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="lg:ml-64 pt-20 px-6 lg:px-12 pb-12 min-h-screen">
+
+    <!-- Welcome Header -->
+    <header class="py-8 lg:py-12">
+      <h1 class="font-serif text-3xl lg:text-4xl text-primary mb-2">Welcome back, Julian.</h1>
+      <p class="font-sans text-on-surface-variant max-w-2xl text-sm lg:text-base">Your creative journey continues. You have <span class="text-secondary font-semibold">3 pending assignments</span> and <span class="text-secondary font-semibold">2 new lectures</span> available in <span class="text-secondary font-medium italic">Classical Composition</span>.</p>
+    </header>
+
+    <!-- Bento Grid Layout -->
+    <div class="grid grid-cols-12 gap-6 lg:gap-8">
+
+      <!-- Featured Progress Card -->
+      <section class="col-span-12 lg:col-span-8 bg-surface-container-low rounded-xl p-6 lg:p-8 relative overflow-hidden flex flex-col justify-between min-h-[280px] lg:min-h-[320px] card-hover">
+        <div class="relative z-10">
+          <span class="font-sans tracking-widest uppercase text-[10px] text-secondary font-bold mb-4 block">Current Focus</span>
+          <h2 class="font-serif text-2xl lg:text-3xl text-primary max-w-md">Advanced Theory &amp; Color Harmonies</h2>
+          <p class="font-sans text-sm text-on-surface-variant mt-4 max-w-sm">Master the delicate balance between saturation and atmospheric depth in late 19th-century landscapes.</p>
+        </div>
+        <div class="mt-8 z-10 flex flex-col sm:flex-row items-start sm:items-center gap-6 lg:gap-12">
+          <div class="flex-1 w-full">
+            <div class="flex justify-between text-[11px] font-sans uppercase tracking-tighter mb-2 text-primary">
+              <span>Module Completion</span>
+              <span class="font-semibold">74%</span>
+            </div>
+            <div class="h-1.5 bg-surface-variant rounded-full overflow-hidden">
+              <div class="h-full bg-primary rounded-full transition-all duration-1000 ease-out" style="width: 74%"></div>
+            </div>
+          </div>
+          <button class="bg-primary text-white px-6 py-3 rounded-lg font-sans text-sm font-semibold flex items-center gap-2 hover:bg-primary-container transition-all active:scale-95 whitespace-nowrap shadow-lg shadow-primary/10">
+            Resume Lecture
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+        </div>
+        <!-- Decorative elements -->
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-secondary-container opacity-20 rounded-full blur-3xl"></div>
+        <div class="absolute right-12 top-12 w-48 h-48 border border-outline-variant opacity-10 rounded-full"></div>
+      </section>
+
+      <!-- Stats Column -->
+      <aside class="col-span-12 lg:col-span-4 grid grid-cols-2 lg:grid-cols-1 gap-4">
+        <div class="bg-surface-container-lowest p-5 lg:p-6 rounded-xl flex flex-col justify-center card-hover">
+          <span class="font-sans text-[10px] tracking-widest uppercase text-slate-500 mb-1">Time Invested</span>
+          <div class="flex items-end gap-2">
+            <span class="font-serif text-3xl lg:text-4xl text-primary">42</span>
+            <span class="font-sans text-xs lg:text-sm text-on-surface-variant pb-1">Hours this month</span>
+          </div>
+        </div>
+        <div class="bg-surface-container-lowest p-5 lg:p-6 rounded-xl flex flex-col justify-center card-hover">
+          <span class="font-sans text-[10px] tracking-widest uppercase text-slate-500 mb-1">Certifications</span>
+          <div class="flex items-end gap-2">
+            <span class="font-serif text-3xl lg:text-4xl text-primary">03</span>
+            <span class="font-sans text-xs lg:text-sm text-on-surface-variant pb-1">Mastery badges</span>
+          </div>
+        </div>
+        <div class="col-span-2 lg:col-span-1 bg-secondary text-on-secondary p-5 lg:p-6 rounded-xl flex flex-col justify-center card-hover">
+          <span class="font-sans text-[10px] tracking-widest uppercase opacity-80 mb-1">Next Live Critic</span>
+          <div class="flex items-end gap-2">
+            <span class="font-serif text-lg lg:text-xl">Tomorrow, 10:00 AM</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Recent Video Lessons -->
+      <section class="col-span-12">
+        <div class="flex justify-between items-end mb-6 lg:mb-8">
+          <div>
+            <h3 class="font-serif text-2xl text-primary">Recent Lectures</h3>
+            <p class="font-sans text-sm text-slate-500">Pick up where you left off</p>
+          </div>
+          <a class="font-sans text-xs uppercase tracking-widest text-secondary font-bold hover:underline underline-offset-4" href="#">View Library</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          <!-- Video Card 1 -->
+          <div class="group cursor-pointer card-hover rounded-xl">
+            <div class="aspect-video bg-surface-container-high rounded-lg mb-4 overflow-hidden relative">
+              <img alt="Close up of a painter's palette with vibrant oils" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7z3PUtQHREtih2ms1gCImArQwxNp53A0ccKp_L0t-6Mcp8Xjf2cTZKzJJCubtasid0tOOQF0X61LCcX3-p28Ss2PZ13nbsDhqYOUZtqTaSk2aC1Ti_aXuVHNKXOrYm9UPauBHO3cdXgXter-UipdYexj6fhDsDe4GOwVbDQB2yHQF8jiH2dKv70bSepLh_Fwls4ltHUVl9If3_Dj6Xl_4--jACBFV8tdfyugfFiOH4sxL_2ChwYh5O2KH0b79HkUQAg-WqDJOAgc"/>
+              <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="material-symbols-outlined text-white text-5xl drop-shadow-lg" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+              </div>
+              <div class="absolute bottom-0 left-0 w-full h-1 bg-surface-variant/50">
+                <div class="h-full bg-primary rounded-full" style="width: 85%"></div>
+              </div>
+            </div>
+            <span class="font-sans text-[10px] tracking-widest uppercase text-secondary font-bold">Module 04</span>
+            <h4 class="font-serif text-lg text-primary mt-1 group-hover:text-primary-container transition-colors">The Psychology of Warm Tones</h4>
+          </div>
+          <!-- Video Card 2 -->
+          <div class="group cursor-pointer card-hover rounded-xl">
+            <div class="aspect-video bg-surface-container-high rounded-lg mb-4 overflow-hidden relative">
+              <img alt="Detailed charcoal sketch of a classical bust" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-YyQV86GMnZgO-LbEaIMGL5gNZFk3fPYtvKC2DtV5qgfBCYdlJtTqT4onEjwurBwEHt9n-8E-zcyG9KAsrxDXE1W2AodqJVGEYV0bbZ4mPpvN2k3yj12IkPcclDhoh7p6BtGz5sS25ZXiK5OMa2PWjlBfvMgQrjFU60rREPcHPnTEc3ePlPMfXROUgT6Qo0VZ28Yty3jHaJz-QSpPqaHS7Z1jJ61btUx8K8bAnBYqMq1QHR6Ph3jc2183G48qEz1UWIBQtWiU7uw"/>
+              <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="material-symbols-outlined text-white text-5xl drop-shadow-lg" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+              </div>
+              <div class="absolute bottom-0 left-0 w-full h-1 bg-surface-variant/50">
+                <div class="h-full bg-primary rounded-full" style="width: 30%"></div>
+              </div>
+            </div>
+            <span class="font-sans text-[10px] tracking-widest uppercase text-secondary font-bold">Module 03</span>
+            <h4 class="font-serif text-lg text-primary mt-1 group-hover:text-primary-container transition-colors">Structural Anatomy in Sketching</h4>
+          </div>
+          <!-- Video Card 3 -->
+          <div class="group cursor-pointer card-hover rounded-xl">
+            <div class="aspect-video bg-surface-container-high rounded-lg mb-4 overflow-hidden relative">
+              <img alt="Abstract watercolor washes of blue and gold" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6VSbnptdWnqwPp6i0GDb4EJ3hL7yrqKzjNjsSuDUg0rouaEyhXnuEExXsWjD7UUpLEceZ259J-pAen09kUd2BS7gnfQ3zUuRUwT-TJ4zdooFzOVN2jmUm4emWDCxvp5w2zwXUvYDEIsRjeNzM1m-3FLSvTIr-HmzdU7nBbkstK7ptM94wXPsPH92NcA35Q_LDpDOzJ6goK18buhtKENaFOqCvFixNhsTXofRolhDO7dw8dQXHc9HaR9xhFKHSLizPF0HEg25RkWI"/>
+              <div class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <span class="material-symbols-outlined text-white text-5xl drop-shadow-lg" style="font-variation-settings: 'FILL' 1;">play_circle</span>
+              </div>
+              <div class="absolute bottom-0 left-0 w-full h-1 bg-surface-variant/50">
+                <div class="h-full bg-primary rounded-full" style="width: 0%"></div>
+              </div>
+            </div>
+            <span class="font-sans text-[10px] tracking-widest uppercase text-secondary font-bold">Module 05</span>
+            <h4 class="font-serif text-lg text-primary mt-1 group-hover:text-primary-container transition-colors">Intro to Atmospheric Perspective</h4>
+          </div>
+        </div>
+      </section>
+
+      <!-- Assignments & Tasks -->
+      <section class="col-span-12 lg:col-span-7 mt-4 lg:mt-8">
+        <h3 class="font-serif text-2xl text-primary mb-6 lg:mb-8">Upcoming Assignments</h3>
+        <div class="space-y-3">
+          <!-- Assignment 1 -->
+          <div class="bg-surface-container-lowest p-5 lg:p-6 rounded-xl flex items-center justify-between group hover:shadow-md transition-all card-hover">
+            <div class="flex gap-4 lg:gap-6 items-center">
+              <div class="w-11 h-11 lg:w-12 lg:h-12 rounded-lg bg-surface-container-low flex items-center justify-center text-primary flex-shrink-0">
+                <span class="material-symbols-outlined">edit_note</span>
+              </div>
+              <div>
+                <h5 class="font-sans font-semibold text-primary text-sm lg:text-base">Landscape Composition Draft</h5>
+                <p class="text-xs text-slate-500 font-sans mt-1 uppercase tracking-tighter">Due in 2 days • Art History 101</p>
+              </div>
+            </div>
+            <span class="hidden sm:inline-block px-3 lg:px-4 py-1.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase tracking-widest whitespace-nowrap">In Progress</span>
+          </div>
+          <!-- Assignment 2 -->
+          <div class="bg-surface-container-lowest p-5 lg:p-6 rounded-xl flex items-center justify-between group hover:shadow-md transition-all card-hover">
+            <div class="flex gap-4 lg:gap-6 items-center">
+              <div class="w-11 h-11 lg:w-12 lg:h-12 rounded-lg bg-surface-container-low flex items-center justify-center text-primary flex-shrink-0">
+                <span class="material-symbols-outlined">brush</span>
+              </div>
+              <div>
+                <h5 class="font-sans font-semibold text-primary text-sm lg:text-base">Value Scale Study (Digital)</h5>
+                <p class="text-xs text-slate-500 font-sans mt-1 uppercase tracking-tighter">Due in 5 days • Fundamentals</p>
+              </div>
+            </div>
+            <span class="hidden sm:inline-block px-3 lg:px-4 py-1.5 rounded-full bg-surface-variant text-on-surface-variant text-[10px] font-bold uppercase tracking-widest whitespace-nowrap">To Do</span>
+          </div>
+          <!-- Assignment 3 -->
+          <div class="bg-surface-container-lowest p-5 lg:p-6 rounded-xl flex items-center justify-between group hover:shadow-md transition-all card-hover">
+            <div class="flex gap-4 lg:gap-6 items-center">
+              <div class="w-11 h-11 lg:w-12 lg:h-12 rounded-lg bg-surface-container-low flex items-center justify-center text-primary flex-shrink-0">
+                <span class="material-symbols-outlined">history_edu</span>
+              </div>
+              <div>
+                <h5 class="font-sans font-semibold text-primary text-sm lg:text-base">The Renaissance Perspective Essay</h5>
+                <p class="text-xs text-slate-500 font-sans mt-1 uppercase tracking-tighter">Due in 1 week • Liberal Arts</p>
+              </div>
+            </div>
+            <span class="hidden sm:inline-block px-3 lg:px-4 py-1.5 rounded-full bg-surface-variant text-on-surface-variant text-[10px] font-bold uppercase tracking-widest whitespace-nowrap">To Do</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Achievement Showcase -->
+      <section class="col-span-12 lg:col-span-5 mt-4 lg:mt-8">
+        <div class="bg-primary p-6 lg:p-8 rounded-xl text-white h-full flex flex-col justify-between card-hover">
+          <div>
+            <h3 class="font-serif text-2xl mb-4">Milestone Progress</h3>
+            <p class="font-sans text-sm opacity-70 mb-6 lg:mb-8">You are approaching the "Master of Form" certificate. Complete 2 more assignments to unlock.</p>
+            <div class="flex flex-wrap gap-3">
+              <div class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-white/50 hover:bg-white/10 transition-all cursor-pointer" title="First Stroke Badge">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+              </div>
+              <div class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-white/50 hover:bg-white/10 transition-all cursor-pointer" title="Color Specialist">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">palette</span>
+              </div>
+              <div class="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center hover:border-white/50 hover:bg-white/10 transition-all cursor-pointer" title="Daily Ritual">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+              </div>
+              <div class="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center opacity-40" title="Locked">
+                <span class="material-symbols-outlined">lock</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-6 lg:mt-8 pt-6 lg:pt-8 border-t border-white/10">
+            <div class="flex justify-between items-center">
+              <span class="font-sans text-[11px] uppercase tracking-widest opacity-60">Mastery Level</span>
+              <span class="font-serif italic text-xl">Silver Tier IV</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    // Mobile sidebar toggle
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      sidebar.classList.toggle('sidebar-closed');
+      overlay.classList.toggle('hidden');
+    }
+
+    // Close sidebar on window resize to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024) {
+        const overlay = document.getElementById('sidebar-overlay');
+        overlay.classList.add('hidden');
+      }
+    });
+
+    // Animate progress bars on load
+    document.addEventListener('DOMContentLoaded', () => {
+      const bars = document.querySelectorAll('[style*="width:"]');
+      bars.forEach(bar => {
+        const width = bar.style.width;
+        bar.style.width = '0%';
+        setTimeout(() => {
+          bar.style.width = width;
+        }, 300);
+      });
+    });
+  </script>
+</body>
+</html>
