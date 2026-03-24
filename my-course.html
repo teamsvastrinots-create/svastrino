@@ -81,7 +81,30 @@
       #sidebar { transform: translateX(0) !important; }
       #sidebar-overlay { display: none !important; }
     }
+
+    /* Freemium Lock Overlay */
+    .freemium-mode .freemium-lock {
+      position: relative;
+      pointer-events: none;
+      filter: grayscale(100%) opacity(0.8);
+    }
+    .freemium-mode .freemium-lock::after {
+      content: '🔒 Premium';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(2px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      font-weight: 800;
+      color: #191c1e;
+      z-index: 10;
+      border-radius: inherit;
+    }
   </style>
+  <script src="freemium-state.js"></script>
 </head>
 <body class="bg-surface text-on-surface min-h-screen antialiased">
 
@@ -89,10 +112,14 @@
   <div class="fixed inset-0 bg-black/30 z-30 hidden lg:!hidden" id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
   <!-- SideNavBar — Claude-inspired clean layout -->
-  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-surface-container-low flex flex-col border-r border-outline-variant/10 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
-    <!-- Brand -->
-    <div class="px-5 pt-5 pb-4">
+  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-white flex flex-col border-r border-outline-variant/20 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
+    <!-- Brand & Toggle -->
+    <div class="px-5 pt-5 pb-4 flex items-center justify-between">
       <a href="index.html" class="text-xl font-extrabold text-primary tracking-tight hover:opacity-80 transition-opacity">Svastrino</a>
+      <label class="relative inline-flex items-center cursor-pointer" title="Toggle Premium Mode">
+        <input type="checkbox" class="sr-only peer premium-toggle-checkbox" onchange="toggleFreemiumMode(this)">
+        <div class="w-8 h-4 bg-outline-variant/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-secondary shadow-sm"></div>
+      </label>
     </div>
 
     <!-- Navigation -->
@@ -276,7 +303,7 @@
             </div>
           </div>
 
-          <!-- Week 3 (Locked) -->
+          <!-- Week 3 (Locked normally) -->
           <div class="bg-surface-container/40 p-5 lg:p-6 rounded-xl border border-outline-variant/10 opacity-70 grayscale">
             <div class="flex justify-between items-start mb-5 lg:mb-6">
               <div class="w-10 h-10 rounded-lg bg-outline-variant/20 flex items-center justify-center text-outline">
@@ -288,6 +315,51 @@
             <p class="text-on-surface-variant text-sm mt-1">Market Positioning &amp; Trends</p>
             <div class="mt-5 lg:mt-6 flex gap-2">
               <span class="px-2 py-1 bg-surface-container-low rounded-md text-[10px] font-bold text-outline-variant uppercase tracking-tighter">6 Lessons</span>
+            </div>
+          </div>
+
+          <!-- Week 4 (Freemium Locked) -->
+          <div class="freemium-lock bg-surface-container/40 p-5 lg:p-6 rounded-xl border border-outline-variant/10 opacity-70">
+            <div class="flex justify-between items-start mb-5 lg:mb-6">
+              <div class="w-10 h-10 rounded-lg bg-outline-variant/20 flex items-center justify-center text-outline">
+                <span class="material-symbols-outlined">lock</span>
+              </div>
+              <span class="text-[10px] font-bold text-outline-variant uppercase tracking-widest">Locked</span>
+            </div>
+            <h4 class="font-bold text-on-surface text-lg">Week 4</h4>
+            <p class="text-on-surface-variant text-sm mt-1">Prototyping &amp; Testing</p>
+            <div class="mt-5 lg:mt-6 flex gap-2">
+              <span class="px-2 py-1 bg-surface-container-low rounded-md text-[10px] font-bold text-outline-variant uppercase tracking-tighter">5 Lessons</span>
+            </div>
+          </div>
+
+          <!-- Week 5 (Freemium Locked) -->
+          <div class="freemium-lock bg-surface-container/40 p-5 lg:p-6 rounded-xl border border-outline-variant/10 opacity-70">
+            <div class="flex justify-between items-start mb-5 lg:mb-6">
+              <div class="w-10 h-10 rounded-lg bg-outline-variant/20 flex items-center justify-center text-outline">
+                <span class="material-symbols-outlined">lock</span>
+              </div>
+              <span class="text-[10px] font-bold text-outline-variant uppercase tracking-widest">Locked</span>
+            </div>
+            <h4 class="font-bold text-on-surface text-lg">Week 5</h4>
+            <p class="text-on-surface-variant text-sm mt-1">Advanced UI Systems</p>
+            <div class="mt-5 lg:mt-6 flex gap-2">
+              <span class="px-2 py-1 bg-surface-container-low rounded-md text-[10px] font-bold text-outline-variant uppercase tracking-tighter">8 Lessons</span>
+            </div>
+          </div>
+
+          <!-- Week 6 (Freemium Locked) -->
+          <div class="freemium-lock bg-surface-container/40 p-5 lg:p-6 rounded-xl border border-outline-variant/10 opacity-70">
+            <div class="flex justify-between items-start mb-5 lg:mb-6">
+              <div class="w-10 h-10 rounded-lg bg-outline-variant/20 flex items-center justify-center text-outline">
+                <span class="material-symbols-outlined">lock</span>
+              </div>
+              <span class="text-[10px] font-bold text-outline-variant uppercase tracking-widest">Locked</span>
+            </div>
+            <h4 class="font-bold text-on-surface text-lg">Week 6</h4>
+            <p class="text-on-surface-variant text-sm mt-1">Final Capstone Project</p>
+            <div class="mt-5 lg:mt-6 flex gap-2">
+              <span class="px-2 py-1 bg-surface-container-low rounded-md text-[10px] font-bold text-outline-variant uppercase tracking-tighter">Project</span>
             </div>
           </div>
         </div>

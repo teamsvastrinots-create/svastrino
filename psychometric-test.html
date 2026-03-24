@@ -81,7 +81,21 @@
       #sidebar { transform: translateX(0) !important; }
       #sidebar-overlay { display: none !important; }
     }
+
+    /* Global Freemium Lock Overlay */
+    .freemium-mode .freemium-section-lock::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(8px);
+      z-index: 40;
+    }
+    .freemium-mode .freemium-section-lock .lock-message {
+      display: flex !important;
+    }
   </style>
+  <script src="freemium-state.js"></script>
 </head>
 <body class="bg-surface text-on-surface antialiased min-h-screen">
   
@@ -89,10 +103,14 @@
   <div class="fixed inset-0 bg-black/30 z-30 hidden lg:!hidden" id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
   <!-- SideNavBar — Claude-inspired clean layout -->
-  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-surface-container-low flex flex-col border-r border-outline-variant/10 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
-    <!-- Brand -->
-    <div class="px-5 pt-5 pb-4">
+  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-white flex flex-col border-r border-outline-variant/20 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
+    <!-- Brand & Toggle -->
+    <div class="px-5 pt-5 pb-4 flex items-center justify-between">
       <a href="index.html" class="text-xl font-extrabold text-primary tracking-tight hover:opacity-80 transition-opacity">Svastrino</a>
+      <label class="relative inline-flex items-center cursor-pointer" title="Toggle Premium Mode">
+        <input type="checkbox" class="sr-only peer premium-toggle-checkbox" onchange="toggleFreemiumMode(this)">
+        <div class="w-8 h-4 bg-outline-variant/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-secondary shadow-sm"></div>
+      </label>
     </div>
 
     <!-- Navigation -->

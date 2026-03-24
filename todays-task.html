@@ -82,16 +82,21 @@
       #sidebar-overlay { display: none !important; }
     }
   </style>
+  <script src="freemium-state.js"></script>
 </head>
 <body class="text-on-surface antialiased">
   <!-- Mobile overlay -->
   <div class="fixed inset-0 bg-black/30 z-30 hidden lg:!hidden" id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
   <!-- SideNavBar — Claude-inspired clean layout, no overflow-y-auto -->
-  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-surface-container-low flex flex-col border-r border-outline-variant/10 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
-    <!-- Brand -->
-    <div class="px-5 pt-5 pb-4">
+  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-white flex flex-col border-r border-outline-variant/20 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
+    <!-- Brand & Toggle -->
+    <div class="px-5 pt-5 pb-4 flex items-center justify-between">
       <a href="index.html" class="text-xl font-extrabold text-primary tracking-tight hover:opacity-80 transition-opacity">Svastrino</a>
+      <label class="relative inline-flex items-center cursor-pointer" title="Toggle Premium Mode">
+        <input type="checkbox" class="sr-only peer premium-toggle-checkbox" onchange="toggleFreemiumMode(this)">
+        <div class="w-8 h-4 bg-outline-variant/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-secondary shadow-sm"></div>
+      </label>
     </div>
 
     <!-- Navigation -->

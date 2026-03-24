@@ -83,7 +83,21 @@
       #sidebar-overlay { display: none !important; }
     }
     .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); }
+
+    /* Global Freemium Lock Overlay */
+    .freemium-mode .freemium-section-lock::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(8px);
+      z-index: 40;
+    }
+    .freemium-mode .freemium-section-lock .lock-message {
+      display: flex !important;
+    }
   </style>
+  <script src="freemium-state.js"></script>
 </head>
 <body class="bg-surface-container-low text-on-surface antialiased min-h-screen">
   
@@ -91,10 +105,14 @@
   <div class="fixed inset-0 bg-black/30 z-30 hidden lg:!hidden" id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
   <!-- SideNavBar — Claude-inspired clean layout -->
-  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-surface-container-low flex flex-col border-r border-outline-variant/10 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
-    <!-- Brand -->
-    <div class="px-5 pt-5 pb-4">
+  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-white flex flex-col border-r border-outline-variant/20 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
+    <!-- Brand & Toggle -->
+    <div class="px-5 pt-5 pb-4 flex items-center justify-between">
       <a href="index.html" class="text-xl font-extrabold text-primary tracking-tight hover:opacity-80 transition-opacity">Svastrino</a>
+      <label class="relative inline-flex items-center cursor-pointer" title="Toggle Premium Mode">
+        <input type="checkbox" class="sr-only peer premium-toggle-checkbox" onchange="toggleFreemiumMode(this)">
+        <div class="w-8 h-4 bg-outline-variant/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-secondary shadow-sm"></div>
+      </label>
     </div>
 
     <!-- Navigation -->
@@ -163,7 +181,8 @@
   </header>
 
   <!-- Main Content Area -->
-  <main class="lg:ml-[260px] flex-grow p-6 pt-20 lg:p-10 lg:pt-10 flex flex-col gap-[20px] max-w-[1240px] mx-auto">
+  <main class="lg:ml-[260px] min-h-screen p-6 pt-16 lg:p-10 lg:pt-10 xl:p-12 relative freemium-section-lock">
+    <div class="max-w-6xl mx-auto space-y-10 lg:space-y-12">
     <!-- Header Section -->
     <header class="mb-4">
       <h1 class="text-3xl lg:text-4xl font-[800] text-on-surface tracking-tight mb-2">My Test Results</h1>
@@ -343,6 +362,20 @@
         <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
       </button>
     </section>
+
+    </div>
+
+    <!-- Global Lock Message -->
+    <div class="lock-message hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex-col items-center justify-center bg-white p-8 md:p-10 rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-outline-variant/20 text-center max-w-sm w-[90%] lg:ml-[130px]">
+      <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-5">
+        <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">lock</span>
+      </div>
+      <h2 class="text-2xl font-bold font-headline mb-3 text-on-surface tracking-tight">Premium Feature</h2>
+      <p class="text-sm text-on-surface-variant mb-8 leading-relaxed">Upgrade to Svastrino Premium to unlock the advanced psychometric testing portal and personalized insights.</p>
+      <button class="w-full py-3.5 bg-primary text-white font-bold rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 active:scale-95">
+        Unlock Premium <span class="material-symbols-outlined text-lg">workspace_premium</span>
+      </button>
+    </div>
   </main>
 
   <script>
