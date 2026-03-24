@@ -88,94 +88,66 @@
   <!-- Mobile overlay -->
   <div class="fixed inset-0 bg-black/30 z-30 hidden lg:!hidden" id="sidebar-overlay" onclick="toggleSidebar()"></div>
 
-  <!-- SideNavBar (same as dashboard, "My course" active) -->
-  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[200px] z-40 bg-white flex flex-col border-r-[0.5px] border-outline-variant/15 font-['Plus_Jakarta_Sans'] overflow-y-auto sidebar-hidden lg:!translate-x-0">
-    <!-- User Card -->
-    <div class="px-4 pt-[14px] pb-6">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-10 h-10 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-sm">RS</div>
-        <div>
-          <div class="text-[13px] font-semibold text-on-surface leading-tight">Rahul Sharma</div>
-          <div class="flex items-center gap-1.5 mt-0.5">
-            <span class="text-[10px] font-medium text-on-surface-variant">Career Development</span>
-            <span class="w-1 h-1 rounded-full bg-outline-variant"></span>
-            <span class="text-[10px] font-bold text-primary uppercase">Paid</span>
-          </div>
-        </div>
-      </div>
-      <div class="space-y-1.5">
-        <div class="flex justify-between items-center text-[10px] font-medium text-on-surface-variant">
-          <span>Overall progress</span>
-          <span>33%</span>
-        </div>
-        <div class="h-1 w-full bg-surface-container-highest rounded-full overflow-hidden">
-          <div class="h-full bg-primary transition-all duration-1000" style="width: 33%"></div>
-        </div>
-      </div>
+  <!-- SideNavBar — Claude-inspired clean layout -->
+  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-surface-container-low flex flex-col border-r border-outline-variant/10 font-['Plus_Jakarta_Sans'] overflow-y-auto sidebar-hidden lg:!translate-x-0">
+    <!-- Brand -->
+    <div class="px-5 pt-5 pb-4">
+      <a href="index.html" class="text-xl font-extrabold text-primary tracking-tight hover:opacity-80 transition-opacity">Svastrino</a>
     </div>
 
     <!-- Navigation -->
-    <nav class="flex-grow">
-      <div class="mb-4">
-        <p class="px-[14px] py-2 text-[11px] font-medium text-slate-500 uppercase tracking-wider font-['Inter']">Overview</p>
-        <a class="flex items-center gap-3 px-[14px] py-[7px] border-l-[3px] border-transparent text-slate-500 font-medium hover:bg-surface-container-low transition-colors duration-200 active:scale-[0.98]" href="dashboard.html">
-          <span class="material-symbols-outlined text-[20px]">home</span>
-          <span class="text-[13px]">Home</span>
-        </a>
-      </div>
-      <div class="mb-4">
-        <p class="px-[14px] py-2 text-[11px] font-medium text-slate-500 uppercase tracking-wider font-['Inter']">My Learning</p>
-        <div class="space-y-0.5">
-          <a class="flex items-center justify-between px-[14px] py-[7px] bg-surface-container-low border-l-[3px] border-primary text-primary font-semibold transition-all active:scale-[0.98]" href="my-course.html">
-            <div class="flex items-center gap-3">
-              <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">book</span>
-              <span class="text-[13px]">My course</span>
-            </div>
-            <span class="text-[9px] bg-primary text-white px-1.5 py-0.5 rounded uppercase font-bold">Week 2</span>
-          </a>
-          <a class="flex items-center gap-3 px-[14px] py-[7px] border-l-[3px] border-transparent text-slate-500 font-medium hover:bg-surface-container-low transition-colors duration-200 active:scale-[0.98]" href="#">
-            <span class="material-symbols-outlined text-[20px]">check_box</span>
-            <span class="text-[13px]">Today's task</span>
-          </a>
-          <a class="flex items-center gap-3 px-[14px] py-[7px] border-l-[3px] border-transparent text-slate-500 font-medium hover:bg-surface-container-low transition-colors duration-200 active:scale-[0.98]" href="#">
-            <span class="material-symbols-outlined text-[20px]">history</span>
-            <span class="text-[13px]">Task history</span>
-          </a>
+    <nav class="flex-grow px-3 space-y-1">
+      <p class="px-3 pt-4 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Overview</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="dashboard.html">
+        <span class="material-symbols-outlined text-[20px]">home</span>
+        <span class="text-[13px]">Home</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">My Learning</p>
+      <a class="flex items-center justify-between px-3 py-2.5 rounded-lg bg-primary/10 text-primary font-semibold transition-all active:scale-[0.98]" href="my-course.html">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">book</span>
+          <span class="text-[13px]">My course</span>
         </div>
-      </div>
-      <div class="mb-4">
-        <p class="px-[14px] py-2 text-[11px] font-medium text-slate-500 uppercase tracking-wider font-['Inter']">Career Tools</p>
-        <div class="space-y-0.5">
-          <a class="flex items-center gap-3 px-[14px] py-[7px] border-l-[3px] border-transparent text-slate-500 font-medium hover:bg-surface-container-low transition-colors duration-200 active:scale-[0.98]" href="free-test.html">
-            <span class="material-symbols-outlined text-[20px]">psychology</span>
-            <span class="text-[13px]">Psychometric test</span>
-          </a>
-          <a class="flex items-center gap-3 px-[14px] py-[7px] border-l-[3px] border-transparent text-slate-500 font-medium hover:bg-surface-container-low transition-colors duration-200 active:scale-[0.98]" href="#">
-            <span class="material-symbols-outlined text-[20px]">trending_up</span>
-            <span class="text-[13px]">My test results</span>
-          </a>
-          <a class="flex items-center gap-3 px-[14px] py-[7px] border-l-[3px] border-transparent text-slate-500 font-medium hover:bg-surface-container-low transition-colors duration-200 active:scale-[0.98]" href="#">
-            <span class="material-symbols-outlined text-[20px]">monitor</span>
-            <span class="text-[13px]">Webinars</span>
-          </a>
-        </div>
-      </div>
-      <div>
-        <p class="px-[14px] py-2 text-[11px] font-medium text-slate-500 uppercase tracking-wider font-['Inter']">Account</p>
-        <a class="flex items-center gap-3 px-[14px] py-[7px] border-l-[3px] border-transparent text-slate-500 font-medium hover:bg-surface-container-low transition-colors duration-200 active:scale-[0.98]" href="#">
-          <span class="material-symbols-outlined text-[20px]">notifications</span>
-          <span class="text-[13px]">Notifications</span>
-        </a>
-      </div>
+        <span class="text-[9px] bg-primary text-white px-1.5 py-0.5 rounded uppercase font-bold">Week 2</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="#">
+        <span class="material-symbols-outlined text-[20px]">check_box</span>
+        <span class="text-[13px]">Today's task</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="#">
+        <span class="material-symbols-outlined text-[20px]">history</span>
+        <span class="text-[13px]">Task history</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Career Tools</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="free-test.html">
+        <span class="material-symbols-outlined text-[20px]">psychology</span>
+        <span class="text-[13px]">Psychometric test</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="#">
+        <span class="material-symbols-outlined text-[20px]">trending_up</span>
+        <span class="text-[13px]">My test results</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="#">
+        <span class="material-symbols-outlined text-[20px]">monitor</span>
+        <span class="text-[13px]">Webinars</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Account</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="#">
+        <span class="material-symbols-outlined text-[20px]">notifications</span>
+        <span class="text-[13px]">Notifications</span>
+      </a>
     </nav>
 
-    <!-- Bottom -->
-    <div class="py-4 border-t border-outline-variant/15">
-      <a class="flex items-center gap-3 px-[14px] py-[7px] border-l-[3px] border-transparent text-slate-500 font-medium hover:bg-surface-container-low transition-colors duration-200 active:scale-[0.98]" href="#">
+    <!-- Bottom Pinned -->
+    <div class="px-3 py-4 border-t border-outline-variant/10 space-y-1">
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="#">
         <span class="material-symbols-outlined text-[20px]">person</span>
         <span class="text-[13px]">Profile</span>
       </a>
-      <a class="flex items-center gap-3 px-[14px] py-[7px] border-l-[3px] border-transparent text-error font-medium hover:bg-error-container/20 transition-colors duration-200 active:scale-[0.98]" href="signin.html">
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-error hover:bg-error-container/20 transition-colors duration-200 active:scale-[0.98]" href="signin.html">
         <span class="material-symbols-outlined text-[20px]">logout</span>
         <span class="text-[13px]">Logout</span>
       </a>
@@ -192,7 +164,7 @@
   </header>
 
   <!-- Main Content -->
-  <main class="lg:ml-[200px] min-h-screen bg-surface-container-low p-6 pt-16 lg:p-10 lg:pt-10 xl:p-12">
+  <main class="lg:ml-[260px] min-h-screen bg-surface-container-low p-6 pt-16 lg:p-10 lg:pt-10 xl:p-12">
     <div class="max-w-6xl mx-auto space-y-10 lg:space-y-12">
 
       <!-- Page Header -->
