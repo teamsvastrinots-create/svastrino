@@ -17,9 +17,9 @@
 
     function applyFreemiumState(isFreemium) {
         if (isFreemium) {
-            document.body.classList.add('freemium-mode');
+            document.documentElement.classList.add('freemium-mode');
         } else {
-            document.body.classList.remove('freemium-mode');
+            document.documentElement.classList.remove('freemium-mode');
         }
     }
 
