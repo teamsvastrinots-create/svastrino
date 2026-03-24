@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Today's Task | Svastrino</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-secondary": "#ffffff",
+            "surface": "#f8f9fb",
+            "primary": "#24389c",
+            "error": "#ba1a1a",
+            "secondary-fixed-dim": "#ffb870",
+            "on-secondary-fixed-variant": "#693c00",
+            "tertiary-fixed": "#a1efff",
+            "tertiary-container": "#006471",
+            "background": "#f8f9fb",
+            "secondary-fixed": "#ffdcbe",
+            "primary-fixed": "#dee0ff",
+            "inverse-surface": "#2d3133",
+            "surface-tint": "#4355b9",
+            "tertiary": "#004a55",
+            "on-secondary-fixed": "#2c1600",
+            "on-tertiary-fixed": "#001f25",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-highest": "#e0e3e5",
+            "outline": "#757684",
+            "on-error-container": "#93000a",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#653900",
+            "surface-bright": "#f8f9fb",
+            "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "surface-dim": "#d8dadc",
+            "on-tertiary-container": "#55e4fd",
+            "surface-container-low": "#f2f4f6",
+            "on-primary-fixed": "#00105c",
+            "outline-variant": "#c5c5d4",
+            "secondary-container": "#ff9800",
+            "on-tertiary-fixed-variant": "#004e59",
+            "primary-container": "#3f51b5",
+            "on-background": "#191c1e",
+            "surface-container": "#eceef0",
+            "on-surface-variant": "#454652",
+            "secondary": "#8b5000",
+            "on-surface": "#191c1e",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#44d8f1",
+            "on-tertiary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "primary-fixed-dim": "#bac3ff",
+            "on-primary-container": "#cacfff",
+            "inverse-primary": "#bac3ff",
+            "on-primary-fixed-variant": "#293ca0",
+            "surface-container-high": "#e6e8ea"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fb; }
+    h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    #sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    #sidebar.sidebar-hidden { transform: translateX(-100%); }
+    @media (min-width: 1024px) {
+      #sidebar { transform: translateX(0) !important; }
+      #sidebar-overlay { display: none !important; }
+    }
+  </style>
+</head>
+<body class="text-on-surface antialiased">
+  <!-- Mobile overlay -->
+  <div class="fixed inset-0 bg-black/30 z-30 hidden lg:!hidden" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- SideNavBar — Claude-inspired clean layout, no overflow-y-auto -->
+  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-surface-container-low flex flex-col border-r border-outline-variant/10 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
+    <!-- Brand -->
+    <div class="px-5 pt-5 pb-4">
+      <a href="index.html" class="text-xl font-extrabold text-primary tracking-tight hover:opacity-80 transition-opacity">Svastrino</a>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-grow px-3 space-y-1">
+      <p class="px-3 pt-4 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Overview</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="dashboard.html">
+        <span class="material-symbols-outlined text-[20px]">home</span>
+        <span class="text-[13px]">Home</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">My Learning</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="my-course.html">
+        <span class="material-symbols-outlined text-[20px]">book</span>
+        <span class="text-[13px]">My course</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary font-semibold transition-all active:scale-[0.98]" href="todays-task.html">
+        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check_box</span>
+        <span class="text-[13px]">Today's task</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="#">
+        <span class="material-symbols-outlined text-[20px]">history</span>
+        <span class="text-[13px]">Task history</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Career Tools</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="free-test.html">
+        <span class="material-symbols-outlined text-[20px]">psychology</span>
+        <span class="text-[13px]">Psychometric test</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="#">
+        <span class="material-symbols-outlined text-[20px]">trending_up</span>
+        <span class="text-[13px]">My test results</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="#">
+        <span class="material-symbols-outlined text-[20px]">monitor</span>
+        <span class="text-[13px]">Webinars</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Account</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="#">
+        <span class="material-symbols-outlined text-[20px]">notifications</span>
+        <span class="text-[13px]">Notifications</span>
+      </a>
+    </nav>
+
+    <!-- Bottom Pinned -->
+    <div class="px-3 py-4 border-t border-outline-variant/10 space-y-1">
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="#">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span class="text-[13px]">Profile</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-error hover:bg-error-container/20 transition-colors duration-200 active:scale-[0.98]" href="signin.html">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span class="text-[13px]">Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Mobile header -->
+  <header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-b border-outline-variant/10 px-4 py-3 flex items-center justify-between">
+    <button onclick="toggleSidebar()" class="p-1 text-on-surface">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <span class="font-headline font-bold text-primary">Svastrino</span>
+    <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-xs">RS</div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="lg:ml-[260px] min-h-screen p-6 pt-16 lg:p-10 lg:pt-10 max-w-[1240px]">
+    <div class="max-w-4xl mx-auto space-y-6 lg:space-y-8">
+      
+      <!-- Zone 1: Header -->
+      <section class="bg-surface-container-lowest rounded-xl p-6 lg:p-8 flex items-center justify-between shadow-sm">
+        <div>
+          <h1 class="text-2xl lg:text-3xl font-extrabold tracking-tight text-primary">Today's task</h1>
+          <p class="text-on-surface-variant font-medium mt-1">Week 2 · Day 3 of 6</p>
+        </div>
+        <div class="flex items-center gap-2 px-3 lg:px-4 py-1.5 bg-error-container text-on-error-container rounded-full text-[10px] lg:text-xs font-bold uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+          1 pending
+        </div>
+      </section>
+
+      <!-- Zone 2: Progress -->
+      <section class="bg-surface-container-lowest rounded-xl p-6 lg:p-8 shadow-sm">
+        <h3 class="text-xs lg:text-sm font-bold uppercase tracking-widest text-on-surface-variant/70 mb-5 lg:mb-6">This week's tasks</h3>
+        <div class="flex items-center gap-2 lg:gap-8">
+          <!-- Completed Day 1 -->
+          <div class="relative flex flex-col items-center gap-2">
+            <div class="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary">
+              <span class="material-symbols-outlined text-lg lg:text-xl" style="font-variation-settings: 'FILL' 1;">check</span>
+            </div>
+            <span class="text-[9px] lg:text-[10px] font-bold text-on-surface-variant">Day 1</span>
+          </div>
+          <div class="h-[2px] w-6 lg:flex-1 bg-secondary-container opacity-30"></div>
+          
+          <!-- Completed Day 2 -->
+          <div class="relative flex flex-col items-center gap-2">
+            <div class="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary">
+              <span class="material-symbols-outlined text-lg lg:text-xl" style="font-variation-settings: 'FILL' 1;">check</span>
+            </div>
+            <span class="text-[9px] lg:text-[10px] font-bold text-on-surface-variant">Day 2</span>
+          </div>
+          <div class="h-[2px] w-6 lg:flex-1 bg-secondary-container opacity-30"></div>
+          
+          <!-- Current/Pending Day 3 -->
+          <div class="relative flex flex-col items-center gap-2">
+            <div class="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-surface-container-lowest border-2 border-error flex items-center justify-center text-error shadow-sm shadow-error/10">
+              <span class="material-symbols-outlined text-lg lg:text-xl">schedule</span>
+            </div>
+            <span class="text-[9px] lg:text-[10px] font-bold text-error">Day 3</span>
+          </div>
+          <div class="h-[2px] w-6 lg:flex-1 bg-outline-variant/30"></div>
+          
+          <!-- Locked Days -->
+          <div class="relative hidden sm:flex flex-col items-center gap-2 opacity-40">
+            <div class="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+              <span class="material-symbols-outlined text-lg lg:text-xl">lock</span>
+            </div>
+            <span class="text-[9px] lg:text-[10px] font-bold">Day 4</span>
+          </div>
+          <div class="h-[2px] flex-1 bg-outline-variant/30 hidden sm:block"></div>
+          
+          <div class="relative flex flex-col items-center gap-2 opacity-40">
+            <div class="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+              <span class="material-symbols-outlined text-lg lg:text-xl">lock</span>
+            </div>
+            <span class="text-[9px] lg:text-[10px] font-bold">Day 5</span>
+          </div>
+          <div class="h-[2px] w-6 lg:flex-1 bg-outline-variant/30"></div>
+          
+          <div class="relative flex flex-col items-center gap-2 opacity-40">
+            <div class="w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant">
+              <span class="material-symbols-outlined text-lg lg:text-xl">lock</span>
+            </div>
+            <span class="text-[9px] lg:text-[10px] font-bold">Day 6</span>
+          </div>
+        </div>
+        <p class="mt-6 lg:mt-8 text-xs lg:text-sm text-on-surface-variant leading-relaxed italic border-l-2 border-secondary-fixed pl-4">
+          You're 33% through this week's career exploration module. Finish today's activity to unlock tomorrow's mentorship video.
+        </p>
+      </section>
+
+      <!-- Zone 3: Current Task -->
+      <section class="bg-surface-container-lowest rounded-xl border-[1.5px] border-error p-6 lg:p-8 shadow-xl shadow-error/5 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 pointer-events-none"></div>
+        <div class="flex items-center justify-between mb-5 lg:mb-6">
+          <div class="flex items-center gap-2">
+            <span class="px-2 lg:px-3 py-1 bg-error/10 text-error rounded-full text-[9px] lg:text-[10px] font-extrabold uppercase tracking-widest">Pending · Day 3</span>
+            <span class="flex items-center gap-1 text-on-surface-variant text-[11px] lg:text-xs font-medium">
+              <span class="material-symbols-outlined text-xs lg:text-sm">timer</span>
+              ~15 mins
+            </span>
+          </div>
+          <button class="p-1.5 lg:p-2 text-on-surface-variant hover:bg-surface-container rounded-full transition-colors active:scale-95">
+            <span class="material-symbols-outlined">more_vert</span>
+          </button>
+        </div>
+        <div class="space-y-3 lg:space-y-4 mb-6 lg:mb-8">
+          <h2 class="text-xl lg:text-2xl font-bold tracking-tight text-primary">Values identification worksheet</h2>
+          <p class="text-on-surface-variant text-sm lg:text-base leading-relaxed max-w-2xl">
+            Identify your core professional values to better align your future career path. This interactive worksheet helps you rank what matters most: stability, creativity, impact, or financial growth.
+          </p>
+        </div>
+        <div class="flex flex-col sm:flex-row gap-3 sm:gap-6 mb-8 lg:mb-10 text-xs lg:text-sm text-on-surface-variant font-medium">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-lg">description</span>
+            Interactive PDF
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-lg">grade</span>
+            +50 Points
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-lg">group</span>
+            Community Discussion
+          </div>
+        </div>
+        <div class="flex flex-col sm:flex-row items-center gap-3 lg:gap-4">
+          <button class="w-full sm:w-auto bg-gradient-to-r from-primary to-primary-container text-on-primary px-6 lg:px-8 py-3 lg:py-4 rounded-full font-bold text-xs lg:text-sm hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-95">
+            Start Task
+            <span class="material-symbols-outlined text-base lg:text-lg">arrow_forward</span>
+          </button>
+          <button class="w-full sm:w-auto bg-surface-container-low text-primary px-6 lg:px-8 py-3 lg:py-4 rounded-full font-bold text-xs lg:text-sm hover:bg-surface-container transition-all active:scale-95">
+            View Details
+          </button>
+        </div>
+      </section>
+
+      <!-- Zone 4: Completed -->
+      <section class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+        <div class="p-5 lg:p-6 flex items-center justify-between cursor-pointer hover:bg-surface-container-low transition-colors group">
+          <div class="flex items-center gap-3 lg:gap-4">
+            <h3 class="text-base lg:text-lg font-bold text-primary">Completed tasks</h3>
+            <div class="px-2 lg:px-3 py-1 bg-secondary-fixed text-on-secondary-fixed rounded-full text-[9px] lg:text-[10px] font-bold uppercase tracking-wider">
+              2 done
+            </div>
+          </div>
+          <span class="material-symbols-outlined text-on-surface-variant transition-transform group-hover:translate-y-0.5">expand_more</span>
+        </div>
+        <div class="px-5 lg:px-6 pb-5 lg:pb-6 space-y-1 lg:space-y-2">
+          <!-- Item 1 -->
+          <div class="flex items-center justify-between py-3 lg:py-4 border-t border-outline-variant/10">
+            <div class="flex items-center gap-3 lg:gap-4">
+              <div class="w-8 h-8 rounded-full bg-secondary-container/20 text-secondary flex items-center justify-center">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-on-surface">Skill Gap Analysis</p>
+                <p class="text-[10px] lg:text-xs text-on-surface-variant">Completed Yesterday</p>
+              </div>
+            </div>
+            <button class="text-primary text-xs font-bold hover:underline">Review</button>
+          </div>
+          <!-- Item 2 -->
+          <div class="flex items-center justify-between py-3 lg:py-4 border-t border-outline-variant/10">
+            <div class="flex items-center gap-3 lg:gap-4">
+              <div class="w-8 h-8 rounded-full bg-secondary-container/20 text-secondary flex items-center justify-center">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+              </div>
+              <div>
+                <p class="text-sm font-semibold text-on-surface">Career Path Intro Video</p>
+                <p class="text-[10px] lg:text-xs text-on-surface-variant">Completed 2 days ago</p>
+              </div>
+            </div>
+            <button class="text-primary text-xs font-bold hover:underline">Review</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Decorative Element -->
+  <div class="fixed bottom-0 right-0 p-8 pointer-events-none opacity-[0.03]">
+    <svg fill="none" height="200" viewbox="0 0 100 100" width="200" xmlns="http://www.w3.org/2000/svg">
+      <circle class="text-primary" cx="50" cy="50" r="40" stroke="currentColor" stroke-width="0.5"></circle>
+      <path class="text-primary" d="M10 50L90 50M50 10L50 90" stroke="currentColor" stroke-width="0.5"></path>
+    </svg>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('sidebar-hidden');
+      document.getElementById('sidebar-overlay').classList.toggle('hidden');
+    }
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024) document.getElementById('sidebar-overlay').classList.add('hidden');
+    });
+  </script>
+</body>
+</html>
