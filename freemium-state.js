@@ -41,4 +41,16 @@
             toggle.checked = !isFreemium; // If freemium is true, premium toggle is unchecked
         });
     });
+
+    // Prevent navigation to locked pages in freemium mode
+    document.addEventListener('click', function(e) {
+        if (document.documentElement.classList.contains('freemium-mode')) {
+            const lockedLink = e.target.closest('a[href="psychometric-test.html"], a[href="my-test-results.html"], a[href="webinars.html"], a[href="profile.html"], a[href="notifications.html"]');
+            if (lockedLink) {
+                e.preventDefault();
+                // Optionally, could show a toast message here
+            }
+        }
+    });
+
 })();
