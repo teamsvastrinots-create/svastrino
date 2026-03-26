@@ -83,7 +83,11 @@
             background: rgba(255, 255, 255, 0.15);
             backdrop-filter: blur(12px);
         }
-    </style>
+    
+    .freemium-only { display: none !important; }
+    .freemium-mode .freemium-only { display: flex !important; }
+    .freemium-mode .freemium-only-block { display: block !important; }
+  </style>
 </head>
 <body class="h-full font-body bg-surface text-on-surface antialiased overflow-hidden">
 <main class="flex h-full w-full">

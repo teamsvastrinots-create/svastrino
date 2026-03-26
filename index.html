@@ -82,7 +82,11 @@
             background: rgba(250, 248, 255, 0.7);
             backdrop-filter: blur(24px);
         }
-    </style>
+    
+    .freemium-only { display: none !important; }
+    .freemium-mode .freemium-only { display: flex !important; }
+    .freemium-mode .freemium-only-block { display: block !important; }
+  </style>
 </head>
 <body class="bg-surface text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
 <main class="min-h-screen flex flex-col md:flex-row overflow-hidden">

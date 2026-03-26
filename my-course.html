@@ -103,6 +103,10 @@
       z-index: 10;
       border-radius: inherit;
     }
+  
+    .freemium-only { display: none !important; }
+    .freemium-mode .freemium-only { display: flex !important; }
+    .freemium-mode .freemium-only-block { display: block !important; }
   </style>
   <script src="freemium-state.js"></script>
 </head>
@@ -142,23 +146,22 @@
         <span class="material-symbols-outlined text-[20px]">check_box</span>
         <span class="text-[13px]">Today's task</span>
       </a>
-      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="#">
-        <span class="material-symbols-outlined text-[20px]">history</span>
-        <span class="text-[13px]">Task history</span>
-      </a>
 
       <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Career Tools</p>
       <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="psychometric-test.html">
         <span class="material-symbols-outlined text-[20px]">psychology</span>
-        <span class="text-[13px]">Psychometric test</span>
+        <span class="text-[13px] flex-1">Psychometric test</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
       </a>
       <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="my-test-results.html">
         <span class="material-symbols-outlined text-[20px]">trending_up</span>
-        <span class="text-[13px]">My test results</span>
+        <span class="text-[13px] flex-1">My test results</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
       </a>
       <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="webinars.html">
         <span class="material-symbols-outlined text-[20px]">monitor</span>
-        <span class="text-[13px]">Webinars</span>
+        <span class="text-[13px] flex-1">Webinars</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
       </a>
 
       <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Account</p>
