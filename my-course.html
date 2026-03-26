@@ -136,7 +136,7 @@
           <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">book</span>
           <span class="text-[13px]">My course</span>
         </div>
-        <span class="text-[9px] bg-primary text-white px-1.5 py-0.5 rounded uppercase font-bold">Week 2</span>
+        <span class="text-[9px] bg-primary text-white px-1.5 py-0.5 rounded uppercase font-bold">Week 1</span>
       </a>
       <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="todays-task.html">
         <span class="material-symbols-outlined text-[20px]">check_box</span>
@@ -202,7 +202,7 @@
         </div>
         <div class="flex items-center gap-3 px-4 py-2 bg-secondary-fixed rounded-full shadow-sm">
           <span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">stars</span>
-          <span class="text-secondary font-bold text-sm tracking-wide">33% complete</span>
+          <span class="text-secondary font-bold text-sm tracking-wide">10% complete</span>
         </div>
       </header>
 
@@ -210,7 +210,7 @@
       <section class="grid grid-cols-12 gap-5 lg:gap-8">
         <!-- Video Player Card -->
         <div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-outline-variant/10">
-          <div class="relative aspect-video lg:h-[240px] bg-slate-900 flex items-center justify-center group cursor-pointer">
+          <div class="relative aspect-video w-full bg-slate-900 flex items-center justify-center group cursor-pointer">
             <img class="absolute inset-0 w-full h-full object-cover opacity-40 grayscale group-hover:scale-105 transition-transform duration-700" alt="Abstract blue digital workspace background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbYDp6Ai42o0XiNW3HrJuUmSoay0H37VBy9rJRRADzStVcal2OSMCMhW6VOBuS5D2xqm0pjr73HBlF_oXRk0-JwjXkM9kmPbhA9oHMBwnbbBSwsxjOQ6lkxzXLly21CnC9Rd7nsdUGITBKzbDUGKrlUXm6wEOo4SgDrpW5Xpt16tFrDVkCDgg30zJstqxG5gb6npx2GOdHeTGr2yOzXLOylr4R1vp36ZgqBJzUgQjJAE8ZI4M_M1ggX4dYvCffGx-UqK5ZHIv54eQo"/>
             <div class="relative z-10 w-14 h-14 lg:w-16 lg:h-16 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl transition-transform group-hover:scale-110">
               <span class="material-symbols-outlined text-3xl lg:text-4xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
@@ -220,13 +220,16 @@
                 <div class="w-1/3 h-full bg-primary-container"></div>
               </div>
               <span class="text-[10px] text-white font-mono">12:45 / 34:00</span>
+              <button class="text-white/80 hover:text-white transition-colors flex items-center" title="Full Screen">
+                <span class="material-symbols-outlined text-sm">fullscreen</span>
+              </button>
             </div>
           </div>
           <div class="p-4 lg:p-6">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
               <div>
                 <span class="text-[10px] font-bold text-primary tracking-widest uppercase">Currently Watching</span>
-                <h2 class="text-lg lg:text-xl font-bold mt-1">Week 2 — Values &amp; strengths</h2>
+                <h2 class="text-lg lg:text-xl font-bold mt-1">Week 1 — Foundations of Design Thinking</h2>
               </div>
               <button class="flex items-center gap-2 px-4 py-2 bg-surface-container-low hover:bg-surface-container rounded-lg transition-colors">
                 <span class="material-symbols-outlined text-lg">description</span>
@@ -238,43 +241,29 @@
 
         <!-- Sidebar Info Card -->
         <div class="col-span-12 lg:col-span-4 bg-primary text-white rounded-xl p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden min-h-[280px]">
+          
           <div class="absolute -top-12 -right-12 w-48 h-48 bg-primary-container rounded-full blur-3xl opacity-50"></div>
           <div class="relative z-10">
             <span class="text-primary-fixed text-xs font-bold uppercase tracking-widest">Next Milestone</span>
-            <h3 class="text-xl lg:text-2xl font-bold mt-2 leading-tight">Career Map Submission</h3>
-            <p class="mt-4 text-primary-fixed/80 text-sm leading-relaxed">Submit your initial brand values to unlock the mentoring session.</p>
+            <h3 class="text-xl lg:text-2xl font-bold mt-2 leading-tight">First Concept Submission</h3>
+            <p class="mt-4 text-primary-fixed/80 text-sm leading-relaxed">Submit your initial ideation sketches to unlock the next module.</p>
           </div>
-          <button class="relative z-10 mt-6 lg:mt-8 w-full py-3 bg-white text-primary rounded-xl font-bold text-sm hover:shadow-lg transition-all active:scale-[0.98]">
+          <button onclick="alert('Please complete the Week 1 video first to unlock this assignment.')" class="relative z-10 mt-6 lg:mt-8 w-full py-3 bg-white/95 text-primary rounded-xl font-bold text-sm hover:shadow-lg hover:bg-white transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-lg">lock</span>
             View Assignment
           </button>
         </div>
       </section>
 
-      <!-- Course Map Grid -->
+      <!-- Course Map Grid (Learning Path) -->
       <section>
         <div class="flex items-center justify-between mb-6 lg:mb-8">
           <h2 class="text-xl lg:text-2xl font-bold tracking-tight">The Learning Path</h2>
           <div class="h-[1px] flex-grow mx-4 lg:mx-8 bg-outline-variant/30 hidden sm:block"></div>
-          <span class="text-xs font-bold text-on-surface-variant bg-surface-container px-3 py-1 rounded-full uppercase tracking-tighter hidden sm:block">12 Modules Total</span>
+          <span class="text-xs font-bold text-on-surface-variant bg-surface-container px-3 py-1 rounded-full uppercase tracking-tighter hidden sm:block">Active Module</span>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-8">
-          <!-- Week 1 (Done) -->
-          <div class="group bg-surface-container-lowest p-5 lg:p-6 rounded-xl border border-transparent shadow-sm hover:shadow-md transition-all">
-            <div class="flex justify-between items-start mb-5 lg:mb-6">
-              <div class="w-10 h-10 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
-                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">check_circle</span>
-              </div>
-              <span class="text-[10px] font-bold text-secondary uppercase tracking-widest">Completed</span>
-            </div>
-            <h4 class="font-bold text-on-surface text-lg">Week 1</h4>
-            <p class="text-on-surface-variant text-sm mt-1">Foundations of Design Thinking</p>
-            <div class="mt-5 lg:mt-6 flex gap-2">
-              <span class="px-2 py-1 bg-surface-container-low rounded-md text-[10px] font-bold text-outline uppercase tracking-tighter">4 Lessons</span>
-              <span class="px-2 py-1 bg-surface-container-low rounded-md text-[10px] font-bold text-outline uppercase tracking-tighter">Quiz Passed</span>
-            </div>
-          </div>
-
-          <!-- Week 2 (Active) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-8">
+          <!-- Week 1 (Active) -->
           <div class="bg-surface-container-lowest p-5 lg:p-6 rounded-xl border-2 border-primary shadow-xl md:scale-105 relative">
             <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-widest whitespace-nowrap">
               In Progress
@@ -290,8 +279,8 @@
                 <div class="w-6 h-6 rounded-full border-2 border-white bg-primary flex items-center justify-center text-[8px] font-bold text-white">+12</div>
               </div>
             </div>
-            <h4 class="font-bold text-on-surface text-lg">Week 2</h4>
-            <p class="text-on-surface-variant text-sm mt-1">Values &amp; Strengths Analysis</p>
+            <h4 class="font-bold text-on-surface text-lg">Week 1</h4>
+            <p class="text-on-surface-variant text-sm mt-1">Foundations of Design Thinking</p>
             <div class="mt-5 lg:mt-6">
               <div class="flex justify-between items-center text-[10px] font-bold text-primary mb-2">
                 <span>PROGRESS</span>
@@ -302,66 +291,54 @@
               </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          <!-- Week 3 (Locked normally) -->
-          <div class="bg-surface-container/40 p-5 lg:p-6 rounded-xl border border-outline-variant/10 opacity-70 grayscale">
-            <div class="flex justify-between items-start mb-5 lg:mb-6">
-              <div class="w-10 h-10 rounded-lg bg-outline-variant/20 flex items-center justify-center text-outline">
-                <span class="material-symbols-outlined">lock</span>
-              </div>
-              <span class="text-[10px] font-bold text-outline-variant uppercase tracking-widest">Locked</span>
-            </div>
+      <!-- Coming Up Section -->
+      <section class="mt-12 lg:mt-16">
+        <div class="flex items-center justify-between mb-6 lg:mb-8">
+          <h2 class="text-xl lg:text-2xl font-bold tracking-tight">Coming Up</h2>
+          <div class="h-[1px] flex-grow mx-4 lg:mx-8 bg-outline-variant/30 hidden sm:block"></div>
+          <span class="text-xs font-bold text-on-surface-variant bg-surface-container px-3 py-1 rounded-full uppercase tracking-tighter hidden sm:block">5 Modules</span>
+        </div>
+        
+        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-4">
+          <!-- Week 2-6 Locked -->
+          <div class="freemium-lock bg-surface-container/40 p-5 rounded-xl border border-outline-variant/10 opacity-70 transition-transform relative min-h-[230px] flex flex-col items-center justify-center text-center">
+            <h4 class="font-bold text-on-surface text-lg">Week 2</h4>
+            <p class="text-on-surface-variant text-xs mt-2 font-medium">Values &amp; Strengths</p>
+          </div>
+          <div class="freemium-lock bg-surface-container/40 p-5 rounded-xl border border-outline-variant/10 opacity-70 transition-transform relative min-h-[230px] flex flex-col items-center justify-center text-center">
             <h4 class="font-bold text-on-surface text-lg">Week 3</h4>
-            <p class="text-on-surface-variant text-sm mt-1">Market Positioning &amp; Trends</p>
-            <div class="mt-5 lg:mt-6 flex gap-2">
-              <span class="px-2 py-1 bg-surface-container-low rounded-md text-[10px] font-bold text-outline-variant uppercase tracking-tighter">6 Lessons</span>
-            </div>
+            <p class="text-on-surface-variant text-xs mt-2 font-medium">Market Positioning</p>
           </div>
-
-          <!-- Week 4 (Freemium Locked) -->
-          <div class="freemium-lock bg-surface-container/40 p-5 lg:p-6 rounded-xl border border-outline-variant/10 opacity-70">
-            <div class="flex justify-between items-start mb-5 lg:mb-6">
-              <div class="w-10 h-10 rounded-lg bg-outline-variant/20 flex items-center justify-center text-outline">
-                <span class="material-symbols-outlined">lock</span>
-              </div>
-              <span class="text-[10px] font-bold text-outline-variant uppercase tracking-widest">Locked</span>
-            </div>
+          <div class="freemium-lock bg-surface-container/40 p-5 rounded-xl border border-outline-variant/10 opacity-70 transition-transform relative min-h-[230px] flex flex-col items-center justify-center text-center">
             <h4 class="font-bold text-on-surface text-lg">Week 4</h4>
-            <p class="text-on-surface-variant text-sm mt-1">Prototyping &amp; Testing</p>
-            <div class="mt-5 lg:mt-6 flex gap-2">
-              <span class="px-2 py-1 bg-surface-container-low rounded-md text-[10px] font-bold text-outline-variant uppercase tracking-tighter">5 Lessons</span>
-            </div>
+            <p class="text-on-surface-variant text-xs mt-2 font-medium">Prototyping &amp; Testing</p>
           </div>
-
-          <!-- Week 5 (Freemium Locked) -->
-          <div class="freemium-lock bg-surface-container/40 p-5 lg:p-6 rounded-xl border border-outline-variant/10 opacity-70">
-            <div class="flex justify-between items-start mb-5 lg:mb-6">
-              <div class="w-10 h-10 rounded-lg bg-outline-variant/20 flex items-center justify-center text-outline">
-                <span class="material-symbols-outlined">lock</span>
-              </div>
-              <span class="text-[10px] font-bold text-outline-variant uppercase tracking-widest">Locked</span>
-            </div>
+          <div class="freemium-lock bg-surface-container/40 p-5 rounded-xl border border-outline-variant/10 opacity-70 transition-transform relative min-h-[230px] flex flex-col items-center justify-center text-center">
             <h4 class="font-bold text-on-surface text-lg">Week 5</h4>
-            <p class="text-on-surface-variant text-sm mt-1">Advanced UI Systems</p>
-            <div class="mt-5 lg:mt-6 flex gap-2">
-              <span class="px-2 py-1 bg-surface-container-low rounded-md text-[10px] font-bold text-outline-variant uppercase tracking-tighter">8 Lessons</span>
-            </div>
+            <p class="text-on-surface-variant text-xs mt-2 font-medium">Advanced UI Systems</p>
           </div>
-
-          <!-- Week 6 (Freemium Locked) -->
-          <div class="freemium-lock bg-surface-container/40 p-5 lg:p-6 rounded-xl border border-outline-variant/10 opacity-70">
-            <div class="flex justify-between items-start mb-5 lg:mb-6">
-              <div class="w-10 h-10 rounded-lg bg-outline-variant/20 flex items-center justify-center text-outline">
-                <span class="material-symbols-outlined">lock</span>
-              </div>
-              <span class="text-[10px] font-bold text-outline-variant uppercase tracking-widest">Locked</span>
-            </div>
+          <div class="freemium-lock bg-surface-container/40 p-5 rounded-xl border border-outline-variant/10 opacity-70 transition-transform relative min-h-[230px] flex flex-col items-center justify-center text-center">
             <h4 class="font-bold text-on-surface text-lg">Week 6</h4>
-            <p class="text-on-surface-variant text-sm mt-1">Final Capstone Project</p>
-            <div class="mt-5 lg:mt-6 flex gap-2">
-              <span class="px-2 py-1 bg-surface-container-low rounded-md text-[10px] font-bold text-outline-variant uppercase tracking-tighter">Project</span>
-            </div>
+            <p class="text-on-surface-variant text-xs mt-2 font-medium">Capstone Project</p>
           </div>
+        </div>
+      </section>
+
+      <!-- Premium Upgrade Banner -->
+      <section class="mt-8 lg:mt-12 bg-gradient-to-r from-amber-400 to-orange-500 p-6 lg:p-8 rounded-2xl shadow-lg relative overflow-hidden group">
+        <div class="absolute -right-8 -top-8 w-48 h-48 bg-white/20 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700 pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+          <div>
+            <span class="text-white/90 text-xs font-bold uppercase tracking-widest mb-1 block">Level up your career</span>
+            <h3 class="text-2xl font-extrabold text-white">Upgrade to Premium 🚀</h3>
+            <p class="text-white/90 font-medium mt-2 text-sm max-w-lg">Unlock all 6 weeks, assignments, and mentorship sessions instantly.</p>
+          </div>
+          <button class="px-6 py-3 bg-white text-orange-600 font-extrabold rounded-xl shadow-xl hover:shadow-2xl transition-all active:scale-95 whitespace-nowrap">
+            Unlock Full Access
+          </button>
         </div>
       </section>
 
@@ -372,7 +349,7 @@
             <span class="material-symbols-outlined text-secondary">forum</span>
           </div>
           <div class="flex-grow">
-            <h5 class="font-bold text-sm">Need help with Week 2?</h5>
+            <h5 class="font-bold text-sm">Need help with Week 1?</h5>
             <p class="text-xs text-on-surface-variant">Join the student community discussion board.</p>
           </div>
           <button class="px-5 py-2 text-xs font-bold text-primary border border-primary/20 rounded-lg hover:bg-primary/5 transition-colors whitespace-nowrap">
