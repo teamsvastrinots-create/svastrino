@@ -84,6 +84,12 @@
     }
     .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); }
 
+    /* Radial trait progress */
+    .trait-ring { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .trait-card:hover .trait-ring { transform: scale(1.12); }
+    .trait-card { transition: box-shadow 0.3s ease, transform 0.3s ease; }
+    .trait-card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px -8px rgba(0,0,0,0.12); }
+
     /* Global Freemium Lock Overlay */
     .freemium-mode .freemium-section-lock::after {
       content: '';
@@ -194,23 +200,24 @@
 
     <!-- ZONE 1: Personality Hero -->
     <section>
-      <div class="bg-gradient-to-br from-primary to-primary-container border-[1px] border-primary rounded-2xl p-[24px_28px] lg:p-[32px_40px] flex flex-col md:flex-row items-start md:items-center justify-between text-white overflow-hidden relative shadow-xl">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 lg:gap-10 z-10 w-full mb-6 md:mb-0">
+      <div class="bg-gradient-to-br from-[#1a3a5c] to-[#0d2137] border-[1px] border-[#1a3a5c] rounded-2xl p-[24px_28px] lg:p-[32px_40px] text-white overflow-hidden relative shadow-xl">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 lg:gap-10 z-10 w-full mb-6">
           <div class="flex flex-col items-center justify-center bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/20 sm:flex-shrink-0">
             <div class="w-[72px] h-[72px] bg-white/25 rounded-full flex items-center justify-center mb-4 shadow-inner">
               <span class="material-symbols-outlined text-[36px]" style="font-variation-settings: 'FILL' 1;">star</span>
             </div>
             <div class="text-[28px] font-extrabold leading-none mb-1 tracking-tight">INTJ</div>
-            <div class="text-[13px] font-bold text-primary-fixed uppercase tracking-wider">The Architect</div>
+            <div class="text-[13px] font-bold text-blue-200 uppercase tracking-wider">The Architect</div>
           </div>
           <div class="max-w-2xl">
             <h2 class="text-[18px] lg:text-[20px] font-[700] mb-3 text-white">Your personality type</h2>
-            <p class="text-[14px] lg:text-[15px] font-[400] leading-relaxed text-white/90">
+            <p class="text-[14px] lg:text-[15px] font-[400] leading-relaxed text-white/85">
               You are a strategic and independent thinker. You have a natural ability to analyze complex problems and design efficient systems to solve them. Your drive for excellence and objectivity makes you a valuable asset in highly technical and innovative fields.
             </p>
           </div>
         </div>
-        <button class="bg-surface-container-lowest text-primary px-8 py-3.5 rounded-full text-sm font-bold whitespace-nowrap z-10 hover:shadow-lg hover:bg-white transition-all active:scale-95 w-full md:w-auto">
+        <button class="bg-white/95 text-[#1a3a5c] px-8 py-3.5 rounded-lg text-sm font-bold whitespace-nowrap z-10 hover:shadow-lg hover:bg-white transition-all active:scale-95 w-full md:w-auto flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined text-lg">download</span>
           Download full report (PDF)
         </button>
         <!-- Abstract Pattern Decoration -->
@@ -220,45 +227,69 @@
       </div>
     </section>
 
-    <!-- ZONE 2: Trait Scores -->
+    <!-- ZONE 2: Trait Scores (Radial Progress) -->
     <section class="mt-4">
       <div class="text-[11px] font-bold text-on-surface-variant tracking-[0.15em] uppercase mb-4 px-1">Your Trait Scores</div>
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        <!-- Trait 1 -->
-        <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-[20px] shadow-sm hover:shadow-md transition-shadow">
+        <!-- Trait 1: Analytical -->
+        <div class="trait-card bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-[20px] shadow-sm flex flex-col items-center text-center cursor-pointer">
+          <div class="trait-ring relative w-[100px] h-[100px] mb-4">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#eceef0" stroke-width="6" fill="none"/>
+              <circle cx="50" cy="50" r="42" stroke="#24389c" stroke-width="6" fill="none" stroke-dasharray="264" stroke-dashoffset="31.7" stroke-linecap="round"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[28px] text-primary" style="font-variation-settings: 'FILL' 1;">neurology</span>
+            </div>
+          </div>
           <div class="text-on-surface-variant text-xs font-[600] mb-1">Analytical</div>
-          <div class="text-[28px] font-extrabold text-primary mb-3">88%</div>
-          <div class="w-full bg-surface-container-high h-[8px] rounded-full mb-3 overflow-hidden">
-            <div class="bg-primary h-full rounded-full transition-all duration-1000" style="width: 88%"></div>
-          </div>
-          <div class="text-[12px] font-[700] text-secondary">Very high</div>
+          <div class="text-[24px] font-extrabold text-primary mb-1">88%</div>
+          <div class="text-[11px] font-[700] text-secondary">Very high</div>
         </div>
-        <!-- Trait 2 -->
-        <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-[20px] shadow-sm hover:shadow-md transition-shadow">
+        <!-- Trait 2: Creative -->
+        <div class="trait-card bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-[20px] shadow-sm flex flex-col items-center text-center cursor-pointer">
+          <div class="trait-ring relative w-[100px] h-[100px] mb-4">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#eceef0" stroke-width="6" fill="none"/>
+              <circle cx="50" cy="50" r="42" stroke="#006471" stroke-width="6" fill="none" stroke-dasharray="264" stroke-dashoffset="95" stroke-linecap="round"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[28px] text-tertiary" style="font-variation-settings: 'FILL' 1;">palette</span>
+            </div>
+          </div>
           <div class="text-on-surface-variant text-xs font-[600] mb-1">Creative</div>
-          <div class="text-[28px] font-extrabold text-primary mb-3">64%</div>
-          <div class="w-full bg-surface-container-high h-[8px] rounded-full mb-3 overflow-hidden">
-            <div class="bg-tertiary h-full rounded-full transition-all duration-1000" style="width: 64%"></div>
-          </div>
-          <div class="text-[12px] font-[700] text-tertiary">Above average</div>
+          <div class="text-[24px] font-extrabold text-tertiary mb-1">64%</div>
+          <div class="text-[11px] font-[700] text-tertiary">Above average</div>
         </div>
-        <!-- Trait 3 -->
-        <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-[20px] shadow-sm hover:shadow-md transition-shadow">
+        <!-- Trait 3: Social -->
+        <div class="trait-card bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-[20px] shadow-sm flex flex-col items-center text-center cursor-pointer">
+          <div class="trait-ring relative w-[100px] h-[100px] mb-4">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#eceef0" stroke-width="6" fill="none"/>
+              <circle cx="50" cy="50" r="42" stroke="#c5c5d4" stroke-width="6" fill="none" stroke-dasharray="264" stroke-dashoffset="153" stroke-linecap="round"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[28px] text-outline" style="font-variation-settings: 'FILL' 1;">groups</span>
+            </div>
+          </div>
           <div class="text-on-surface-variant text-xs font-[600] mb-1">Social</div>
-          <div class="text-[28px] font-extrabold text-on-surface mb-3">42%</div>
-          <div class="w-full bg-surface-container-high h-[8px] rounded-full mb-3 overflow-hidden">
-            <div class="bg-outline-variant h-full rounded-full transition-all duration-1000" style="width: 42%"></div>
-          </div>
-          <div class="text-[12px] font-[600] text-on-surface-variant opacity-80">Moderate</div>
+          <div class="text-[24px] font-extrabold text-on-surface mb-1">42%</div>
+          <div class="text-[11px] font-[600] text-on-surface-variant opacity-80">Moderate</div>
         </div>
-        <!-- Trait 4 -->
-        <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-[20px] shadow-sm hover:shadow-md transition-shadow">
-          <div class="text-on-surface-variant text-xs font-[600] mb-1">Leadership</div>
-          <div class="text-[28px] font-extrabold text-primary mb-3">76%</div>
-          <div class="w-full bg-surface-container-high h-[8px] rounded-full mb-3 overflow-hidden">
-            <div class="bg-primary h-full rounded-full transition-all duration-1000" style="width: 76%"></div>
+        <!-- Trait 4: Leadership -->
+        <div class="trait-card bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-[20px] shadow-sm flex flex-col items-center text-center cursor-pointer">
+          <div class="trait-ring relative w-[100px] h-[100px] mb-4">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="42" stroke="#eceef0" stroke-width="6" fill="none"/>
+              <circle cx="50" cy="50" r="42" stroke="#8b5000" stroke-width="6" fill="none" stroke-dasharray="264" stroke-dashoffset="63.4" stroke-linecap="round"/>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="material-symbols-outlined text-[28px] text-secondary" style="font-variation-settings: 'FILL' 1;">shield_person</span>
+            </div>
           </div>
-          <div class="text-[12px] font-[700] text-secondary">High</div>
+          <div class="text-on-surface-variant text-xs font-[600] mb-1">Leadership</div>
+          <div class="text-[24px] font-extrabold text-secondary mb-1">76%</div>
+          <div class="text-[11px] font-[700] text-secondary">High</div>
         </div>
       </div>
     </section>
@@ -266,7 +297,7 @@
     <!-- ZONE 3: Career Fit + Strengths -->
     <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mt-4">
       <!-- Left Card: Career Matches -->
-      <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-[24px_28px] shadow-sm h-full flex flex-col">
+      <div class="bg-amber-50/70 border border-amber-200/40 rounded-xl p-[24px_28px] shadow-sm h-full flex flex-col">
         <h3 class="text-[16px] font-[700] text-on-surface mb-6 flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-xl">work</span>
           Top career matches
@@ -312,7 +343,7 @@
       </div>
       
       <!-- Right Card: Your top strengths -->
-      <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-[24px_28px] shadow-sm h-full flex flex-col">
+      <div class="bg-amber-50/70 border border-amber-200/40 rounded-xl p-[24px_28px] shadow-sm h-full flex flex-col">
         <h3 class="text-[16px] font-[700] text-on-surface mb-6 flex items-center gap-2">
           <span class="material-symbols-outlined text-tertiary text-xl">insights</span>
           Your top strengths
