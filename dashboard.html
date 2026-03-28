@@ -101,6 +101,44 @@
     .freemium-mode .premium-only { display: none !important; }
     .premium-only-block { display: block !important; }
     .freemium-mode .premium-only-block { display: none !important; }
+
+    /* Streak Modal Styles */
+    #streak-modal {
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    #streak-modal.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+    #streak-modal:not(.hidden) {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+    #streak-modal .modal-content {
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform: scale(0.95) translateY(10px);
+    }
+    #streak-modal:not(.hidden) .modal-content {
+      transform: scale(1) translateY(0);
+    }
+    
+    @keyframes pulse-fire {
+      0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(36, 56, 156, 0.4)); opacity: 0.9;}
+      50% { transform: scale(1.15); filter: drop-shadow(0 0 8px rgba(36, 56, 156, 0.8)); opacity: 1;}
+      100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(36, 56, 156, 0.4)); opacity: 0.9;}
+    }
+    .fire-icon {
+      animation: pulse-fire 2s infinite ease-in-out;
+      color: var(--color-primary); /* Use theme primary color */
+    }
+    .fire-icon:nth-child(even) {
+       animation-delay: 0.5s; /* Stagger animations slightly */
+    }
+    .fire-icon:nth-child(3n) {
+       animation-delay: 1s; 
+    }
   </style>
   <script src="freemium-state.js"></script>
 </head>
@@ -398,8 +436,8 @@
           <span class="font-label text-sm uppercase tracking-[0.2em] text-on-surface-variant/70 mb-2 block">Welcome back</span>
           <h1 class="font-headline text-3xl lg:text-5xl font-extrabold tracking-tight text-primary">Good morning, Rahul</h1>
         </div>
-        <button class="flex items-center gap-3 px-5 py-2.5 lg:px-6 lg:py-3 bg-secondary-fixed rounded-xl shadow-sm border border-secondary/10 transition-transform active:scale-95">
-          <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+        <button onclick="showStreakModal()" class="flex items-center gap-3 px-5 py-2.5 lg:px-6 lg:py-3 bg-secondary-fixed rounded-xl shadow-sm border border-secondary/10 transition-transform active:scale-95 hover:shadow-md hover:bg-secondary-fixed/90 cursor-pointer">
+          <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
           <span class="font-bold text-on-secondary-fixed text-sm">5 day streak</span>
         </button>
       </header>
@@ -515,6 +553,69 @@
     </svg>
   </div>
 
+  <!-- Streak Calendar Modal Overlay -->
+  <div id="streak-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <!-- Modal Container -->
+    <div class="modal-content bg-surface-container-lowest w-full max-w-sm rounded-[24px] shadow-2xl border border-outline-variant/20 overflow-hidden relative">
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-primary to-primary-container px-6 py-5 flex items-center justify-between relative overflow-hidden">
+        <!-- Decoration -->
+        <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full blur-2xl"></div>
+        
+        <div class="relative z-10 flex items-center gap-3">
+          <div class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md border border-white/30 shadow-inner text-white">
+             <span class="material-symbols-outlined text-[24px]" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+          </div>
+          <div>
+            <h3 class="text-white font-headline font-bold text-lg leading-tight">Your Streak</h3>
+            <p class="text-white/80 text-xs font-medium">Keep the fire burning!</p>
+          </div>
+        </div>
+        <button onclick="hideStreakModal()" class="relative z-10 text-white/70 hover:text-white bg-black/10 hover:bg-black/20 p-2 rounded-full transition-colors">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+
+      <!-- Body / Calendar -->
+      <div class="p-6">
+        <div class="flex items-center justify-between mb-4 px-2">
+           <button class="text-outline-variant hover:text-on-surface transition-colors p-1"><span class="material-symbols-outlined">chevron_left</span></button>
+           <h4 id="calendar-month" class="font-headline font-bold text-on-surface">March 2026</h4>
+           <button class="text-outline-variant hover:text-on-surface transition-colors p-1"><span class="material-symbols-outlined">chevron_right</span></button>
+        </div>
+
+        <!-- Days of week -->
+        <div class="grid grid-cols-7 gap-1 mb-2">
+          <div class="text-center text-[10px] font-bold text-outline uppercase tracking-wider">Su</div>
+          <div class="text-center text-[10px] font-bold text-outline uppercase tracking-wider">Mo</div>
+          <div class="text-center text-[10px] font-bold text-outline uppercase tracking-wider">Tu</div>
+          <div class="text-center text-[10px] font-bold text-outline uppercase tracking-wider">We</div>
+          <div class="text-center text-[10px] font-bold text-outline uppercase tracking-wider">Th</div>
+          <div class="text-center text-[10px] font-bold text-outline uppercase tracking-wider">Fr</div>
+          <div class="text-center text-[10px] font-bold text-outline uppercase tracking-wider">Sa</div>
+        </div>
+        
+        <!-- Calendar Grid rendering -->
+        <div id="calendar-grid" class="grid grid-cols-7 gap-1.5 md:gap-2">
+           <!-- Javascript will populate days here -->
+        </div>
+
+        <!-- Footer Stats -->
+        <div class="mt-6 pt-5 border-t border-outline-variant/10 flex justify-around">
+           <div class="text-center">
+             <div class="text-2xl font-headline font-black text-primary flex items-center justify-center gap-1">5 <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1; color: #3f51b5;">local_fire_department</span></div>
+             <div class="text-[10px] font-semibold text-on-surface-variant uppercase tracking-wider mt-1">Current</div>
+           </div>
+           <div class="w-px bg-outline-variant/20"></div>
+           <div class="text-center">
+             <div class="text-2xl font-headline font-black text-on-surface">12</div>
+             <div class="text-[10px] font-semibold text-on-surface-variant uppercase tracking-wider mt-1">Longest</div>
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('sidebar-hidden');
@@ -525,6 +626,110 @@
         document.getElementById('sidebar-overlay').classList.add('hidden');
       }
     });
+
+    // --- Streak Modal Logic ---
+    const streakModal = document.getElementById('streak-modal');
+    const calendarGrid = document.getElementById('calendar-grid');
+    const calendarMonthLabel = document.getElementById('calendar-month');
+
+    function showStreakModal() {
+      streakModal.classList.remove('hidden');
+      renderStreakCalendar();
+    }
+
+    function hideStreakModal() {
+      streakModal.classList.add('hidden');
+    }
+
+    // Close modal if clicked outside content
+    streakModal.addEventListener('click', (e) => {
+      if(e.target === streakModal) {
+         hideStreakModal();
+      }
+    });
+
+    function renderStreakCalendar() {
+      const today = new Date();
+      const currentMonth = today.getMonth();
+      const currentYear = today.getFullYear();
+      
+      // Update header
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      calendarMonthLabel.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+      
+      calendarGrid.innerHTML = ''; // clear previous
+
+      // Get first day of month (0 = Sun, 1 = Mon...)
+      const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+      
+      // Get number of days in month
+      const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+      // For demo: Let's pretend the streak is the last 5 days ending today.
+      const currentDay = today.getDate();
+      const streakDays = [];
+      for(let i=0; i<5; i++) {
+        let d = currentDay - i;
+        if(d > 0) streakDays.push(d);
+      }
+
+      // 1. Add empty cells for padding before the 1st
+      for(let i = 0; i < firstDay; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = "flex items-center justify-center p-2 rounded-lg text-sm bg-surface-container/30 opacity-40 border border-transparent";
+        calendarGrid.appendChild(emptyCell);
+      }
+
+      // 2. Add actual days
+      for(let day = 1; day <= daysInMonth; day++) {
+        const dayCell = document.createElement('div');
+        
+        let isStreakDay = streakDays.includes(day);
+        let isToday = day === currentDay;
+
+        let isFirstStreakDay = isStreakDay && !streakDays.includes(day - 1);
+        let isLastStreakDay = isStreakDay && !streakDays.includes(day + 1);
+
+        dayCell.className = `flex flex-col items-center justify-center p-2 rounded-[20px] text-sm font-semibold border relative shadow-sm h-12 w-full`;
+        
+        if (isStreakDay) {
+           dayCell.classList.add('bg-orange-200', 'border-orange-400', 'border-y');
+           
+           if (!isFirstStreakDay) {
+               dayCell.classList.add('rounded-l-none', 'border-l-0');
+           } else {
+               dayCell.classList.add('border-l');
+           }
+
+           if (!isLastStreakDay) {
+               dayCell.classList.add('rounded-r-none', 'border-r-0');
+           } else {
+               dayCell.classList.add('border-r');
+           }
+
+           // Add an absolute pseudo-element to extend the background into the grid gap gap-1.5/md:gap-2
+           if (!isLastStreakDay) {
+                dayCell.innerHTML = `
+                  <div class="absolute -right-[7px] md:-right-[9px] top-[-1px] bottom-[-1px] w-[8px] md:w-[10px] bg-orange-200 border-y border-orange-400 z-0"></div>
+                  <span class="absolute inset-0 m-auto flex items-center justify-center text-[24px] fire-icon z-10">🔥</span>
+                `;
+           } else {
+                dayCell.innerHTML = `
+                  <span class="absolute inset-0 m-auto flex items-center justify-center text-[24px] fire-icon z-10">🔥</span>
+                `;
+           }
+        } else if (isToday) {
+           dayCell.classList.add('bg-primary', 'text-on-primary', 'border-primary', 'shadow-md');
+           dayCell.textContent = day;
+        } else {
+           dayCell.classList.add('bg-surface-container-lowest', 'text-on-surface', 'border-outline-variant/20');
+           if(day > currentDay) dayCell.classList.add('opacity-50'); // future days fades
+           dayCell.textContent = day;
+        }
+
+        calendarGrid.appendChild(dayCell);
+      }
+    }
   </script>
 </body>
 </html>
