@@ -228,6 +228,7 @@
           <input type="tel" id="mobileInput" maxlength="10" placeholder="Enter 10-digit number" class="flex-1 px-4 py-3 bg-surface-container-low border border-outline-variant/20 rounded-xl text-on-surface font-semibold focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-base" />
         </div>
         <p class="text-xs text-on-surface-variant/60" id="mobileError"></p>
+        <div id="recaptcha-container" class="mt-4 flex justify-center"></div>
       </div>
 
       <button class="w-full mt-6 bg-gradient-to-r from-primary to-primary-container text-on-primary py-4 rounded-xl font-bold text-base hover:scale-[0.98] active:scale-95 transition-transform shadow-lg shadow-primary/15 disabled:opacity-40" id="sendOtpBtn" disabled onclick="sendOtp()">
@@ -246,14 +247,16 @@
           <span class="material-symbols-outlined text-primary text-3xl">sms</span>
         </div>
         <h2 class="text-2xl font-extrabold text-primary mb-2">Verify OTP</h2>
-        <p class="text-on-surface-variant text-sm">Enter the 4-digit code sent to <span class="font-semibold text-primary" id="otpMobileDisplay">+91 ••••••••••</span></p>
+        <p class="text-on-surface-variant text-sm">Enter the 6-digit code sent to <span class="font-semibold text-primary" id="otpMobileDisplay">+91 ••••••••••</span></p>
       </div>
 
-      <div class="flex justify-center gap-3 mb-2" id="otpContainer">
+      <div class="flex justify-center gap-2 mb-2" id="otpContainer">
         <input type="text" maxlength="1" class="otp-input" data-index="0" inputmode="numeric" pattern="[0-9]" />
         <input type="text" maxlength="1" class="otp-input" data-index="1" inputmode="numeric" pattern="[0-9]" />
         <input type="text" maxlength="1" class="otp-input" data-index="2" inputmode="numeric" pattern="[0-9]" />
         <input type="text" maxlength="1" class="otp-input" data-index="3" inputmode="numeric" pattern="[0-9]" />
+        <input type="text" maxlength="1" class="otp-input" data-index="4" inputmode="numeric" pattern="[0-9]" />
+        <input type="text" maxlength="1" class="otp-input" data-index="5" inputmode="numeric" pattern="[0-9]" />
       </div>
       <p class="text-xs text-center text-on-surface-variant/60 mb-6" id="otpError"></p>
 
@@ -268,6 +271,32 @@
       </div>
     </div>
   </div>
+
+  <!-- Firebase Modular Scripts -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBq96Czle8LDriS1ZyQYwFaWU6KmrsbVBg",
+      authDomain: "teamsvastrino-project1.firebaseapp.com",
+      projectId: "teamsvastrino-project1",
+      storageBucket: "teamsvastrino-project1.firebasestorage.app",
+      messagingSenderId: "734870958660",
+      appId: "1:734870958660:web:1f00f163110943331f4211",
+      measurementId: "G-1J5HG40VGM"
+    };
+
+    // Initialize Firebase
+    window.firebaseApp = initializeApp(firebaseConfig);
+    window.firebaseAuth = getAuth(firebaseApp);
+    window.firebaseAnalytics = getAnalytics(window.firebaseApp);
+    
+    window.RecaptchaVerifier = RecaptchaVerifier;
+    window.signInWithPhoneNumber = signInWithPhoneNumber;
+  </script>
 
   <script>
     // ─── QUESTIONS DATA ───
@@ -503,6 +532,20 @@
       document.getElementById('mobileError').textContent = '';
     });
 
+    let confirmationResult = null;
+    let recaptchaVerifier = null;
+
+    function initRecaptcha() {
+      if (!recaptchaVerifier) {
+        recaptchaVerifier = new window.RecaptchaVerifier(window.firebaseAuth, 'recaptcha-container', {
+          'size': 'invisible',
+          'callback': (response) => {
+             // reCAPTCHA solved
+          }
+        });
+      }
+    }
+
     function sendOtp() {
       mobileNumber = mobileInput.value;
       if (mobileNumber.length !== 10) {
@@ -513,19 +556,34 @@
       sendOtpBtn.textContent = 'Sending...';
       sendOtpBtn.disabled = true;
 
-      // Simulate OTP send
-      setTimeout(() => {
-        document.getElementById('mobileModal').classList.remove('show');
-        sendOtpBtn.textContent = 'Send OTP';
+      initRecaptcha();
+      const phoneNumber = '+91' + mobileNumber;
 
-        // Show OTP modal
-        setTimeout(() => {
+      window.signInWithPhoneNumber(window.firebaseAuth, phoneNumber, recaptchaVerifier)
+        .then((result) => {
+          confirmationResult = result;
+          document.getElementById('mobileModal').classList.remove('show');
+          sendOtpBtn.textContent = 'Send OTP';
+          sendOtpBtn.disabled = false;
+
           document.getElementById('otpMobileDisplay').textContent = '+91 ' + mobileNumber.slice(0, 2) + '••••' + mobileNumber.slice(-4);
           document.getElementById('otpModal').classList.add('show');
           document.querySelectorAll('.otp-input')[0].focus();
           startResendTimer();
-        }, 300);
-      }, 1200);
+        }).catch((error) => {
+          console.error(error);
+          document.getElementById('mobileError').textContent = error.message;
+          sendOtpBtn.textContent = 'Send OTP';
+          sendOtpBtn.disabled = false;
+          // Reset recaptcha if possible
+          if(recaptchaVerifier) {
+            try {
+              recaptchaVerifier.render().then(function(widgetId) {
+                grecaptcha.reset(widgetId);
+              });
+            } catch(e) {}
+          }
+        });
     }
 
     // ─── OTP HANDLING ───
@@ -555,14 +613,14 @@
       // Handle paste
       input.addEventListener('paste', (e) => {
         e.preventDefault();
-        const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 4);
+        const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
         pasted.split('').forEach((char, i) => {
           if (otpInputs[i]) {
             otpInputs[i].value = char;
             otpInputs[i].classList.add('filled');
           }
         });
-        if (pasted.length > 0) otpInputs[Math.min(pasted.length, 3)].focus();
+        if (pasted.length > 0) otpInputs[Math.min(pasted.length - 1, 5)].focus();
         checkOtpFilled();
       });
     });
@@ -578,13 +636,24 @@
       verifyOtpBtn.textContent = 'Verifying...';
       verifyOtpBtn.disabled = true;
 
-      // Simulate verification
-      setTimeout(() => {
-        // Accept any 4-digit OTP for demo
+      if (!confirmationResult) {
+        document.getElementById('otpError').textContent = 'Session expired. Please request a new OTP.';
+        verifyOtpBtn.textContent = 'Verify & Get Results';
+        verifyOtpBtn.disabled = false;
+        return;
+      }
+
+      confirmationResult.confirm(otp).then((result) => {
+        // User signed in successfully.
+        const user = result.user;
         document.getElementById('otpModal').classList.remove('show');
-        // Redirect to portal hub with success flag
         window.location.href = 'psychometric-test.html?completed=true';
-      }, 1500);
+      }).catch((error) => {
+        console.error(error);
+        document.getElementById('otpError').textContent = 'Invalid OTP. Please try again.';
+        verifyOtpBtn.textContent = 'Verify & Get Results';
+        verifyOtpBtn.disabled = false;
+      });
     }
 
     function startResendTimer() {
@@ -606,12 +675,10 @@
     }
 
     function resendOtp() {
-      document.getElementById('otpError').textContent = 'New OTP sent!';
+      document.getElementById('otpError').textContent = 'Sending new OTP...';
       document.getElementById('otpError').style.color = '#16a34a';
-      startResendTimer();
-      setTimeout(() => {
-        document.getElementById('otpError').textContent = '';
-      }, 3000);
+      document.getElementById('otpModal').classList.remove('show');
+      sendOtp();
     }
 
     // ─── TIMER ───
