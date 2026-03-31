@@ -613,15 +613,23 @@
         6: 'A',
         7: 'D'
       };
-      
-      let calculatedScore = 0;
-      for (const [qIndex, choice] of Object.entries(answers)) {
-        if (correctAnswers[qIndex] === choice) {
-          calculatedScore++;
+
+      function calculateScore(userAnswers) {
+        let score = 0;
+        for (const [qIndex, choice] of Object.entries(userAnswers)) {
+          if (correctAnswers[qIndex] === choice) {
+            score++;
+          }
         }
+        return Math.round((score / 8) * 100);
       }
-      
-      const percentageScore = Math.round((calculatedScore / 8) * 100);
+
+      console.log("User Answers:", answers);
+      console.log("Correct Answers:", correctAnswers);
+      console.log("Calculated Score:", calculateScore(answers));
+
+      const percentageScore = calculateScore(answers);
+
 
       try {
         const response = await fetch('/api/test-results', {
