@@ -274,30 +274,12 @@
     </div>
   </div>
 
-  <!-- Firebase Modular Scripts -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
-    import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-analytics.js";
-
-    // Firebase Configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyBq96Czle8LDriS1ZyQYwFaWU6KmrsbVBg",
-      authDomain: "teamsvastrino-project1.firebaseapp.com",
-      projectId: "teamsvastrino-project1",
-      storageBucket: "teamsvastrino-project1.firebasestorage.app",
-      messagingSenderId: "734870958660",
-      appId: "1:734870958660:web:1f00f163110943331f4211",
-      measurementId: "G-1J5HG40VGM"
-    };
-
-    // Initialize Firebase
-    window.firebaseApp = initializeApp(firebaseConfig);
-    window.firebaseAuth = getAuth(firebaseApp);
-    window.firebaseAnalytics = getAnalytics(window.firebaseApp);
-    
-    window.RecaptchaVerifier = RecaptchaVerifier;
-    window.signInWithPhoneNumber = signInWithPhoneNumber;
+  <!-- Supabase SDK via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = 'https://yrwpvekpafzkqowrtloi.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlyd3B2ZWtwYWZ6a3Fvd3J0bG9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODY3MDEsImV4cCI6MjA5MDQ2MjcwMX0.XjantcbriIik1OCzikksTjOfTlIzqodoD4zA85Fw-gY';
+    window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
   </script>
 
   <script>
@@ -425,17 +407,13 @@
     // ─── SELECT OPTION ───
     function selectOption(qIndex, letter, btn) {
       answers[qIndex] = letter;
-      // Clear previous selection in this question
       const card = btn.closest('.question-card');
       card.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
-      // Enable next button
       document.getElementById('nextBtn').disabled = false;
-      // Auto-advance after brief delay (except last question)
       if (qIndex < questions.length - 1) {
         setTimeout(() => nextQuestion(), 500);
       } else {
-        // Last question: change next button to "Finish"
         const nextBtn = document.getElementById('nextBtn');
         nextBtn.innerHTML = 'Finish <span class="material-symbols-outlined text-sm">check</span>';
       }
@@ -444,30 +422,25 @@
     // ─── NAVIGATION ───
     function nextQuestion() {
       if (answers[currentQuestion] === undefined) return;
-
       if (currentQuestion === questions.length - 1) {
         finishTest();
         return;
       }
-
       const cards = document.querySelectorAll('.question-card');
       cards[currentQuestion].classList.remove('active');
       cards[currentQuestion].classList.add('exit-left');
       currentQuestion++;
       cards[currentQuestion].classList.add('active');
-
       updateUI();
     }
 
     function prevQuestion() {
       if (currentQuestion === 0) return;
-
       const cards = document.querySelectorAll('.question-card');
       cards[currentQuestion].classList.remove('active');
       currentQuestion--;
       cards[currentQuestion].classList.remove('exit-left');
       cards[currentQuestion].classList.add('active');
-
       updateUI();
     }
 
@@ -479,7 +452,6 @@
       document.getElementById('prevBtn').disabled = currentQuestion === 0;
       document.getElementById('nextBtn').disabled = answers[currentQuestion] === undefined;
 
-      // Update next button text
       const nextBtn = document.getElementById('nextBtn');
       if (currentQuestion === questions.length - 1) {
         nextBtn.innerHTML = answers[currentQuestion] !== undefined
@@ -493,14 +465,10 @@
     // ─── FINISH TEST ───
     function finishTest() {
       clearInterval(timerInterval);
-      // Set progress to 100%
       document.getElementById('progressBar').style.width = '100%';
       document.getElementById('progressPercent').textContent = '100%';
-      // Hide nav buttons
       document.getElementById('navButtons').style.display = 'none';
-      // Show confetti
       createConfetti();
-      // Show mobile modal after brief delay
       setTimeout(() => {
         document.getElementById('mobileModal').classList.add('show');
       }, 800);
@@ -524,7 +492,7 @@
       }
     }
 
-    // ─── MOBILE NUMBER ───
+    // ─── MOBILE NUMBER & OTP (SUPABASE) ───
     const mobileInput = document.getElementById('mobileInput');
     const sendOtpBtn = document.getElementById('sendOtpBtn');
 
@@ -534,21 +502,7 @@
       document.getElementById('mobileError').textContent = '';
     });
 
-    let confirmationResult = null;
-    let recaptchaVerifier = null;
-
-    function initRecaptcha() {
-      if (!recaptchaVerifier) {
-        recaptchaVerifier = new window.RecaptchaVerifier(window.firebaseAuth, 'recaptcha-container', {
-          'size': 'invisible',
-          'callback': (response) => {
-             // reCAPTCHA solved
-          }
-        });
-      }
-    }
-
-    function sendOtp() {
+    async function sendOtp() {
       mobileNumber = mobileInput.value;
       if (mobileNumber.length !== 10) {
         document.getElementById('mobileError').textContent = 'Please enter a valid 10-digit mobile number';
@@ -558,34 +512,28 @@
       sendOtpBtn.textContent = 'Sending...';
       sendOtpBtn.disabled = true;
 
-      initRecaptcha();
-      const phoneNumber = '+91' + mobileNumber;
+      const phoneString = '+91' + mobileNumber;
 
-      window.signInWithPhoneNumber(window.firebaseAuth, phoneNumber, recaptchaVerifier)
-        .then((result) => {
-          confirmationResult = result;
-          document.getElementById('mobileModal').classList.remove('show');
-          sendOtpBtn.textContent = 'Send OTP';
-          sendOtpBtn.disabled = false;
+      const { data, error } = await window.supabaseClient.auth.signInWithOtp({
+        phone: phoneString,
+      });
 
-          document.getElementById('otpMobileDisplay').textContent = '+91 ' + mobileNumber.slice(0, 2) + '••••' + mobileNumber.slice(-4);
-          document.getElementById('otpModal').classList.add('show');
-          document.querySelectorAll('.otp-input')[0].focus();
-          startResendTimer();
-        }).catch((error) => {
-          console.error(error);
-          document.getElementById('mobileError').textContent = error.message;
-          sendOtpBtn.textContent = 'Send OTP';
-          sendOtpBtn.disabled = false;
-          // Reset recaptcha if possible
-          if(recaptchaVerifier) {
-            try {
-              recaptchaVerifier.render().then(function(widgetId) {
-                grecaptcha.reset(widgetId);
-              });
-            } catch(e) {}
-          }
-        });
+      if (error) {
+        console.error(error);
+        document.getElementById('mobileError').textContent = error.message;
+        sendOtpBtn.textContent = 'Send OTP';
+        sendOtpBtn.disabled = false;
+        return;
+      }
+
+      document.getElementById('mobileModal').classList.remove('show');
+      sendOtpBtn.textContent = 'Send OTP';
+      sendOtpBtn.disabled = false;
+
+      document.getElementById('otpMobileDisplay').textContent = '+91 ' + mobileNumber.slice(0, 2) + '••••' + mobileNumber.slice(-4);
+      document.getElementById('otpModal').classList.add('show');
+      document.querySelectorAll('.otp-input')[0].focus();
+      startResendTimer();
     }
 
     // ─── OTP HANDLING ───
@@ -632,36 +580,78 @@
       verifyOtpBtn.disabled = !filled;
     }
 
-    function verifyOtp() {
+    async function verifyOtp() {
       const otp = Array.from(otpInputs).map(i => i.value).join('');
       document.getElementById('otpError').textContent = '';
       verifyOtpBtn.textContent = 'Verifying...';
       verifyOtpBtn.disabled = true;
 
-      if (!confirmationResult) {
-        document.getElementById('otpError').textContent = 'Session expired. Please request a new OTP.';
+      const phoneString = '+91' + mobileNumber;
+
+      const { data: { session, user }, error } = await window.supabaseClient.auth.verifyOtp({
+        phone: phoneString,
+        token: otp,
+        type: 'sms'
+      });
+
+      if (error) {
+        console.error(error);
+        document.getElementById('otpError').textContent = 'Invalid OTP. Please try again.';
         verifyOtpBtn.textContent = 'Verify & Get Results';
         verifyOtpBtn.disabled = false;
         return;
       }
 
-      confirmationResult.confirm(otp).then((result) => {
-        // User signed in successfully.
-        const user = result.user;
+      // User verified successfully. Send results to REST API.
+      const correctAnswers = {
+        0: 'C',
+        1: 'A',
+        2: 'B',
+        3: 'C',
+        4: 'C',
+        5: 'B',
+        6: 'A',
+        7: 'D'
+      };
+      
+      let calculatedScore = 0;
+      for (const [qIndex, choice] of Object.entries(answers)) {
+        if (correctAnswers[qIndex] === choice) {
+          calculatedScore++;
+        }
+      }
+      
+      const percentageScore = Math.round((calculatedScore / 8) * 100);
+
+      try {
+        const response = await fetch('/api/test-results', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_id: user ? user.id : "anonymous",
+            phone: phoneString,
+            answers: answers,
+            score: percentageScore
+          })
+        });
+
+        if (!response.ok) {
+           throw new Error("Failed to save results on server.");
+        }
+        
+        // Securely store for dashboard retrieval
+        localStorage.setItem('userPhone', phoneString);
+        
+        // Success: Only now we redirect
         document.getElementById('otpModal').classList.remove('show');
-<<<<<<< HEAD
-        window.location.href = 'psychometric-test.html?completed=true';
-      }).catch((error) => {
-        console.error(error);
-        document.getElementById('otpError').textContent = 'Invalid OTP. Please try again.';
+        window.location.href = 'dashboard.html';
+
+      } catch (e) {
+        console.error("Critical: Failed to save test results:", e);
+        document.getElementById('otpError').textContent = "Server error saving results. Please try again.";
         verifyOtpBtn.textContent = 'Verify & Get Results';
         verifyOtpBtn.disabled = false;
-      });
-=======
-        // Redirect to freemium homepage
-        window.location.href = 'dashboard.html';
-      }, 1500);
->>>>>>> 7a08f9b664da58079c7e56d06cfd30aff35f13f6
+      }
     }
 
     function startResendTimer() {

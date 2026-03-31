@@ -275,20 +275,20 @@
               </button>
             </div>
             
-            <!-- Radial Score -->
+             <!-- Radial Score -->
             <div class="shrink-0 flex flex-col items-center justify-center self-center md:self-auto pb-4 md:pb-0">
               <div class="w-28 h-28 lg:w-36 lg:h-36 rounded-full border border-white/20 bg-white/10 backdrop-blur-sm flex items-center justify-center relative overflow-hidden shadow-2xl">
                  <svg class="absolute inset-0 w-full h-full transform -rotate-90">
                    <circle cx="50%" cy="50%" r="45%" stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none"></circle>
-                   <circle cx="50%" cy="50%" r="45%" stroke="white" stroke-width="4" fill="none" class="opacity-100" stroke-dasharray="283" stroke-dashoffset="62" stroke-linecap="round"></circle>
+                   <circle id="scoreCircle" cx="50%" cy="50%" r="45%" stroke="white" stroke-width="4" fill="none" class="opacity-100 transition-all duration-[1500ms] ease-out" stroke-dasharray="283" stroke-dashoffset="283" stroke-linecap="round"></circle>
                  </svg>
                  <div class="text-center relative z-10 flex flex-col items-center">
-                   <div class="text-4xl lg:text-5xl font-black font-headline tracking-tighter leading-none mb-1 text-white">78</div>
+                   <div id="testScoreDisplay" class="text-4xl lg:text-5xl font-black font-headline tracking-tighter leading-none mb-1 text-white">--</div>
                    <div class="w-8 h-[1px] bg-white/30"></div>
-                   <div class="text-[10px] lg:text-xs font-bold font-mono opacity-80 mt-1">100</div>
+                   <div class="text-[10px] lg:text-xs font-bold font-mono opacity-80 mt-1">%</div>
                  </div>
               </div>
-              <span class="text-[10px] tracking-widest uppercase opacity-70 font-black mt-4 text-center leading-tight">Sample<br>score</span>
+              <span id="scoreLabel" class="text-[10px] tracking-widest uppercase opacity-70 font-black mt-4 text-center leading-tight">You<br>scored</span>
             </div>
           </div>
         </div>
@@ -780,6 +780,92 @@
         calendarGrid.appendChild(dayCell);
       }
     }
+  </script>
+
+  <!-- Supabase Data Fetching -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = 'https://yrwpvekpafzkqowrtloi.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlyd3B2ZWtwYWZ6a3Fvd3J0bG9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODY3MDEsImV4cCI6MjA5MDQ2MjcwMX0.XjantcbriIik1OCzikksTjOfTlIzqodoD4zA85Fw-gY';
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function loadTestScore() {
+      // Step 1: Find elements with a slight retry in case they haven't rendered yet
+      const findElements = () => {
+        return {
+          display: document.getElementById('testScoreDisplay'),
+          circle: document.getElementById('scoreCircle'),
+          label: document.getElementById('scoreLabel')
+        };
+      };
+
+      let elements = findElements();
+      if (!elements.display) {
+        console.warn("Retrying UI element lookup in 500ms...");
+        await new Promise(r => setTimeout(r, 500));
+        elements = findElements();
+      }
+
+      if (!elements.display) {
+        console.error("Critical: Could not find score UI elements in the current view.");
+        return;
+      }
+
+      console.log("--- Score Load Start ---");
+      let phone = localStorage.getItem('userPhone');
+      
+      if (!phone) {
+          const { data: { user } } = await supabaseClient.auth.getUser();
+          if (user) {
+              phone = user.phone || user.identities?.[0]?.identity_data?.phone || null;
+          }
+      }
+      
+      if (!phone) {
+        console.log("No phone found. Showing default state.");
+        elements.display.textContent = "--";
+        return;
+      }
+
+      let phoneToQuery = phone.startsWith('+') ? phone : '+' + phone;
+      console.log("Querying Supabase for phone:", phoneToQuery);
+      
+      try {
+        const { data, error } = await supabaseClient
+          .from('free_test_attempts')
+          .select('score')
+          .eq('phone', phoneToQuery)
+          .order('created_at', { ascending: false })
+          .limit(1);
+          
+        if (error) throw error;
+          
+        if (data && data.length > 0) {
+          const score = data[0].score;
+          console.log("Found score:", score);
+          
+          elements.display.textContent = score;
+          elements.label.innerHTML = `You<br>scored ${score}%`;
+          
+          // Animate Circle
+          const fraction = Math.min(score / 100, 1);
+          const offset = 283 - (283 * fraction);
+          setTimeout(() => {
+             elements.circle.style.strokeDashoffset = offset;
+          }, 100);
+          
+        } else {
+          console.warn("No score record found in Supabase for this number.");
+          elements.display.textContent = "0";
+        }
+      } catch(err) {
+        console.error("Supabase query failed (Check RLS Policies):", err);
+        elements.display.textContent = "Err";
+      }
+    }
+
+    // Call on load
+    document.addEventListener("DOMContentLoaded", loadTestScore);
   </script>
 </body>
 </html>

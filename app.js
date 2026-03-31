@@ -103,16 +103,39 @@ function setupSignInForm() {
       return;
     }
 
-    // Simulate sign in
+    // Call API sign in
     const btn = document.getElementById('btnSignIn');
     btn.textContent = 'Signing in…';
     btn.disabled = true;
 
-    setTimeout(() => {
+    fetch('/api/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    })
+    .then(async res => {
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.detail || 'Login failed');
+      }
+      return res.json();
+    })
+    .then(data => {
       showToast('Signed in successfully! 🎉', 'success');
+      // Set to premium state simulation for now or base it on API res
+      import('./freemium-state.js').then(module => {
+         module.appState.isPremium = true;
+         module.appState.save();
+      });
+      setTimeout(() => {
+        window.location.href = 'dashboard.html';
+      }, 1000);
+    })
+    .catch(err => {
+      showToast(err.message, 'error');
       btn.textContent = 'Sign In';
       btn.disabled = false;
-    }, 1500);
+    });
   });
 }
 
@@ -150,16 +173,34 @@ function setupSignUpForm() {
       return;
     }
 
-    // Simulate sign up
+    // Call API sign up
     const btn = document.getElementById('btnSignUp');
     btn.textContent = 'Creating account…';
     btn.disabled = true;
 
-    setTimeout(() => {
+    fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName, lastName, email, password })
+    })
+    .then(async res => {
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.detail || 'Sign up failed');
+      }
+      return res.json();
+    })
+    .then(data => {
       showToast('Account created successfully! 🎉', 'success');
+      setTimeout(() => {
+        window.location.href = 'signin.html';
+      }, 1000);
+    })
+    .catch(err => {
+      showToast(err.message, 'error');
       btn.textContent = 'Create Account';
       btn.disabled = false;
-    }, 1500);
+    });
   });
 }
 
