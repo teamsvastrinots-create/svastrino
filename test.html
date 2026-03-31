@@ -58,6 +58,8 @@
       transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
       pointer-events: none;
       position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
     }
     .question-card.active {
@@ -190,7 +192,7 @@
   </div>
 
   <!-- Test Container -->
-  <main class="max-w-[700px] mx-auto px-6 pt-8 pb-24 relative" id="testContainer">
+  <main class="max-w-[700px] mx-auto px-6 flex flex-col justify-center min-h-[calc(100vh-160px)] pt-8 pb-32 relative" id="testContainer">
     <!-- Questions will be rendered by JS -->
   </main>
 
@@ -303,90 +305,90 @@
     const questions = [
       {
         id: 1,
-        category: "Personality",
-        question: "When faced with a complex problem, what is your first instinct?",
+        category: "Logical Sequence",
+        question: "Look at the following series: 2, 6, 12, 20, ... What number should come next in the sequence?",
         options: [
-          { letter: "A", text: "Break it down into smaller, logical steps" },
-          { letter: "B", text: "Brainstorm creative and unconventional solutions" },
-          { letter: "C", text: "Discuss it with others to get diverse perspectives" },
-          { letter: "D", text: "Research thoroughly before making a move" }
+          { letter: "A", text: "24" },
+          { letter: "B", text: "28" },
+          { letter: "C", text: "30" },
+          { letter: "D", text: "32" }
         ]
       },
       {
         id: 2,
-        category: "Work Style",
-        question: "Which work environment makes you feel most productive?",
+        category: "Deductive Reasoning",
+        question: "Read the following statements:<br><br>All birds lay eggs.<br>A swan is a bird.<br>Therefore, a swan lays eggs.<br><br>Based strictly on the statements above, this conclusion is:",
         options: [
-          { letter: "A", text: "A quiet, structured office with clear routines" },
-          { letter: "B", text: "A vibrant, open space with lots of energy" },
-          { letter: "C", text: "Remote work with flexible hours" },
-          { letter: "D", text: "A lab or workshop where I can experiment" }
+          { letter: "A", text: "True" },
+          { letter: "B", text: "False" },
+          { letter: "C", text: "Only true depending on the season" },
+          { letter: "D", text: "Cannot be determined" }
         ]
       },
       {
         id: 3,
-        category: "Values",
-        question: "What matters most to you in a career?",
+        category: "Spatial Reasoning",
+        question: "If you fold a standard square piece of paper in half to make a rectangle, and then fold it in half again to make a smaller square, how many layers of paper thick is the final small square?",
         options: [
-          { letter: "A", text: "Financial stability and growth potential" },
-          { letter: "B", text: "Creative freedom and self-expression" },
-          { letter: "C", text: "Making a positive impact on society" },
-          { letter: "D", text: "Continuous learning and intellectual challenge" }
+          { letter: "A", text: "2 layers" },
+          { letter: "B", text: "4 layers" },
+          { letter: "C", text: "6 layers" },
+          { letter: "D", text: "8 layers" }
         ]
       },
       {
         id: 4,
-        category: "Strengths",
-        question: "Which skill comes most naturally to you?",
+        category: "Word Analogies",
+        question: "Hot is to Cold as Joy is to:",
         options: [
-          { letter: "A", text: "Analyzing data and spotting patterns" },
-          { letter: "B", text: "Persuading and inspiring others" },
-          { letter: "C", text: "Organizing projects and managing timelines" },
-          { letter: "D", text: "Designing and visualizing concepts" }
+          { letter: "A", text: "Anger" },
+          { letter: "B", text: "Excitement" },
+          { letter: "C", text: "Sorrow" },
+          { letter: "D", text: "Peace" }
         ]
       },
       {
         id: 5,
-        category: "Leadership",
-        question: "In a team project, you naturally tend to...",
+        category: "Word Classification",
+        question: "Which of the following words does not belong with the others?",
         options: [
-          { letter: "A", text: "Take charge and delegate responsibilities" },
-          { letter: "B", text: "Contribute ideas and support the leader" },
-          { letter: "C", text: "Mediate conflicts and keep morale high" },
-          { letter: "D", text: "Focus on the technical execution" }
+          { letter: "A", text: "Apple" },
+          { letter: "B", text: "Banana" },
+          { letter: "C", text: "Carrot" },
+          { letter: "D", text: "Orange" }
         ]
       },
       {
         id: 6,
-        category: "Interests",
-        question: "Which of these activities excites you the most?",
+        category: "Time and Distance",
+        question: "If a train travels 120 kilometers in 2 hours at a steady pace, what is its average speed per hour?",
         options: [
-          { letter: "A", text: "Building something from scratch — an app, a business, a prototype" },
-          { letter: "B", text: "Writing, storytelling, or creating content" },
-          { letter: "C", text: "Helping people solve personal or health problems" },
-          { letter: "D", text: "Crunching numbers and finding hidden insights in data" }
+          { letter: "A", text: "50 km/h" },
+          { letter: "B", text: "60 km/h" },
+          { letter: "C", text: "100 km/h" },
+          { letter: "D", text: "240 km/h" }
         ]
       },
       {
         id: 7,
-        category: "Decision Making",
-        question: "When making important decisions, you rely most on...",
+        category: "Logical Math",
+        question: "A bat and a ball together cost ₹110. The bat costs exactly ₹100 more than the ball. How much does the ball cost?",
         options: [
-          { letter: "A", text: "Logic, facts, and evidence" },
-          { letter: "B", text: "Gut feeling and intuition" },
-          { letter: "C", text: "Advice from people I trust" },
-          { letter: "D", text: "Weighing all possible outcomes carefully" }
+          { letter: "A", text: "₹5" },
+          { letter: "B", text: "₹10" },
+          { letter: "C", text: "₹15" },
+          { letter: "D", text: "₹20" }
         ]
       },
       {
         id: 8,
-        category: "Future Vision",
-        question: "In 10 years, where do you see yourself?",
+        category: "Real-World Scenario",
+        question: "You find a lost wallet in the school hallway. It has money and a student ID card inside. What is the most appropriate course of action?",
         options: [
-          { letter: "A", text: "Leading a company or managing a large team" },
-          { letter: "B", text: "Working independently on passion projects" },
-          { letter: "C", text: "Being a recognized expert in my field" },
-          { letter: "D", text: "Traveling and working across different cultures" }
+          { letter: "A", text: "Keep the money and throw the wallet back on the floor." },
+          { letter: "B", text: "Leave it exactly where it is so the owner can come back and find it." },
+          { letter: "C", text: "Try to track down the person yourself by asking everyone walking by." },
+          { letter: "D", text: "Hand it over to the school's main office or a trusted teacher immediately." }
         ]
       }
     ];
@@ -394,7 +396,7 @@
     // ─── STATE ───
     let currentQuestion = 0;
     let answers = {};
-    let timerSeconds = 0;
+    let timerSeconds = 180; // 3 minutes
     let timerInterval = null;
     let resendInterval = null;
     let mobileNumber = '';
@@ -647,6 +649,7 @@
         // User signed in successfully.
         const user = result.user;
         document.getElementById('otpModal').classList.remove('show');
+<<<<<<< HEAD
         window.location.href = 'psychometric-test.html?completed=true';
       }).catch((error) => {
         console.error(error);
@@ -654,6 +657,11 @@
         verifyOtpBtn.textContent = 'Verify & Get Results';
         verifyOtpBtn.disabled = false;
       });
+=======
+        // Redirect to freemium homepage
+        window.location.href = 'dashboard.html';
+      }, 1500);
+>>>>>>> 7a08f9b664da58079c7e56d06cfd30aff35f13f6
     }
 
     function startResendTimer() {
@@ -684,10 +692,21 @@
     // ─── TIMER ───
     function startTimer() {
       timerInterval = setInterval(() => {
-        timerSeconds++;
+        timerSeconds--;
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          timerSeconds = 0;
+          finishTest(); // Auto-finish when time's up
+        }
         const m = Math.floor(timerSeconds / 60);
         const s = timerSeconds % 60;
         document.getElementById('timerDisplay').textContent = `${m}:${s.toString().padStart(2, '0')}`;
+        
+        // Visual warning for last 30 seconds
+        if (timerSeconds < 30) {
+          document.getElementById('timerDisplay').style.color = '#ba1a1a';
+          document.getElementById('timerDisplay').style.fontWeight = 'bold';
+        }
       }, 1000);
     }
 
