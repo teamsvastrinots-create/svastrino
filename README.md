@@ -44,3 +44,24 @@ svastrino/
 - **Landing Page** → `http://localhost:3000/`
 - **Sign In** → `http://localhost:3000/signin.html`
 - **Sign Up** → `http://localhost:3000/signup.html`
+
+## 🗄️ Backend & Database Architecture
+
+The project now includes a backend infrastructure connected to **Supabase** (PostgreSQL) managed via SQLAlchemy.
+
+### Connection
+Database configuration is managed in `database.py` via an environment variable `DATABASE_URL` that connects the app via SQLAlchemy Engine.
+
+### Existing Tables/Models
+The following database tables have been defined in `models.py`:
+
+- **`users`**: Manages user accounts (name, email, phone, free/paid status).
+- **`psychometric_results`**: Stores the results from the psychometric tests (trait scores, matching careers, strengths, overall score).
+- **`courses`**: Stores the core learning pathways and programs.
+- **`course_enrollments`**: Associates users to courses and tracks their percentage progress.
+- **`weeks`**: Sub-sections for courses to structure the progression path.
+- **`tasks`**: Individual tasks (videos, worksheets, PDFs) belonging to a specific week.
+- **`task_completions`**: Associates a user with completed tasks to track daily and weekly progress.
+- **`webinars`**: Schedules upcoming live mentoring/webinar sessions.
+- **`webinar_registrations`**: Connects users to webinars they have opted into.
+
