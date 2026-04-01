@@ -512,19 +512,11 @@
       sendOtpBtn.textContent = 'Sending...';
       sendOtpBtn.disabled = true;
 
-      const phoneString = '+91' + mobileNumber;
-
-      const { data, error } = await window.supabaseClient.auth.signInWithOtp({
-        phone: phoneString,
-      });
-
-      if (error) {
-        console.error(error);
-        document.getElementById('mobileError').textContent = error.message;
-        sendOtpBtn.textContent = 'Send OTP';
-        sendOtpBtn.disabled = false;
-        return;
-      }
+      // --- MOCK OTP FLOW ---
+      console.log("Mock OTP: Skipping Supabase signInWithOtp");
+      
+      // Simulate a small delay for "Realism"
+      await new Promise(resolve => setTimeout(resolve, 500));
 
       document.getElementById('mobileModal').classList.remove('show');
       sendOtpBtn.textContent = 'Send OTP';
@@ -535,6 +527,7 @@
       document.querySelectorAll('.otp-input')[0].focus();
       startResendTimer();
     }
+
 
     // ─── OTP HANDLING ───
     const otpInputs = document.querySelectorAll('.otp-input');
@@ -588,19 +581,15 @@
 
       const phoneString = '+91' + mobileNumber;
 
-      const { data: { session, user }, error } = await window.supabaseClient.auth.verifyOtp({
-        phone: phoneString,
-        token: otp,
-        type: 'sms'
-      });
 
-      if (error) {
-        console.error(error);
-        document.getElementById('otpError').textContent = 'Invalid OTP. Please try again.';
-        verifyOtpBtn.textContent = 'Verify & Get Results';
-        verifyOtpBtn.disabled = false;
-        return;
-      }
+      // --- MOCK OTP FLOW ---
+      console.log("Mock OTP: Skipping Supabase verifyOtp validation");
+      
+      // Simulate a small delay
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      const user = { id: "anonymous-" + Date.now() }; // Mock user object
+
 
       // User verified successfully. Send results to REST API.
       const correctAnswers = {
