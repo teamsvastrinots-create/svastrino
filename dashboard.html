@@ -270,7 +270,7 @@
                 </span>
               </div>
               
-              <button class="w-full sm:w-auto px-8 py-3.5 bg-white text-primary font-extrabold rounded-xl transition-all active:scale-95 text-sm shadow-lg hover:shadow-xl">
+              <button onclick="openPdfModal()" class="w-full sm:w-auto px-8 py-3.5 bg-white text-primary font-extrabold rounded-xl transition-all active:scale-95 text-sm shadow-lg hover:shadow-xl">
                 Unlock full report
               </button>
             </div>
@@ -780,6 +780,529 @@
         calendarGrid.appendChild(dayCell);
       }
     }
+  </script>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- Personal Details Capture Modal             -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="profile-modal" class="hidden fixed inset-0 z-[60] flex items-center justify-center bg-zinc-900/40 backdrop-blur-[20px] p-4">
+    <div class="bg-white w-full max-w-md rounded-2xl shadow-[0_24px_64px_rgba(0,0,0,0.22)] border border-outline-variant/20 overflow-hidden">
+      <!-- Header -->
+      <div class="px-7 pt-7 pb-5 border-b border-outline-variant/10">
+        <div class="flex items-center gap-3 mb-1">
+          <div class="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary text-[18px]" style="font-variation-settings:'FILL' 1">badge</span>
+          </div>
+          <h2 class="font-headline text-xl font-bold text-on-surface tracking-tight">Personal Details</h2>
+        </div>
+        <p class="text-xs text-on-surface-variant mt-1 ml-11">This will be used to personalize your sample career report.</p>
+      </div>
+      <!-- Form Body -->
+      <div class="px-7 py-6 space-y-5">
+        <!-- Full Name -->
+        <div>
+          <label class="block text-[11px] font-bold text-primary uppercase tracking-widest mb-1.5">Full Name</label>
+          <input id="prof-name" type="text" placeholder="e.g. Rahul Sharma"
+            class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-xl px-4 py-3 text-sm text-on-surface font-medium placeholder:text-outline-variant/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition" />
+        </div>
+        <!-- Phone -->
+        <div>
+          <label class="block text-[11px] font-bold text-primary uppercase tracking-widest mb-1.5">Phone Number</label>
+          <input id="prof-phone" type="tel" placeholder="+91 98765 43210"
+            class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-xl px-4 py-3 text-sm text-on-surface font-medium placeholder:text-outline-variant/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition" />
+        </div>
+        <!-- Class & City -->
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-[11px] font-bold text-primary uppercase tracking-widest mb-1.5">Class</label>
+            <div class="relative">
+              <select id="prof-class"
+                class="w-full appearance-none bg-surface-container-lowest border border-outline-variant/40 rounded-xl px-4 py-3 text-sm text-on-surface font-medium focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition cursor-pointer pr-9">
+                <option value="Class 9">Class 9</option>
+                <option value="Class 10">Class 10</option>
+                <option value="Class 11" selected>Class 11</option>
+                <option value="Class 12">Class 12</option>
+                <option value="Graduate">Graduate</option>
+              </select>
+              <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline text-[18px] pointer-events-none">expand_more</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-primary uppercase tracking-widest mb-1.5">City</label>
+            <input id="prof-city" type="text" placeholder="New Delhi"
+              class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-xl px-4 py-3 text-sm text-on-surface font-medium placeholder:text-outline-variant/60 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition" />
+          </div>
+        </div>
+      </div>
+      <!-- Footer -->
+      <div class="px-7 pb-7 pt-2">
+        <button onclick="saveProfileAndOpenPdf()"
+          class="w-full py-3.5 bg-primary text-white font-bold rounded-xl hover:opacity-90 active:scale-[0.98] transition-all text-sm shadow-sm flex items-center justify-center gap-2">
+          Save Profile
+          <span class="material-symbols-outlined text-lg">arrow_forward</span>
+        </button>
+        <p class="text-center text-[11px] text-on-surface-variant mt-3">Your details are used only for this sample report.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Freemium PDF Sample Document Overlay -->
+  <div id="pdf-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/40 backdrop-blur-[24px] w-full h-screen left-0 top-0 transition-opacity p-4 sm:p-8">
+    
+    <!-- Modal Container -->
+    <div class="bg-zinc-800/60 flex flex-col w-full max-w-5xl max-h-[93vh] rounded-[20px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-white/10 relative">
+      
+      <!-- Top actions bar -->
+      <div class="w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:px-6 bg-zinc-900/90 gap-4 shrink-0 shadow-sm z-10">
+        <div class="flex items-center gap-4 text-white">
+          <div class="bg-red-600 font-extrabold text-[10px] tracking-wider text-white rounded px-2 py-1.5 flex items-center justify-center select-none shadow-sm">
+            PDF
+          </div>
+          <div>
+            <h4 id="pdf-filename" class="font-[600] text-[14px] tracking-wide m-0 text-white leading-tight">Psychometric_Report_Sample.pdf</h4>
+            <p class="text-[11px] text-white/50 m-0 mt-0.5 tracking-wider uppercase font-bold">1 Apr 2026 &middot; Svastrino Career Intelligence</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+          <button onclick="downloadReportPDF()" class="bg-white/10 hover:bg-white/20 text-white/90 px-4 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 flex-shrink-0">
+            <span class="material-symbols-outlined text-[18px]">download</span> Download
+          </button>
+          <button onclick="shareReport()" class="bg-white/10 hover:bg-white/20 text-white/90 px-4 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 flex-shrink-0">
+            <span class="material-symbols-outlined text-[18px]">share</span> Share
+          </button>
+          <button onclick="closePdfModal()" class="text-white hover:text-white/70 transition-colors ml-4 p-2">
+            <span class="material-symbols-outlined text-[24px]">close</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- PDF Canvas wrapper (Scrollable area) -->
+      <div class="overflow-y-auto flex-grow w-full py-6 md:py-8 px-4 flex justify-center items-start">
+        
+        <!-- The Mock Document -->
+        <div id="report-document" class="bg-white max-w-[800px] w-full shadow-2xl flex flex-col relative font-body text-on-surface-variant group">
+        
+        <!-- Inner content padded area -->
+        <div class="p-8 sm:p-12 md:p-16 flex flex-col flex-grow select-none">
+          
+          <!-- Header -->
+          <div class="border-l-4 border-primary pl-4 mb-10">
+             <h5 class="text-[10px] font-[800] tracking-[0.2em] text-outline-variant mb-1 uppercase">SVASTRINO CAREER INTELLIGENCE REPORT</h5>
+             <p id="report-user-meta" class="text-sm font-[600] text-on-surface">Sample User &middot; Class 11 &middot; India &middot; Assessed: 1 Apr 2026</p>
+          </div>
+
+          <!-- Profile Title & Score -->
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 pb-8 border-b border-outline-variant/10 gap-6">
+             <div>
+                <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest mb-2">YOUR PERSONALITY TYPE</h6>
+                <h1 class="font-headline text-4xl lg:text-5xl font-[800] text-primary mb-3 text-on-surface">The Explorer</h1>
+                <p class="font-bold text-on-surface mb-3">Creative Problem-Solver &middot; Right-Brain Dominant</p>
+                <p class="text-sm text-on-surface-variant leading-relaxed max-w-xl">You think in big ideas, connect dots others miss, and thrive when given freedom to create. You bring originality to everything you touch.</p>
+             </div>
+             <div class="flex flex-col items-start md:items-end relative md:pt-4">
+                <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest mb-1">PROFILE SCORE</h6>
+                <div class="flex items-baseline text-[#6060c5]">
+                  <span class="font-headline text-5xl lg:text-6xl font-extrabold tracking-tighter">78</span>
+                  <span class="font-headline text-lg font-bold text-outline-variant ml-2 mt-2">/ 100</span>
+                </div>
+                <div class="mt-3 bg-[#f0f2ff] border border-primary/20 text-[#6060c5] text-[10px] uppercase font-bold px-3 py-1.5 rounded-full whitespace-nowrap">Top 8% of students</div>
+             </div>
+          </div>
+
+          <!-- Dimensions -->
+          <div class="mb-10">
+             <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest mb-6 border-b border-outline-variant/20 inline-block pb-1">PERSONALITY DIMENSIONS</h6>
+             
+             <div class="space-y-6">
+               <!-- Creativity -->
+               <div>
+                 <div class="flex justify-between items-center mb-1">
+                   <span class="font-[600] text-sm text-on-surface">Creativity</span>
+                   <span class="font-bold text-xs text-[#6060c5]">91%</span>
+                 </div>
+                 <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-1">
+                   <div class="bg-[#6060c5] h-full rounded-full w-[91%]"></div>
+                 </div>
+                 <p class="text-[11px] text-on-surface-variant">Ideas come naturally — you generate what others cannot imagine</p>
+               </div>
+               <!-- Empathy -->
+               <div>
+                 <div class="flex justify-between items-center mb-1">
+                   <span class="font-[600] text-sm text-on-surface">Empathy</span>
+                   <span class="font-bold text-xs text-[#006471]">82%</span>
+                 </div>
+                 <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-1">
+                   <div class="bg-[#008f86] h-full rounded-full w-[82%]"></div>
+                 </div>
+                 <p class="text-[11px] text-on-surface-variant">You read people and situations with rare accuracy</p>
+               </div>
+               <!-- Resilience -->
+               <div>
+                 <div class="flex justify-between items-center mb-1">
+                   <span class="font-[600] text-sm text-on-surface">Resilience</span>
+                   <span class="font-bold text-xs text-[#523da1]">77%</span>
+                 </div>
+                 <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-1">
+                   <div class="bg-[#523da1] h-full rounded-full w-[77%]"></div>
+                 </div>
+                 <p class="text-[11px] text-on-surface-variant">You recover fast and keep moving under pressure</p>
+               </div>
+               <!-- Logical Thinking -->
+               <div>
+                 <div class="flex justify-between items-center mb-1">
+                   <span class="font-[600] text-sm text-on-surface">Logical Thinking</span>
+                   <span class="font-bold text-xs text-blue-600">74%</span>
+                 </div>
+                 <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-1">
+                   <div class="bg-blue-600 h-full rounded-full w-[74%]"></div>
+                 </div>
+                 <p class="text-[11px] text-on-surface-variant">You back your instincts with structured reasoning</p>
+               </div>
+               <!-- Leadership -->
+               <div>
+                 <div class="flex justify-between items-center mb-1">
+                   <span class="font-[600] text-sm text-on-surface">Leadership</span>
+                   <span class="font-bold text-xs text-secondary-container text-orange-500">68%</span>
+                 </div>
+                 <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-1">
+                   <div class="bg-orange-500 h-full rounded-full w-[68%]"></div>
+                 </div>
+                 <p class="text-[11px] text-on-surface-variant">You naturally step up when direction is needed</p>
+               </div>
+             </div>
+          </div>
+
+          <!-- Top Career Matches -->
+          <div class="mb-10">
+             <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest border-b border-outline-variant/20 pb-2 mb-6 block">TOP CAREER MATCHES</h6>
+             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+               <!-- Card 1 -->
+               <div class="bg-white border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                 <div class="h-1.5 bg-[#6060c5] w-full"></div>
+                 <div class="p-4">
+                   <span class="bg-[#f0f0ff] border border-[#6060c5]/30 text-[#6060c5] text-[10px] px-2.5 py-1 rounded-full font-bold mb-3 inline-block">94% match</span>
+                   <h5 class="text-sm font-[700] mb-1.5 text-on-surface">Design &amp; Creative Media</h5>
+                   <p class="text-[11px] text-on-surface-variant leading-relaxed">Visual thinking and originality in top 5%</p>
+                 </div>
+               </div>
+               <!-- Card 2 -->
+               <div class="bg-white border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                 <div class="h-1.5 bg-[#008f86] w-full"></div>
+                 <div class="p-4">
+                   <span class="bg-[#f0fffe] border border-[#008f86]/30 text-[#008f86] text-[10px] px-2.5 py-1 rounded-full font-bold mb-3 inline-block">88% match</span>
+                   <h5 class="text-sm font-[700] mb-1.5 text-on-surface">Entrepreneurship &amp; Business</h5>
+                   <p class="text-[11px] text-on-surface-variant leading-relaxed">Independence and risk appetite are exceptional</p>
+                 </div>
+               </div>
+               <!-- Card 3 -->
+               <div class="bg-white border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                 <div class="h-1.5 bg-[#2978a3] w-full"></div>
+                 <div class="p-4">
+                   <span class="bg-[#eef5ff] border border-[#2978a3]/30 text-[#2978a3] text-[10px] px-2.5 py-1 rounded-full font-bold mb-3 inline-block">81% match</span>
+                   <h5 class="text-sm font-[700] mb-1.5 text-on-surface">Psychology &amp; Counselling</h5>
+                   <p class="text-[11px] text-on-surface-variant leading-relaxed">Empathy score higher than 90% of students</p>
+                 </div>
+               </div>
+             </div>
+          </div>
+
+          <!-- Top Strengths -->
+          <div class="mb-4">
+             <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest inline-block pb-1 mb-5">TOP STRENGTHS</h6>
+             <div class="flex flex-wrap gap-x-6 gap-y-3 text-xs font-[600] text-on-surface px-1">
+               <span>Originality</span>
+               <span>Empathy</span>
+               <span>Pattern Recognition</span>
+               <span>Adaptability</span>
+               <span>Visual Thinking</span>
+               <span>Communication</span>
+             </div>
+          </div>
+
+          <!-- Locked Section -->
+          <div class="mt-8 relative overflow-hidden flex flex-col items-center justify-center p-12 bg-surface-container-low/30 rounded-xl text-center">
+             <h6 class="text-[10px] font-bold text-outline uppercase tracking-widest top-4 left-0 absolute opacity-80">STREAM RECOMMENDATION &amp; 12-WEEK ROADMAP</h6>
+             <p class="text-[14px] font-[600] text-on-surface mb-0.5 mt-8">Your personalised career roadmap is locked</p>
+             <p class="text-xs text-on-surface-variant mb-4">Available with Career Pro plan</p>
+             <button onclick="document.querySelector('.premium-toggle-checkbox').click()" class="bg-[#5c5cce] hover:bg-primary text-white font-bold text-sm px-6 py-2.5 rounded-full shadow-md transition-all active:scale-95 z-10 transition-colors">
+                Upgrade to unlock
+             </button>
+          </div>
+        </div>
+        
+        <!-- Bottom Action Bar (Floating exactly like mockup) -->
+        <div class="bg-[#f2efff] p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#e2dfff] shadow-[0_-10px_20px_rgba(0,0,0,0.02)] rounded-b-xl z-20 m-3 sm:m-4 mt-0">
+          <div>
+            <p class="font-bold text-[14px] text-on-surface mb-1">Unlock your complete career report</p>
+            <p class="text-[11px] text-[#5c5cce] font-[600] flex flex-wrap gap-2 items-center">
+              <span>Stream guide</span>&middot;<span>College roadmap</span>&middot;<span>12-week plan</span>&middot;<span>1-on-1 session</span>
+            </p>
+          </div>
+          <button onclick="document.querySelector('.premium-toggle-checkbox').click()" class="bg-[#5c5cce] hover:bg-primary w-full sm:w-auto text-white font-bold text-sm px-7 py-3 rounded-xl shadow-[0_4px_12px_rgba(92,92,206,0.2)] transition-all active:scale-95 whitespace-nowrap">
+            Upgrade to Career Pro
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- jsPDF CDN for real PDF generation -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    const pdfModal = document.getElementById('pdf-modal');
+    const profileModal = document.getElementById('profile-modal');
+
+    // Store user profile data
+    let reportUserName = 'Sample User';
+    let reportUserClass = 'Class 11';
+    let reportUserCity = 'India';
+
+    // Step 1: Open profile prompt first
+    function openPdfModal() {
+      profileModal.classList.remove('hidden');
+      profileModal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Step 2: Save profile, update report, show PDF
+    function saveProfileAndOpenPdf() {
+      const name = document.getElementById('prof-name').value.trim() || 'Sample User';
+      const cls  = document.getElementById('prof-class').value || 'Class 11';
+      const city = document.getElementById('prof-city').value.trim() || 'India';
+      const today = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+
+      reportUserName  = name;
+      reportUserClass = cls;
+      reportUserCity  = city;
+
+      // Dynamically inject user details into report header
+      document.getElementById('report-user-meta').textContent =
+        `${name} \u00B7 ${cls} \u00B7 ${city} \u00B7 Assessed: ${today}`;
+
+      // Update filename in top bar
+      const slug = name.replace(/\s+/g, '_');
+      document.getElementById('pdf-filename').textContent = `Psychometric_Report_${slug}.pdf`;
+
+      // Close profile modal, open PDF viewer
+      profileModal.classList.add('hidden');
+      profileModal.classList.remove('flex');
+      pdfModal.classList.remove('hidden');
+      pdfModal.classList.add('flex');
+    }
+
+    function closePdfModal() {
+      pdfModal.classList.add('hidden');
+      pdfModal.classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    // Real PDF download using jsPDF (programmatic, not screenshot)
+    function downloadReportPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+      const pageW = doc.internal.pageSize.getWidth();
+      const margin = 18;
+      const col = margin;
+      let y = 20;
+
+      const today = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+
+      // ── Header bar ──
+      doc.setFillColor(36, 56, 156);
+      doc.rect(0, 0, 8, 297, 'F');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(140, 140, 160);
+      doc.text('SVASTRINO CAREER INTELLIGENCE REPORT', col + 6, y);
+      y += 6;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(30, 30, 30);
+      doc.text(`${reportUserName}  ·  ${reportUserClass}  ·  ${reportUserCity}  ·  Assessed: ${today}`, col + 6, y);
+      y += 14;
+
+      // ── Divider ──
+      doc.setDrawColor(220, 220, 235);
+      doc.line(col + 6, y, pageW - margin, y);
+      y += 10;
+
+      // ── Personality Type ──
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(140, 140, 160);
+      doc.text('YOUR PERSONALITY TYPE', col + 6, y);
+      y += 7;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(26);
+      doc.setTextColor(36, 56, 156);
+      doc.text('The Explorer', col + 6, y);
+      y += 8;
+      doc.setFontSize(10);
+      doc.setTextColor(30, 30, 30);
+      doc.text('Creative Problem-Solver  ·  Right-Brain Dominant', col + 6, y);
+      y += 6;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(90, 90, 110);
+      const desc = doc.splitTextToSize('You think in big ideas, connect dots others miss, and thrive when given freedom to create. You bring originality to everything you touch.', pageW - margin * 2 - 6);
+      doc.text(desc, col + 6, y);
+      y += desc.length * 5 + 6;
+
+      // Profile score badge
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(36);
+      doc.setTextColor(96, 96, 197);
+      doc.text('78', pageW - margin - 14, 58);
+      doc.setFontSize(9);
+      doc.setTextColor(140, 140, 160);
+      doc.text('/ 100', pageW - margin - 2, 64);
+      doc.setFontSize(7);
+      doc.setTextColor(96, 96, 197);
+      doc.text('PROFILE SCORE', pageW - margin - 20, 50);
+
+      // ── Divider ──
+      doc.setDrawColor(220, 220, 235);
+      doc.line(col + 6, y, pageW - margin, y);
+      y += 10;
+
+      // ── Personality Dimensions ──
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(140, 140, 160);
+      doc.text('PERSONALITY DIMENSIONS', col + 6, y);
+      y += 7;
+
+      const dims = [
+        { label: 'Creativity',       pct: 91, color: [96,96,197] },
+        { label: 'Empathy',          pct: 82, color: [0,143,134] },
+        { label: 'Resilience',       pct: 77, color: [82,61,161] },
+        { label: 'Logical Thinking', pct: 74, color: [37,99,235] },
+        { label: 'Leadership',       pct: 68, color: [249,115,22] },
+      ];
+      const barW = pageW - margin * 2 - 6;
+      dims.forEach(d => {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(9);
+        doc.setTextColor(30, 30, 30);
+        doc.text(d.label, col + 6, y);
+        doc.setFont('helvetica', 'bold');
+        doc.setTextColor(...d.color);
+        doc.text(`${d.pct}%`, pageW - margin, y, { align: 'right' });
+        y += 4;
+        // bg track
+        doc.setFillColor(236, 238, 240);
+        doc.roundedRect(col + 6, y, barW, 3, 1.5, 1.5, 'F');
+        // filled bar
+        doc.setFillColor(...d.color);
+        doc.roundedRect(col + 6, y, barW * (d.pct / 100), 3, 1.5, 1.5, 'F');
+        y += 9;
+      });
+
+      y += 4;
+      // ── Divider ──
+      doc.setDrawColor(220, 220, 235);
+      doc.line(col + 6, y, pageW - margin, y);
+      y += 10;
+
+      // ── Top Career Matches ──
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(140, 140, 160);
+      doc.text('TOP CAREER MATCHES', col + 6, y);
+      y += 7;
+
+      const careers = [
+        { title: 'Design & Creative Media',      match: '94%', desc: 'Visual thinking in top 5%',            color: [96,96,197] },
+        { title: 'Entrepreneurship & Business',  match: '88%', desc: 'Independence & risk appetite high',    color: [0,143,134] },
+        { title: 'Psychology & Counselling',     match: '81%', desc: 'Empathy higher than 90% of peers',    color: [41,120,163] },
+      ];
+      const cardW = (barW - 8) / 3;
+      careers.forEach((c, i) => {
+        const cx = col + 6 + i * (cardW + 4);
+        doc.setFillColor(248, 249, 251);
+        doc.roundedRect(cx, y, cardW, 28, 2, 2, 'F');
+        doc.setFillColor(...c.color);
+        doc.rect(cx, y, cardW, 2, 'F');
+        // badge
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(7);
+        doc.setTextColor(...c.color);
+        doc.text(`${c.match} match`, cx + 3, y + 8);
+        // title
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.setTextColor(30, 30, 30);
+        const titleLines = doc.splitTextToSize(c.title, cardW - 6);
+        doc.text(titleLines, cx + 3, y + 14);
+        // desc
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(7);
+        doc.setTextColor(100, 100, 120);
+        doc.text(c.desc, cx + 3, y + 14 + titleLines.length * 4 + 2);
+      });
+      y += 36;
+
+      // ── Top Strengths ──
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(7);
+      doc.setTextColor(140, 140, 160);
+      doc.text('TOP STRENGTHS', col + 6, y);
+      y += 6;
+      const strengths = ['Originality', 'Empathy', 'Pattern Recognition', 'Adaptability', 'Visual Thinking', 'Communication'];
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(40, 40, 60);
+      doc.text(strengths.join('  ·  '), col + 6, y);
+      y += 14;
+
+      // ── Locked section note ──
+      doc.setFillColor(242, 239, 255);
+      doc.roundedRect(col + 6, y, barW, 22, 3, 3, 'F');
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8);
+      doc.setTextColor(92, 92, 206);
+      doc.text('STREAM RECOMMENDATION & 12-WEEK ROADMAP', col + 6 + barW/2, y + 8, { align: 'center' });
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 120);
+      doc.text('Your personalised career roadmap is available with Career Pro plan.', col + 6 + barW/2, y + 15, { align: 'center' });
+
+      // ── Footer ──
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(7);
+      doc.setTextColor(180, 180, 180);
+      doc.text('Generated by Svastrino · svastrino.com · Career Intelligence Platform', pageW / 2, 289, { align: 'center' });
+
+      const slug = reportUserName.replace(/\s+/g, '_');
+      doc.save(`Career_Report_${slug}.pdf`);
+    }
+
+    function shareReport() {
+      if (navigator.share) {
+        navigator.share({ title: 'My Svastrino Career Report', text: 'Check out my psychometric career report from Svastrino!', url: window.location.href });
+      } else {
+        navigator.clipboard.writeText(window.location.href).then(() => alert('Link copied to clipboard!'));
+      }
+    }
+
+    // Close on Escape key press
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        if (!pdfModal.classList.contains('hidden')) closePdfModal();
+        if (!profileModal.classList.contains('hidden')) {
+          profileModal.classList.add('hidden');
+          profileModal.classList.remove('flex');
+          document.body.style.overflow = '';
+        }
+      }
+    });
+
+    // Close PDF viewer on clicking outside
+    pdfModal.addEventListener('click', function(event) {
+      if (event.target === pdfModal) closePdfModal();
+    });
   </script>
 
   <!-- Supabase Data Fetching -->
