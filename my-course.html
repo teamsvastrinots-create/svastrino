@@ -213,17 +213,17 @@
       <section class="grid grid-cols-12 gap-5 lg:gap-8">
         <!-- Video Player Card -->
         <div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-outline-variant/10">
-          <div class="relative aspect-video w-full bg-slate-900 flex items-center justify-center group cursor-pointer">
+          <div id="video-container" class="relative aspect-video w-full bg-slate-900 flex items-center justify-center group cursor-pointer">
             <img class="absolute inset-0 w-full h-full object-cover opacity-40 grayscale group-hover:scale-105 transition-transform duration-700" alt="Abstract blue digital workspace background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbYDp6Ai42o0XiNW3HrJuUmSoay0H37VBy9rJRRADzStVcal2OSMCMhW6VOBuS5D2xqm0pjr73HBlF_oXRk0-JwjXkM9kmPbhA9oHMBwnbbBSwsxjOQ6lkxzXLly21CnC9Rd7nsdUGITBKzbDUGKrlUXm6wEOo4SgDrpW5Xpt16tFrDVkCDgg30zJstqxG5gb6npx2GOdHeTGr2yOzXLOylr4R1vp36ZgqBJzUgQjJAE8ZI4M_M1ggX4dYvCffGx-UqK5ZHIv54eQo"/>
             <div class="relative z-10 w-14 h-14 lg:w-16 lg:h-16 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl transition-transform group-hover:scale-110">
-              <span class="material-symbols-outlined text-3xl lg:text-4xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+              <span id="play-btn-icon" class="material-symbols-outlined text-3xl lg:text-4xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
             </div>
             <div class="absolute bottom-4 left-4 right-4 flex items-center gap-3">
               <div class="flex-grow h-1 bg-white/20 rounded-full overflow-hidden">
-                <div class="w-1/3 h-full bg-primary-container"></div>
+                <div id="video-progress-bar" class="h-full bg-primary-container transition-all ease-linear" style="width: 33.33%;"></div>
               </div>
-              <span class="text-[10px] text-white font-mono">12:45 / 34:00</span>
-              <button class="text-white/80 hover:text-white transition-colors flex items-center" title="Full Screen">
+              <span id="video-time-text" class="text-[10px] text-white font-mono" style="min-width: 60px;">12:45 / 34:00</span>
+              <button class="text-white/80 hover:text-white transition-colors flex items-center z-20" title="Full Screen">
                 <span class="material-symbols-outlined text-sm">fullscreen</span>
               </button>
             </div>
@@ -372,6 +372,63 @@
     }
     window.addEventListener('resize', () => {
       if (window.innerWidth >= 1024) document.getElementById('sidebar-overlay').classList.add('hidden');
+    });
+
+    // Interactive Video Player Logic
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('video-container');
+      const btnIcon = document.getElementById('play-btn-icon');
+      const progressBar = document.getElementById('video-progress-bar');
+      const timeText = document.getElementById('video-time-text');
+      
+      let isPlaying = false;
+      let progress = 33.33; // Starts at ~12:45 / 34:00
+      let interval;
+      
+      if (container && btnIcon && progressBar && timeText) {
+        container.addEventListener('click', (e) => {
+          // Ignore clicks on fullscreen button
+          if(e.target.closest('button')) return;
+          
+          if (progress >= 100) {
+            // Reset to beginning
+            progress = 0;
+            progressBar.style.width = '0%';
+            timeText.textContent = '00:00 / 34:00';
+            btnIcon.textContent = 'play_arrow';
+            localStorage.setItem('videoCompleted', 'false');
+            return;
+          }
+          
+          isPlaying = !isPlaying;
+          
+          if (isPlaying) {
+            btnIcon.textContent = 'pause';
+            // Start progressing the bar
+            interval = setInterval(() => {
+              progress += 0.5; // Controls the speed of the fake video player
+              if (progress >= 100) {
+                progress = 100;
+                clearInterval(interval);
+                isPlaying = false;
+                btnIcon.textContent = 'play_arrow'; // Let them replay if they want
+                timeText.textContent = 'Video Completed';
+                localStorage.setItem('videoCompleted', 'true');
+              } else {
+                let currentTotalSeconds = Math.floor((progress / 100) * 34 * 60);
+                let currentMins = Math.floor(currentTotalSeconds / 60);
+                let currentSecs = currentTotalSeconds % 60;
+                timeText.textContent = `${currentMins.toString().padStart(2, '0')}:${currentSecs.toString().padStart(2, '0')} / 34:00`;
+              }
+              progressBar.style.width = progress + '%';
+            }, 50); // Updates every 50ms for smooth animation
+          } else {
+            // Pause
+            btnIcon.textContent = 'play_arrow';
+            clearInterval(interval);
+          }
+        });
+      }
     });
   </script>
 </body>
