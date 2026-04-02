@@ -1300,13 +1300,63 @@
     </div>
   </div>
 
-  <script>
-    // ─── Take Test Modal ───────────────────────────────────
+    // Call on load
+    document.addEventListener("DOMContentLoaded", loadTestScore);
+
+    // ─── Consolidated Dashboard Logic (Popup, Name, Params) ───
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log("Svastrino Dashboard Logic: Initializing...");
+      const params = new URLSearchParams(window.location.search);
+      const savedName = localStorage.getItem('svastrino_user_name');
+
+      // 1. Dynamic Name Update
+      if (savedName) {
+        console.log("Updating greeting with saved name:", savedName);
+        document.querySelectorAll('.greeting-name').forEach(el => {
+          el.textContent = savedName;
+        });
+      }
+
+      // 2. New User Popup Logic
+      if (params.get('newUser') === 'true') {
+        console.log("New user detected. Triggering test popup...");
+        // Show modal after a short delay
+        setTimeout(() => {
+          showTestModal();
+          // Clean up URL after showing
+          window.history.replaceState({}, '', window.location.pathname);
+        }, 600);
+      }
+
+      // 3. Test Completion Logic
+      if (params.get('testDone') === 'true') {
+        const score = parseInt(params.get('score') || '78', 10);
+        console.log("Test completion detected. Score:", score);
+        
+        const display = document.getElementById('testScoreDisplay');
+        const circle = document.getElementById('scoreCircle');
+        const label = document.getElementById('scoreLabel');
+        
+        if (display) {
+          display.textContent = score;
+          if (label) label.innerHTML = 'Your<br>Score';
+          if (circle) {
+            const fraction = score / 100;
+            const offset = 283 - (283 * fraction);
+            setTimeout(() => { circle.style.strokeDashoffset = offset; }, 200);
+          }
+        }
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+    });
+
+    // ─── Take Test Modal Functions ─────────────────────────
     function showTestModal() {
       const overlay = document.getElementById('take-test-modal');
       const content = document.getElementById('take-test-modal-content');
+      if (!overlay || !content) return;
+      
       overlay.classList.remove('hidden');
-      // Trigger animation after paint
       requestAnimationFrame(() => {
         content.style.transform = 'scale(1) translateY(0)';
         content.style.opacity = '1';
@@ -1316,58 +1366,17 @@
     function closeTestModal() {
       const overlay = document.getElementById('take-test-modal');
       const content = document.getElementById('take-test-modal-content');
+      if (!overlay || !content) return;
+      
       content.style.transform = 'scale(0.95) translateY(12px)';
       content.style.opacity = '0';
       setTimeout(() => overlay.classList.add('hidden'), 300);
-      // Clean up URL
       window.history.replaceState({}, '', window.location.pathname);
     }
 
     function goToTest() {
       window.location.href = 'psychometric-test.html?loggedIn=true';
     }
-
-    // ─── URL Param Handler ─────────────────────────────────
-    document.addEventListener('DOMContentLoaded', () => {
-      const params = new URLSearchParams(window.location.search);
-
-      // New user arriving from signup step 3 — show the test popup
-      if (params.get('newUser') === 'true') {
-        // Small delay for smooth entry after page load
-        setTimeout(showTestModal, 600);
-        window.history.replaceState({}, '', window.location.pathname);
-      }
-
-      // Returning from test with completed results — update score on freemium dashboard
-      if (params.get('testDone') === 'true') {
-        window.history.replaceState({}, '', window.location.pathname);
-        const score = parseInt(params.get('score') || '78', 10);
-        // Update the score display in the freemium hero card
-        const display = document.getElementById('testScoreDisplay');
-        const circle = document.getElementById('scoreCircle');
-        const label = document.getElementById('scoreLabel');
-        if (display) {
-          display.textContent = score;
-          if (label) label.innerHTML = 'Your<br>Score';
-          // Animate the circle ring
-          if (circle) {
-            const fraction = score / 100;
-            const offset = 283 - (283 * fraction);
-            setTimeout(() => { circle.style.strokeDashoffset = offset; }, 200);
-          }
-        }
-      }
-    });
-
-    // ─── Dynamic Name Update ──────────────────────────────
-    document.addEventListener('DOMContentLoaded', () => {
-      const savedName = localStorage.getItem('svastrino_user_name');
-      if (savedName) {
-        document.querySelectorAll('.greeting-name').forEach(el => {
-          el.textContent = savedName;
-        });
-      }
-    });
   </script>
 
 </body>
