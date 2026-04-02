@@ -195,173 +195,200 @@
 
   <!-- Main Content -->
   <main class="lg:ml-[260px] min-h-screen bg-surface-container-low p-6 pt-16 lg:p-10 lg:pt-10 xl:p-12">
-    <div class="max-w-6xl mx-auto space-y-10 lg:space-y-12">
-
-      <!-- Page Header -->
-      <header class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <div>
-          <h1 class="text-3xl lg:text-4xl font-extrabold tracking-tight text-on-surface mb-2">My course</h1>
-          <p class="text-on-surface-variant font-medium">Design Systems &amp; Brand Strategy</p>
-        </div>
-        <div class="flex items-center gap-3 px-4 py-2 bg-primary/10 rounded-full shadow-sm">
-          <span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">stars</span>
-          <span class="text-primary font-bold text-sm tracking-wide">10% complete</span>
-        </div>
-      </header>
-
-      <!-- Current Module Bento Section -->
-      <section class="grid grid-cols-12 gap-5 lg:gap-8">
-        <!-- Video Player Card -->
-        <div class="col-span-12 lg:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm border border-outline-variant/10">
-          <div id="video-container" class="relative aspect-video w-full bg-slate-900 flex items-center justify-center group cursor-pointer">
-            <img class="absolute inset-0 w-full h-full object-cover opacity-40 grayscale group-hover:scale-105 transition-transform duration-700" alt="Abstract blue digital workspace background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbYDp6Ai42o0XiNW3HrJuUmSoay0H37VBy9rJRRADzStVcal2OSMCMhW6VOBuS5D2xqm0pjr73HBlF_oXRk0-JwjXkM9kmPbhA9oHMBwnbbBSwsxjOQ6lkxzXLly21CnC9Rd7nsdUGITBKzbDUGKrlUXm6wEOo4SgDrpW5Xpt16tFrDVkCDgg30zJstqxG5gb6npx2GOdHeTGr2yOzXLOylr4R1vp36ZgqBJzUgQjJAE8ZI4M_M1ggX4dYvCffGx-UqK5ZHIv54eQo"/>
-            <div class="relative z-10 w-14 h-14 lg:w-16 lg:h-16 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl transition-transform group-hover:scale-110">
-              <span id="play-btn-icon" class="material-symbols-outlined text-3xl lg:text-4xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
-            </div>
-            <div class="absolute bottom-4 left-4 right-4 flex items-center gap-3">
-              <div class="flex-grow h-1 bg-white/20 rounded-full overflow-hidden">
-                <div id="video-progress-bar" class="h-full bg-primary-container transition-all ease-linear" style="width: 33.33%;"></div>
-              </div>
-              <span id="video-time-text" class="text-[10px] text-white font-mono" style="min-width: 60px;">12:45 / 34:00</span>
-              <button class="text-white/80 hover:text-white transition-colors flex items-center z-20" title="Full Screen">
-                <span class="material-symbols-outlined text-sm">fullscreen</span>
-              </button>
-            </div>
-          </div>
-          <div class="p-4 lg:p-6">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div>
-                <span class="text-[10px] font-bold text-primary tracking-widest uppercase">Currently Watching</span>
-                <h2 class="text-lg lg:text-xl font-bold mt-1">Week 1 - Self Discovery</h2>
-              </div>
-              <button class="flex items-center gap-2 px-4 py-2 bg-surface-container-low hover:bg-surface-container rounded-lg transition-colors">
-                <span class="material-symbols-outlined text-lg">description</span>
-                <span class="text-xs font-semibold">Notes</span>
-              </button>
-            </div>
+    <div class="max-w-6xl mx-auto space-y-10 lg:space-y-12"      <!-- Journey & Selection Context -->
+      <section class="bg-white rounded-2xl p-6 lg:p-8 border border-outline-variant/10 shadow-sm">
+        <div class="flex items-center justify-between mb-8">
+          <h2 class="text-xs font-black uppercase tracking-[0.2em] text-primary/60 font-headline">Your 24-week journey</h2>
+          <div class="flex items-center gap-3">
+            <button onclick="scrollJourney(-1)" class="w-10 h-10 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm active:scale-90">
+              <span class="material-symbols-outlined text-base">chevron_left</span>
+            </button>
+            <button onclick="scrollJourney(1)" class="w-10 h-10 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm active:scale-90">
+              <span class="material-symbols-outlined text-base">chevron_right</span>
+            </button>
           </div>
         </div>
 
-        <!-- Sidebar Info Card -->
-        <div class="col-span-12 lg:col-span-4 bg-primary text-white rounded-xl p-6 lg:p-8 flex flex-col justify-between relative overflow-hidden min-h-[280px]">
-          
-          <div class="absolute -top-12 -right-12 w-48 h-48 bg-primary-container rounded-full blur-3xl opacity-50"></div>
-          <div class="relative z-10">
-            <span class="text-primary-fixed text-xs font-bold uppercase tracking-widest">Next Milestone</span>
-            <h3 class="text-xl lg:text-2xl font-bold mt-2 leading-tight">First Concept Submission</h3>
-            <p class="mt-4 text-primary-fixed/80 text-sm leading-relaxed">Submit your initial ideation sketches to unlock the next module.</p>
-          </div>
-          <button onclick="alert('Please complete the Week 1 video first to unlock this assignment.')" class="relative z-10 mt-6 lg:mt-8 w-full py-3 bg-white/95 text-primary rounded-xl font-bold text-sm hover:shadow-lg hover:bg-white transition-all active:scale-[0.98] flex items-center justify-center gap-2">
-            <span class="material-symbols-outlined text-lg">lock</span>
-            View Assignment
-          </button>
-        </div>
-      </section>
-
-      <!-- Course Map Grid (Learning Path) -->
-      <section>
-        <div class="flex items-center justify-between mb-6 lg:mb-8">
-          <h2 class="text-xl lg:text-2xl font-bold tracking-tight">The Learning Path</h2>
-          <div class="h-[1px] flex-grow mx-4 lg:mx-8 bg-outline-variant/30 hidden sm:block"></div>
-          <span class="text-xs font-bold text-on-surface-variant bg-surface-container px-3 py-1 rounded-full uppercase tracking-tighter hidden sm:block">Active Module</span>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-8">
-          <!-- Week 1 (Active) -->
-          <div class="bg-surface-container-lowest p-5 lg:p-6 rounded-xl border-2 border-primary shadow-xl md:scale-105 relative">
-            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white text-[10px] font-black px-4 py-1 rounded-full uppercase tracking-widest whitespace-nowrap">
-              In Progress
-            </div>
-            <div class="flex justify-between items-start mb-5 lg:mb-6 mt-2 md:mt-0">
-              <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
-                <span class="material-symbols-outlined">pending</span>
-              </div>
-              <div class="flex -space-x-2">
-                <div class="w-6 h-6 rounded-full border-2 border-white bg-primary-fixed overflow-hidden">
-                  <img class="w-full h-full object-cover" alt="Student avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgOjTrFeIYhIKG96qdl2f-Ccq3Je9aRx8pp5FnCA3CRhp19ibBbiwJ_Ukg-uCklzeU97vra2OaaP7kblZhBL2_bRxxiuqGIifOO319NgCIwxBwNQqb64IN78GfUsbQ-mpsVrr9vCyOYH4WrJ9COY6tOLlfeI8V_6vISV6a5dcWfv2JZEQmr7vHf06diSN3qXhmzW1vx8icgwTrGhJ0_-3xFruf85kTCqNaAidPkRFzefn21oap-AnkxC9_I80cwgst6W3MTh_SNuGe"/>
-                </div>
-                <div class="w-6 h-6 rounded-full border-2 border-white bg-primary flex items-center justify-center text-[8px] font-bold text-white">+12</div>
-              </div>
-            </div>
-            <h4 class="font-bold text-on-surface text-lg">Week 1</h4>
-            <p class="text-on-surface-variant text-sm mt-1">Self Discovery</p>
-            <div class="mt-5 lg:mt-6">
-              <div class="flex justify-between items-center text-[10px] font-bold text-primary mb-2">
-                <span>PROGRESS</span>
-                <span>60%</span>
-              </div>
-              <div class="w-full h-1.5 bg-primary-container/20 rounded-full overflow-hidden">
-                <div class="w-3/5 h-full bg-primary transition-all duration-1000"></div>
-              </div>
-            </div>
+        <div class="relative overflow-hidden px-1">
+          <!-- Using grid with 10% column width to ensure exactly 10 weeks visible on desktop -->
+          <div id="journey-scroll-container" class="grid grid-flow-col transition-transform duration-500 ease-out py-4" style="transform: translateX(0px); grid-template-columns: repeat(24, 10%);">
+             <!-- Week items will be injected here by JS -->
           </div>
         </div>
       </section>
 
-      <!-- Coming Up Section -->
-      <section class="mt-12 lg:mt-16">
-        <div class="flex items-center justify-between mb-6 lg:mb-8">
-          <h2 class="text-xl lg:text-2xl font-bold tracking-tight">Coming Up</h2>
-          <div class="h-[1px] flex-grow mx-4 lg:mx-8 bg-outline-variant/30 hidden sm:block"></div>
-          <span class="text-xs font-bold text-on-surface-variant bg-surface-container px-3 py-1 rounded-full uppercase tracking-tighter hidden sm:block">5 Modules</span>
-        </div>
+      <!-- Video & Support Split Section (Row 1) -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
         
-        <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 lg:gap-4">
-          <!-- Week 2 & 3 Unlocked, Week 4-6 Locked -->
-          <div class="bg-surface-container/40 p-5 rounded-xl border border-outline-variant/10 transition-transform relative min-h-[230px] flex flex-col items-center justify-center text-center">
-            <h4 class="font-bold text-on-surface text-lg">Week 2</h4>
-            <p class="text-on-surface-variant text-xs mt-2 font-medium">Values &amp; Strengths</p>
+        <!-- Video Player Area (D1 - Wider) -->
+        <div class="lg:col-span-12 xl:col-span-8 flex flex-col space-y-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+               <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs shadow-sm">D1</div>
+               <h3 class="text-lg font-bold">Week <span id="active-week-label">1</span> - Video Lecture</h3>
+            </div>
           </div>
-          <div class="bg-surface-container/40 p-5 rounded-xl border border-outline-variant/10 transition-transform relative min-h-[230px] flex flex-col items-center justify-center text-center">
-            <h4 class="font-bold text-on-surface text-lg">Week 3</h4>
-            <p class="text-on-surface-variant text-xs mt-2 font-medium">Market Positioning</p>
+
+          <div class="bg-white rounded-2xl overflow-hidden border border-outline-variant/10 shadow-lg group flex-grow flex flex-col">
+            <div id="video-container" class="relative aspect-video w-full bg-slate-900 cursor-pointer overflow-hidden">
+               <img id="video-thumbnail" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:scale-105 transition-transform duration-700" alt="Video thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbYDp6Ai42o0XiNW3HrJuUmSoay0H37VBy9rJRRADzStVcal2OSMCMhW6VOBuS5D2xqm0pjr73HBlF_oXRk0-JwjXkM9kmPbhA9oHMBwnbbBSwsxjOQ6lkxzXLly21CnC9Rd7nsdUGITBKzbDUGKrlUXm6wEOo4SgDrpW5Xpt16tFrDVkCDgg30zJstqxG5gb6npx2GOdHeTGr2yOzXLOylr4R1vp36ZgqBJzUgQjJAE8ZI4M_M1ggX4dYvCffGx-UqK5ZHIv54eQo"/>
+               <div class="absolute inset-0 flex items-center justify-center z-10 transition-transform group-hover:scale-110">
+                 <div class="w-16 h-16 lg:w-20 lg:h-20 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl overflow-hidden border-4 border-white/20">
+                   <span id="play-btn-icon" class="material-symbols-outlined text-4xl lg:text-5xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                 </div>
+               </div>
+               <!-- Progress Bar Backdrop -->
+               <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
+               <!-- Progress Bar -->
+               <div class="absolute bottom-6 left-6 right-6 flex items-center gap-4 z-20">
+                 <div class="flex-grow h-1.5 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm">
+                   <div id="video-progress-bar" class="h-full bg-primary-fixed transition-all ease-linear shadow-[0_0_10px_rgba(255,255,255,0.5)]" style="width: 0%;"></div>
+                 </div>
+                 <span id="video-time-text" class="text-xs text-white font-mono font-bold drop-shadow-md" style="min-width: 80px;">00:00 / 34:00</span>
+                 <button class="text-white/80 hover:text-white transition-colors flex items-center" title="Full Screen">
+                   <span class="material-symbols-outlined text-sm">fullscreen</span>
+                 </button>
+               </div>
+            </div>
+            <div class="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <p class="text-[10px] font-bold text-primary tracking-widest uppercase mb-1">Currently Watching</p>
+                <h2 id="video-title" class="text-xl lg:text-2xl font-bold tracking-tight">Week 1 — Foundations of Design Thinking</h2>
+              </div>
+              <button onclick="toggleNotes()" class="flex items-center gap-2 px-6 py-3 bg-surface border border-outline-variant/30 hover:bg-surface-container rounded-xl transition-all font-bold text-sm shadow-sm active:scale-95">
+                <span class="material-symbols-outlined">notes</span>
+                Notes
+              </button>
+            </div>
           </div>
-          <div class="freemium-lock bg-surface-container/40 p-5 rounded-xl border border-outline-variant/10 opacity-70 transition-transform relative min-h-[230px] flex flex-col items-center justify-center text-center">
-            <h4 class="font-bold text-on-surface text-lg">Week 4</h4>
-            <p class="text-on-surface-variant text-xs mt-2 font-medium">Prototyping &amp; Testing</p>
+        </div>
+
+        <!-- Sidebar Support Area (Row 1 - Narrower) -->
+        <div class="lg:col-span-12 xl:col-span-4 flex flex-col gap-6 lg:gap-8 pt-[44px]">
+          <div class="bg-white rounded-2xl border border-outline-variant/10 p-8 shadow-sm flex flex-col items-center text-center flex-grow justify-center">
+            <div class="w-20 h-20 rounded-3xl bg-secondary-fixed flex items-center justify-center text-secondary mb-6 shadow-sm">
+              <span class="material-symbols-outlined text-4xl">forum</span>
+            </div>
+            <h5 class="font-black text-lg">Need help?</h5>
+            <p class="text-sm text-on-surface-variant mt-2 max-w-[220px] leading-relaxed">Our mentors and community are here to help you bridge the gap in Week <span id="help-week-label">1</span>.</p>
+            <button class="w-full mt-8 px-6 py-4 bg-primary text-white rounded-xl font-bold text-sm hover:shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2">
+              <span class="material-symbols-outlined text-lg">question_answer</span>
+              Ask a Question
+            </button>
           </div>
-          <div class="freemium-lock bg-surface-container/40 p-5 rounded-xl border border-outline-variant/10 opacity-70 transition-transform relative min-h-[230px] flex flex-col items-center justify-center text-center">
-            <h4 class="font-bold text-on-surface text-lg">Week 5</h4>
-            <p class="text-on-surface-variant text-xs mt-2 font-medium">Advanced UI Systems</p>
+          
+          <div class="flex items-center justify-center gap-4 text-primary font-bold text-sm bg-primary/5 px-6 py-4 rounded-2xl border border-primary/10">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">stars</span>
+              <span id="week-completion-badge">0% complete</span>
+            </div>
+            <div class="w-px h-4 bg-primary/20"></div>
+            <span class="text-[10px] font-black uppercase tracking-widest">Active Week</span>
           </div>
-          <div class="freemium-lock bg-surface-container/40 p-5 rounded-xl border border-outline-variant/10 opacity-70 transition-transform relative min-h-[230px] flex flex-col items-center justify-center text-center">
-            <h4 class="font-bold text-on-surface text-lg">Week 6</h4>
-            <p class="text-on-surface-variant text-xs mt-2 font-medium">Capstone Project</p>
+        </div>
+      </section>
+
+      <!-- Task & Overview Split Section -->
+      <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
+        
+        <!-- Day-wise Task Card (Left - Wider) -->
+        <div class="lg:col-span-12 xl:col-span-8 flex flex-col">
+          <div class="bg-white rounded-2xl border border-outline-variant/10 shadow-sm overflow-hidden flex flex-col flex-grow">
+            <!-- Day Tabs -->
+            <div class="flex border-b border-outline-variant/10 bg-surface/30">
+               <button onclick="selectDay(2)" id="tab-d2" class="day-tab flex-1 py-4 px-2 border-b-2 border-transparent font-bold text-sm tracking-wide text-on-surface-variant hover:bg-primary/5 transition-all">D2</button>
+               <button onclick="selectDay(3)" id="tab-d3" class="day-tab flex-1 py-4 px-2 border-b-2 border-transparent font-bold text-sm tracking-wide text-on-surface-variant hover:bg-primary/5 transition-all">D3</button>
+               <button onclick="selectDay(4)" id="tab-d4" class="day-tab flex-1 py-4 px-2 border-b-2 border-transparent font-bold text-sm tracking-wide text-on-surface-variant hover:bg-primary/5 transition-all">D4</button>
+               <button onclick="selectDay(5)" id="tab-d5" class="day-tab flex-1 py-4 px-2 border-b-2 border-transparent font-bold text-sm tracking-wide text-on-surface-variant hover:bg-primary/5 transition-all relative">
+                 D5
+                 <span class="freemium-only absolute top-2 right-2 material-symbols-outlined text-[14px] opacity-40">lock</span>
+               </button>
+               <button onclick="selectDay(6)" id="tab-d6" class="day-tab flex-1 py-4 px-2 border-b-2 border-transparent font-bold text-sm tracking-wide text-on-surface-variant hover:bg-primary/5 transition-all relative">
+                 D6
+                 <span class="freemium-only absolute top-2 right-2 material-symbols-outlined text-[14px] opacity-40">lock</span>
+               </button>
+            </div>
+
+            <!-- Task Content -->
+            <div class="p-8 space-y-6">
+              <div class="flex items-center gap-3">
+                <span id="task-type-badge" class="px-2 py-0.5 rounded bg-primary/5 text-primary text-[10px] font-bold uppercase tracking-wider">Interactive</span>
+                <h4 id="task-title" class="text-xl font-bold">Career Interests Map</h4>
+              </div>
+              <p id="task-description" class="text-on-surface-variant leading-relaxed">
+                Identify fields and roles that excite you — the first building block of your career direction.
+              </p>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                <button class="flex items-center justify-center gap-2 py-3 bg-white border border-outline-variant/30 rounded-xl font-bold text-sm hover:bg-surface shadow-sm transition-all active:scale-[0.98]">
+                  <span class="material-symbols-outlined">download</span>
+                  Download task
+                </button>
+                <button class="flex items-center justify-center gap-2 py-3 bg-primary text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all active:scale-[0.98]">
+                  <span class="material-symbols-outlined">upload</span>
+                  Upload answer
+                </button>
+              </div>
+
+              <!-- Upload Dropzone -->
+              <div class="border-2 border-dashed border-outline-variant/20 bg-surface/50 rounded-2xl p-8 flex flex-col items-center justify-center gap-3 group hover:border-primary/30 transition-colors cursor-pointer">
+                <span class="material-symbols-outlined text-3xl opacity-30 group-hover:opacity-100 transition-opacity">upload_file</span>
+                <p class="text-xs font-bold text-on-surface-variant">Drop your file here or click to upload</p>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <!-- Sidebar (Right - Narrower) -->
+        <div class="lg:col-span-5 xl:col-span-4 flex flex-col gap-6 lg:gap-8">
+          
+          <!-- Week Overview Card -->
+          <div class="bg-white rounded-2xl border border-outline-variant/10 p-8 shadow-sm flex flex-col items-center text-center">
+            <h5 id="overview-title" class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest mb-6">Week 1 Overview</h5>
+            <div class="relative w-40 h-40">
+              <svg class="w-full h-full transform -rotate-90">
+                <circle cx="80" cy="80" r="70" stroke="currentColor" stroke-width="8" fill="transparent" class="text-surface-container"></circle>
+                <circle id="overview-circle" cx="80" cy="80" r="70" stroke="currentColor" stroke-width="8" fill="transparent" stroke-dasharray="440" stroke-dashoffset="293" class="text-primary transition-all duration-1000 ease-out"></circle>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span id="overview-percentage" class="text-4xl font-black text-on-surface">33%</span>
+              </div>
+            </div>
+            <p id="overview-status" class="mt-6 text-sm font-bold text-on-surface">A good start! 🚀</p>
+            <p class="mt-1 text-xs text-on-surface-variant">Finish Week 1 to unlock your certificate.</p>
+          </div>
+
+          <!-- Next Milestone Card -->
+          <div class="bg-primary rounded-2xl p-8 shadow-xl relative overflow-hidden group">
+            <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
+            <div class="relative z-10">
+              <p class="text-primary-fixed text-[10px] font-bold uppercase tracking-widest opacity-80">Next Milestone</p>
+              <h4 id="milestone-title" class="text-white text-xl font-bold mt-2 leading-tight">Complete all 6 tasks</h4>
+              <p id="milestone-desc" class="text-white/70 text-xs mt-3 leading-relaxed">Finish Week 1 to unlock Week 2 and the next module.</p>
+              <button id="milestone-btn" class="w-full py-4 mt-6 bg-white/95 hover:bg-white text-primary rounded-xl font-bold text-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-lg">lock</span>
+                Access Week 2
+              </button>
+            </div>
+          </div>
+
         </div>
       </section>
 
       <!-- Premium Upgrade Banner -->
-      <section class="mt-8 lg:mt-12 bg-gradient-to-r from-amber-400 to-orange-500 p-6 lg:p-10 rounded-2xl shadow-lg relative overflow-hidden group freemium-only">
-        <div class="absolute -right-8 -top-8 w-48 h-48 bg-white/20 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700 pointer-events-none"></div>
-        <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center w-full">
-          <div class="flex-grow">
-            <span class="text-white/90 text-xs font-bold uppercase tracking-widest mb-1 block">Level up your career</span>
-            <h3 class="text-2xl font-extrabold text-white">Upgrade to Premium 🚀</h3>
-            <p class="text-white/90 font-medium mt-2 text-sm max-w-xl">Unlock all 6 weeks, assignments, and mentorship sessions instantly.</p>
+      <section class="bg-gradient-to-br from-[#ff9800] to-[#f57c00] p-8 lg:p-12 rounded-3xl shadow-2xl relative overflow-hidden group freemium-only">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full blur-3xl -mr-20 -mt-20 group-hover:scale-110 transition-transform duration-700"></div>
+        <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
+          <div class="text-center lg:text-left">
+            <span class="inline-block px-3 py-1 bg-white/20 text-white text-[10px] font-bold uppercase tracking-widest rounded-full mb-4">Level up your career</span>
+            <h2 class="text-3xl lg:text-4xl font-black text-white">Upgrade to Premium 🚀</h2>
+            <p class="text-white/90 font-medium mt-3 text-lg">Unlock all 6 weeks, assignments, and mentorship sessions instantly.</p>
           </div>
-          <div class="mt-6 md:mt-0 w-full md:w-auto flex justify-end md:ml-8 flex-shrink-0">
-            <button class="px-8 py-3.5 bg-white text-orange-600 font-extrabold rounded-xl shadow-xl hover:shadow-2xl transition-all active:scale-95 whitespace-nowrap">
-              Unlock Full Access
-            </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- Support Section -->
-      <footer class="mt-8 lg:mt-12">
-        <div class="bg-white p-5 lg:p-8 rounded-xl shadow-sm border border-outline-variant/5 flex flex-col sm:flex-row items-start sm:items-center gap-4 lg:gap-6">
-          <div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center flex-shrink-0">
-            <span class="material-symbols-outlined text-secondary">forum</span>
-          </div>
-          <div class="flex-grow">
-            <h5 class="font-bold text-sm">Need help with Week 1?</h5>
-            <p class="text-xs text-on-surface-variant">Join the student community discussion board.</p>
-          </div>
-          <button class="px-5 py-2 text-xs font-bold text-primary border border-primary/20 rounded-lg hover:bg-primary/5 transition-colors whitespace-nowrap">
-            Ask Question
+          <button onclick="document.querySelector('.premium-toggle-checkbox').click()" class="px-10 py-5 bg-white text-[#f57c00] font-black text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all active:scale-95 whitespace-nowrap">
+            Upgrade Now
           </button>
         </div>
-      </footer>
+      </section>
     </div>
   </main>
 
@@ -374,62 +401,140 @@
       if (window.innerWidth >= 1024) document.getElementById('sidebar-overlay').classList.add('hidden');
     });
 
-    // Interactive Video Player Logic
-    document.addEventListener('DOMContentLoaded', () => {
-      const container = document.getElementById('video-container');
-      const btnIcon = document.getElementById('play-btn-icon');
-      const progressBar = document.getElementById('video-progress-bar');
-      const timeText = document.getElementById('video-time-text');
+    // Mock Data for Weeks
+    const weekData = {
+      1: { title: "Self Discovery", d2: { type: "Interactive", title: "Career Interests Map", desc: "Identify fields and roles that excite you." }, milestone: "Complete all 6 tasks", progress: 33 },
+      2: { title: "Values & Strengths", d2: { type: "Assignment", title: "Strength Finder", desc: "Uncover your top 5 professional strengths." }, milestone: "Access Week 3", progress: 0 },
+      // ... more placeholder data
+    };
+
+    let activeWeek = 1;
+    let activeDay = 2; // Default start on D2 as requested
+    let journeyOffset = 0;
+    const ongoingWeek = 1; // Current system week
+
+    function initJourney() {
+      const container = document.getElementById('journey-scroll-container');
+      container.innerHTML = '';
       
-      let isPlaying = false;
-      let progress = 33.33; // Starts at ~12:45 / 34:00
-      let interval;
+      for (let w = 1; w <= 24; w++) {
+        let circleClass = "bg-white border-outline-variant/30 text-on-surface-variant";
+        let statusIcon = "";
+        
+        if (w < ongoingWeek) {
+          circleClass = "bg-green-500 border-green-500 text-white";
+          statusIcon = '<span class="material-symbols-outlined text-[10px] block">check</span>';
+        } else if (w === ongoingWeek) {
+          circleClass = "bg-[#ffeb3b] border-[#ffeb3b] text-on-surface font-black";
+        }
+
+        const activeCircleStyle = w === activeWeek ? 'border-[3px] border-primary ring-4 ring-primary/10' : '';
+        
+        container.innerHTML += `
+          <div onclick="selectWeek(${w})" class="flex flex-col items-center transition-all cursor-pointer px-2">
+            <div class="w-12 h-12 rounded-full border-2 flex flex-col items-center justify-center shadow-sm ${circleClass} ${activeCircleStyle}">
+              <span class="text-xs font-black">${w}</span>
+              ${statusIcon}
+            </div>
+            <span class="text-[11px] font-bold mt-3 font-headline ${w === activeWeek ? 'text-primary' : 'text-on-surface-variant/70'}">W${w}</span>
+          </div>
+        `;
+      }
+    }
+
+    function scrollJourney(dir) {
+      const container = document.getElementById('journey-scroll-container');
+      const itemWidth = container.offsetWidth / 24; // Width of one grid item
       
-      if (container && btnIcon && progressBar && timeText) {
-        container.addEventListener('click', (e) => {
-          // Ignore clicks on fullscreen button
-          if(e.target.closest('button')) return;
-          
-          if (progress >= 100) {
-            // Reset to beginning
-            progress = 0;
-            progressBar.style.width = '0%';
-            timeText.textContent = '00:00 / 34:00';
-            btnIcon.textContent = 'play_arrow';
-            localStorage.setItem('videoCompleted', 'false');
-            return;
+      journeyOffset += (dir * -1) * (itemWidth * 5); // Scroll 5 weeks
+      const maxScroll = -(itemWidth * 14); // 24 items - 10 visible = 14 to scroll
+      
+      if (journeyOffset > 0) journeyOffset = 0;
+      if (journeyOffset < maxScroll) journeyOffset = maxScroll;
+      
+      container.style.transform = `translateX(${journeyOffset}px)`;
+    }
+
+    function selectWeek(w) {
+      activeWeek = w;
+      document.getElementById('active-week-label').textContent = w;
+      document.getElementById('help-week-label').textContent = w;
+      // Update data based on week (mock)
+      const data = weekData[w] || { title: `Week ${w} Content`, d2: { type: "Module", title: "Coming Soon", desc: "This content is being prepared." }, milestone: "Stay tuned!", progress: 0 };
+      document.getElementById('video-title').textContent = `Week ${w} — ${data.title}`;
+      
+      initJourney();
+      updateWeekProgress(data.progress);
+    }
+
+    function updateWeekProgress(prog) {
+      document.getElementById('week-completion-badge').textContent = `${prog}% complete`;
+      document.getElementById('overview-percentage').textContent = `${prog}%`;
+      const circle = document.getElementById('overview-circle');
+      const offset = 440 - (440 * prog) / 100;
+      circle.style.strokeDashoffset = offset;
+    }
+
+    // Comprehensive Day Data
+    const taskData = {
+      2: { type: "Module", title: "Soft Skill Identification", desc: "Analyze your internal communication patterns and non-verbal cues to identify your native soft skills." },
+      3: { type: "Interactive", title: "Value Alignment Matrix", desc: "Map your personal values against potential career roles to find your true north." },
+      4: { type: "Strategy", title: "Market Positioning Audit", desc: "Research top industry leaders and map your current skills against their early career benchmarks." },
+      5: { type: "Assignment", title: "Personal Brand Statement", desc: "Draft a compelling 30-word personal brand statement that highlights your unique value proposition." },
+      6: { type: "Review", title: "Weekly Milestone Recap", desc: "A comprehensive look back at your progress. Review your assignments before the unlock gate." }
+    };
+
+    function selectDay(d) {
+      const isFreemium = document.documentElement.classList.contains('freemium-mode');
+      if (isFreemium && d >= 5) {
+        alert("Day 5 & 6 are Premium only. Upgrade to unlock!");
+        return;
+      }
+
+      activeDay = d;
+      document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('border-primary', 'text-primary', 'bg-primary/5'));
+      const activeTab = document.getElementById(`tab-d${d}`);
+      activeTab.classList.add('border-primary', 'text-primary', 'bg-primary/5');
+
+      // Update task content dynamically
+      const data = taskData[d];
+      document.getElementById('task-type-badge').textContent = data.type;
+      document.getElementById('task-title').textContent = data.title;
+      document.getElementById('task-description').textContent = data.desc;
+    }
+
+    // Video Player Logic
+    let isPlaying = false;
+    let videoProgress = 0;
+    let videoInterval;
+    
+    document.getElementById('video-container').addEventListener('click', () => {
+      isPlaying = !isPlaying;
+      const btn = document.getElementById('play-btn-icon');
+      if (isPlaying) {
+        btn.textContent = 'pause';
+        videoInterval = setInterval(() => {
+          videoProgress += 0.2;
+          if (videoProgress >= 100) {
+            videoProgress = 100;
+            clearInterval(videoInterval);
           }
-          
-          isPlaying = !isPlaying;
-          
-          if (isPlaying) {
-            btnIcon.textContent = 'pause';
-            // Start progressing the bar
-            interval = setInterval(() => {
-              progress += 0.5; // Controls the speed of the fake video player
-              if (progress >= 100) {
-                progress = 100;
-                clearInterval(interval);
-                isPlaying = false;
-                btnIcon.textContent = 'play_arrow'; // Let them replay if they want
-                timeText.textContent = 'Video Completed';
-                localStorage.setItem('videoCompleted', 'true');
-              } else {
-                let currentTotalSeconds = Math.floor((progress / 100) * 34 * 60);
-                let currentMins = Math.floor(currentTotalSeconds / 60);
-                let currentSecs = currentTotalSeconds % 60;
-                timeText.textContent = `${currentMins.toString().padStart(2, '0')}:${currentSecs.toString().padStart(2, '0')} / 34:00`;
-              }
-              progressBar.style.width = progress + '%';
-            }, 50); // Updates every 50ms for smooth animation
-          } else {
-            // Pause
-            btnIcon.textContent = 'play_arrow';
-            clearInterval(interval);
-          }
-        });
+          document.getElementById('video-progress-bar').style.width = videoProgress + '%';
+          document.getElementById('video-time-text').textContent = `${Math.floor(videoProgress/3)}:00 / 34:00`;
+        }, 100);
+      } else {
+        btn.textContent = 'play_arrow';
+        clearInterval(videoInterval);
       }
     });
+
+    function toggleNotes() { alert("Opening Week Notes..."); }
+
+    // Initialize
+    initJourney();
+    updateWeekProgress(33);
+    selectDay(2);
+
   </script>
 </body>
 </html>
