@@ -73,40 +73,39 @@
   </script>
   <style>
     .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
-    body { font-family: 'Inter', sans-serif; }
-    h1, h2, h3 { font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { font-family: 'Inter', sans-serif; background: #f2f4f8; }
+    h1, h2, h3, h4, h5 { font-family: 'Plus Jakarta Sans', sans-serif; }
     #sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
     #sidebar.sidebar-hidden { transform: translateX(-100%); }
     @media (min-width: 1024px) {
       #sidebar { transform: translateX(0) !important; }
       #sidebar-overlay { display: none !important; }
     }
-
-    /* Freemium Lock Overlay */
-    .freemium-mode .freemium-lock {
-      position: relative;
-      pointer-events: none;
-      filter: grayscale(100%) opacity(0.8);
-    }
-    .freemium-mode .freemium-lock::after {
-      content: '🔒 Premium';
-      position: absolute;
-      inset: 0;
-      background: rgba(255,255,255,0.6);
-      backdrop-filter: blur(2px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      font-weight: 800;
-      color: #191c1e;
-      z-index: 10;
-      border-radius: inherit;
-    }
-  
+    .freemium-mode .freemium-lock { position: relative; pointer-events: none; filter: grayscale(80%) opacity(0.7); }
+    .freemium-mode .freemium-lock::after { content: '🔒 Premium'; position: absolute; inset: 0; background: rgba(255,255,255,0.7); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; color: #24389c; z-index: 10; border-radius: inherit; }
     .freemium-only { display: none !important; }
     .freemium-mode .freemium-only { display: flex !important; }
     .freemium-mode .freemium-only-block { display: block !important; }
+
+    /* Journey Bar */
+    #journey-scroll-container { display: grid; grid-template-columns: repeat(24, 10%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    .week-chip { display: flex; flex-direction: column; align-items: center; cursor: pointer; padding: 0 6px; transition: transform 0.2s; }
+    .week-chip:hover { transform: translateY(-2px); }
+    .week-dot { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; border: 2px solid transparent; transition: all 0.2s; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+    .week-dot.completed { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; border-color: #16a34a; }
+    .week-dot.ongoing { background: linear-gradient(135deg, #fbbf24, #f59e0b); color: #1a1a1a; border-color: #f59e0b; }
+    .week-dot.upcoming { background: white; color: #9ca3af; border-color: #e5e7eb; }
+    .week-dot.selected { transform: scale(1.15); border-color: transparent !important; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .week-chip.selected { background: #f1f5f9; border-radius: 0.75rem; position: relative; }
+    .week-label { font-size: 10px; font-weight: 700; margin-top: 6px; font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    /* Day Tab Active */
+    .day-tab.active { color: #24389c; border-bottom-color: #24389c; background: rgba(36,56,156,0.05); }
+
+    /* Task Checklist */
+    .task-step { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid #f0f0f5; }
+    .task-step:last-child { border-bottom: none; }
+    .step-num { min-width: 26px; height: 26px; border-radius: 50%; background: #f0f4ff; color: #24389c; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
   </style>
   <script src="freemium-state.js"></script>
 </head>
@@ -194,201 +193,234 @@
   </header>
 
   <!-- Main Content -->
-  <main class="lg:ml-[260px] min-h-screen bg-surface-container-low p-6 pt-16 lg:p-10 lg:pt-10 xl:p-12">
-    <div class="max-w-6xl mx-auto space-y-10 lg:space-y-12"      <!-- Journey & Selection Context -->
-      <section class="bg-white rounded-2xl p-6 lg:p-8 border border-outline-variant/10 shadow-sm">
-        <div class="flex items-center justify-between mb-8">
-          <h2 class="text-xs font-black uppercase tracking-[0.2em] text-primary/60 font-headline">Your 24-week journey</h2>
-          <div class="flex items-center gap-3">
-            <button onclick="scrollJourney(-1)" class="w-10 h-10 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm active:scale-90">
-              <span class="material-symbols-outlined text-base">chevron_left</span>
+  <main class="lg:ml-[260px] min-h-screen bg-[#f2f4f8] p-6 pt-16 lg:p-8 lg:pt-8">
+    <div class="max-w-6xl mx-auto space-y-6">
+
+      <div class="bg-white rounded-2xl px-6 pt-5 pb-4 shadow-sm border border-slate-100">
+        <div class="flex items-center justify-between mb-1">
+          <div>
+            <p class="text-[10px] font-black uppercase tracking-[0.18em] text-primary/50">24-Week Learning Path</p>
+            <h2 class="text-base font-black text-slate-800 mt-0.5">Week <span id="active-week-label">1</span> &mdash; Self Discovery</h2>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full">Week 1 In Progress</span>
+            <button onclick="scrollJourney(-1)" class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all text-slate-500">
+              <span class="material-symbols-outlined" style="font-size:16px">chevron_left</span>
             </button>
-            <button onclick="scrollJourney(1)" class="w-10 h-10 rounded-full border border-outline-variant/30 flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all shadow-sm active:scale-90">
-              <span class="material-symbols-outlined text-base">chevron_right</span>
+            <button onclick="scrollJourney(1)" class="w-8 h-8 rounded-full border border-slate-200 flex items-center justify-center hover:bg-primary hover:text-white hover:border-primary transition-all text-slate-500">
+              <span class="material-symbols-outlined" style="font-size:16px">chevron_right</span>
             </button>
           </div>
         </div>
-
-        <div class="relative overflow-hidden px-1">
-          <!-- Using grid with 10% column width to ensure exactly 10 weeks visible on desktop -->
-          <div id="journey-scroll-container" class="grid grid-flow-col transition-transform duration-500 ease-out py-4" style="transform: translateX(0px); grid-template-columns: repeat(24, 10%);">
-             <!-- Week items will be injected here by JS -->
+        <div class="relative overflow-hidden mt-4">
+          <div id="journey-scroll-container">
+            <!-- injected by JS -->
           </div>
         </div>
-      </section>
+      </div>
 
-      <!-- Video & Support Split Section (Row 1) -->
-      <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
-        
-        <!-- Video Player Area (D1 - Wider) -->
-        <div class="lg:col-span-12 xl:col-span-8 flex flex-col space-y-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-               <div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-xs shadow-sm">D1</div>
-               <h3 class="text-lg font-bold">Week <span id="active-week-label">1</span> - Video Lecture</h3>
-            </div>
+      <!-- Row 1: Video + Support -->
+      <div class="grid grid-cols-12 gap-6">
+
+        <!-- Video Player -->
+        <div class="col-span-12 xl:col-span-7 flex flex-col gap-3">
+          <div class="flex items-center gap-2">
+            <span class="inline-flex items-center gap-1 bg-primary text-white text-[10px] font-black px-2.5 py-1 rounded-full uppercase tracking-wide">D1</span>
+            <span class="text-sm font-bold text-slate-700">Video Lecture &mdash; Week <span id="active-week-label-2">1</span></span>
           </div>
-
-          <div class="bg-white rounded-2xl overflow-hidden border border-outline-variant/10 shadow-lg group flex-grow flex flex-col">
-            <div id="video-container" class="relative aspect-video w-full bg-slate-900 cursor-pointer overflow-hidden">
-               <img id="video-thumbnail" class="absolute inset-0 w-full h-full object-cover opacity-60 grayscale group-hover:scale-105 transition-transform duration-700" alt="Video thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbYDp6Ai42o0XiNW3HrJuUmSoay0H37VBy9rJRRADzStVcal2OSMCMhW6VOBuS5D2xqm0pjr73HBlF_oXRk0-JwjXkM9kmPbhA9oHMBwnbbBSwsxjOQ6lkxzXLly21CnC9Rd7nsdUGITBKzbDUGKrlUXm6wEOo4SgDrpW5Xpt16tFrDVkCDgg30zJstqxG5gb6npx2GOdHeTGr2yOzXLOylr4R1vp36ZgqBJzUgQjJAE8ZI4M_M1ggX4dYvCffGx-UqK5ZHIv54eQo"/>
-               <div class="absolute inset-0 flex items-center justify-center z-10 transition-transform group-hover:scale-110">
-                 <div class="w-16 h-16 lg:w-20 lg:h-20 bg-primary text-white rounded-full flex items-center justify-center shadow-2xl overflow-hidden border-4 border-white/20">
-                   <span id="play-btn-icon" class="material-symbols-outlined text-4xl lg:text-5xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
-                 </div>
-               </div>
-               <!-- Progress Bar Backdrop -->
-               <div class="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-black/60 to-transparent pointer-events-none"></div>
-               <!-- Progress Bar -->
-               <div class="absolute bottom-6 left-6 right-6 flex items-center gap-4 z-20">
-                 <div class="flex-grow h-1.5 bg-white/20 rounded-full overflow-hidden backdrop-blur-sm">
-                   <div id="video-progress-bar" class="h-full bg-primary-fixed transition-all ease-linear shadow-[0_0_10px_rgba(255,255,255,0.5)]" style="width: 0%;"></div>
-                 </div>
-                 <span id="video-time-text" class="text-xs text-white font-mono font-bold drop-shadow-md" style="min-width: 80px;">00:00 / 34:00</span>
-                 <button class="text-white/80 hover:text-white transition-colors flex items-center" title="Full Screen">
-                   <span class="material-symbols-outlined text-sm">fullscreen</span>
-                 </button>
-               </div>
-            </div>
-            <div class="p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>
-                <p class="text-[10px] font-bold text-primary tracking-widest uppercase mb-1">Currently Watching</p>
-                <h2 id="video-title" class="text-xl lg:text-2xl font-bold tracking-tight">Week 1 — Foundations of Design Thinking</h2>
+          <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 group">
+            <div id="video-container" class="relative aspect-video w-full bg-[#3c3f44] cursor-pointer overflow-hidden">
+              <div class="absolute inset-0 flex items-center justify-center z-10">
+                <!-- Glowing Play Button Matching Screenshot -->
+                <div class="w-20 h-20 bg-[#24389c]/20 rounded-full flex items-center justify-center p-2 backdrop-blur-sm group-hover:scale-105 transition-transform duration-300 shadow-2xl">
+                  <div class="w-full h-full bg-[#24389c] rounded-full flex items-center justify-center text-white border border-white/5 shadow-inner">
+                    <span id="play-btn-icon" class="material-symbols-outlined text-4xl ml-1" style="font-variation-settings:'FILL' 1">play_arrow</span>
+                  </div>
+                </div>
               </div>
-              <button onclick="toggleNotes()" class="flex items-center gap-2 px-6 py-3 bg-surface border border-outline-variant/30 hover:bg-surface-container rounded-xl transition-all font-bold text-sm shadow-sm active:scale-95">
-                <span class="material-symbols-outlined">notes</span>
-                Notes
+              <!-- Dark Bottom Control Bar -->
+              <div class="absolute bottom-0 left-0 right-0 h-16 bg-[#282a2e] flex items-center px-6 gap-4 z-20">
+                <div class="flex-grow h-1 bg-white/10 rounded-full overflow-hidden">
+                  <div id="video-progress-bar" class="h-full bg-slate-400 rounded-full transition-all ease-linear" style="width:0%"></div>
+                </div>
+                <div class="flex items-center gap-4">
+                  <span id="video-time-text" class="text-[11px] text-white/80 font-mono font-bold" style="min-width:72px">00:00 / 34:00</span>
+                  <button class="text-white/60 hover:text-white transition-colors"><span class="material-symbols-outlined" style="font-size:18px">fullscreen</span></button>
+                </div>
+              </div>
+            </div>
+            <div class="px-5 py-4 flex items-center justify-between gap-4 border-t border-slate-50">
+              <div>
+                <p class="text-[10px] font-black text-primary/60 uppercase tracking-widest">Currently Watching</p>
+                <h3 id="video-title" class="text-base font-black text-slate-800 mt-0.5">Week 1 &mdash; Foundations of Design Thinking</h3>
+              </div>
+              <button onclick="toggleNotes()" class="flex items-center gap-2 px-4 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl transition-all text-sm font-bold text-slate-600">
+                <span class="material-symbols-outlined" style="font-size:18px">edit_note</span> Notes
               </button>
             </div>
           </div>
         </div>
 
-        <!-- Sidebar Support Area (Row 1 - Narrower) -->
-        <div class="lg:col-span-12 xl:col-span-4 flex flex-col gap-6 lg:gap-8 pt-[44px]">
-          <div class="bg-white rounded-2xl border border-outline-variant/10 p-8 shadow-sm flex flex-col items-center text-center flex-grow justify-center">
-            <div class="w-20 h-20 rounded-3xl bg-secondary-fixed flex items-center justify-center text-secondary mb-6 shadow-sm">
-              <span class="material-symbols-outlined text-4xl">forum</span>
+        <!-- Need Help Card -->
+        <div class="col-span-12 xl:col-span-5 flex flex-col gap-4 pt-[36px]">
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 flex flex-col flex-grow">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-50 flex items-center justify-center text-primary mb-4">
+              <span class="material-symbols-outlined text-2xl" style="font-variation-settings:'FILL' 1">support_agent</span>
             </div>
-            <h5 class="font-black text-lg">Need help?</h5>
-            <p class="text-sm text-on-surface-variant mt-2 max-w-[220px] leading-relaxed">Our mentors and community are here to help you bridge the gap in Week <span id="help-week-label">1</span>.</p>
-            <button class="w-full mt-8 px-6 py-4 bg-primary text-white rounded-xl font-bold text-sm hover:shadow-xl transition-all active:scale-95 flex items-center justify-center gap-2">
-              <span class="material-symbols-outlined text-lg">question_answer</span>
-              Ask a Question
-            </button>
+            <h4 class="font-black text-slate-800 text-base">Need Help with Week <span id="help-week-label">1</span>?</h4>
+            <p class="text-sm text-slate-500 mt-2 leading-relaxed flex-grow">Our mentors review your submissions and answer questions within 24 hours. Don't get stuck &mdash; ask away.</p>
+            <div class="mt-5 space-y-2">
+              <button class="w-full flex items-center justify-center gap-2 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold text-sm transition-all active:scale-95 shadow-lg shadow-primary/20">
+                <span class="material-symbols-outlined text-lg">question_answer</span> Ask a Question
+              </button>
+              <button class="w-full flex items-center justify-center gap-2 py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 rounded-xl font-bold text-sm transition-all">
+                <span class="material-symbols-outlined text-lg">groups</span> Join Community
+              </button>
+            </div>
           </div>
-          
-          <div class="flex items-center justify-center gap-4 text-primary font-bold text-sm bg-primary/5 px-6 py-4 rounded-2xl border border-primary/10">
-            <div class="flex items-center gap-2">
-              <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">stars</span>
-              <span id="week-completion-badge">0% complete</span>
+          <div class="bg-gradient-to-r from-primary to-indigo-700 rounded-2xl px-5 py-4 flex items-center gap-4">
+            <span class="material-symbols-outlined text-amber-300 text-3xl" style="font-variation-settings:'FILL' 1">stars</span>
+            <div>
+              <p class="text-white font-black text-lg" id="week-completion-badge">33% Complete</p>
+              <p class="text-white/60 text-xs font-semibold">Keep going, great progress!</p>
             </div>
-            <div class="w-px h-4 bg-primary/20"></div>
-            <span class="text-[10px] font-black uppercase tracking-widest">Active Week</span>
           </div>
         </div>
-      </section>
+      </div>
 
-      <!-- Task & Overview Split Section -->
-      <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10">
-        
-        <!-- Day-wise Task Card (Left - Wider) -->
-        <div class="lg:col-span-12 xl:col-span-8 flex flex-col">
-          <div class="bg-white rounded-2xl border border-outline-variant/10 shadow-sm overflow-hidden flex flex-col flex-grow">
-            <!-- Day Tabs -->
-            <div class="flex border-b border-outline-variant/10 bg-surface/30">
-               <button onclick="selectDay(2)" id="tab-d2" class="day-tab flex-1 py-4 px-2 border-b-2 border-transparent font-bold text-sm tracking-wide text-on-surface-variant hover:bg-primary/5 transition-all">D2</button>
-               <button onclick="selectDay(3)" id="tab-d3" class="day-tab flex-1 py-4 px-2 border-b-2 border-transparent font-bold text-sm tracking-wide text-on-surface-variant hover:bg-primary/5 transition-all">D3</button>
-               <button onclick="selectDay(4)" id="tab-d4" class="day-tab flex-1 py-4 px-2 border-b-2 border-transparent font-bold text-sm tracking-wide text-on-surface-variant hover:bg-primary/5 transition-all">D4</button>
-               <button onclick="selectDay(5)" id="tab-d5" class="day-tab flex-1 py-4 px-2 border-b-2 border-transparent font-bold text-sm tracking-wide text-on-surface-variant hover:bg-primary/5 transition-all relative">
-                 D5
-                 <span class="freemium-only absolute top-2 right-2 material-symbols-outlined text-[14px] opacity-40">lock</span>
-               </button>
-               <button onclick="selectDay(6)" id="tab-d6" class="day-tab flex-1 py-4 px-2 border-b-2 border-transparent font-bold text-sm tracking-wide text-on-surface-variant hover:bg-primary/5 transition-all relative">
-                 D6
-                 <span class="freemium-only absolute top-2 right-2 material-symbols-outlined text-[14px] opacity-40">lock</span>
-               </button>
+      <!-- Row 2: Tasks + Overview -->
+      <div class="grid grid-cols-12 gap-6">
+
+        <!-- D2-D6 Task Card -->
+        <div class="col-span-12 xl:col-span-7">
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
+            <!-- Tabs -->
+            <div class="flex border-b border-slate-100">
+              <button onclick="selectDay(2)" id="tab-d2" class="day-tab flex-1 py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all">Day 2</button>
+              <button onclick="selectDay(3)" id="tab-d3" class="day-tab flex-1 py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all">Day 3</button>
+              <button onclick="selectDay(4)" id="tab-d4" class="day-tab flex-1 py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all">Day 4</button>
+              <button onclick="selectDay(5)" id="tab-d5" class="day-tab flex-1 py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all relative">
+                Day 5 <span class="freemium-only absolute top-1.5 right-1.5 material-symbols-outlined text-[12px] text-slate-300">lock</span>
+              </button>
+              <button onclick="selectDay(6)" id="tab-d6" class="day-tab flex-1 py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all relative">
+                Day 6 <span class="freemium-only absolute top-1.5 right-1.5 material-symbols-outlined text-[12px] text-slate-300">lock</span>
+              </button>
             </div>
 
             <!-- Task Content -->
-            <div class="p-8 space-y-6">
-              <div class="flex items-center gap-3">
-                <span id="task-type-badge" class="px-2 py-0.5 rounded bg-primary/5 text-primary text-[10px] font-bold uppercase tracking-wider">Interactive</span>
-                <h4 id="task-title" class="text-xl font-bold">Career Interests Map</h4>
+            <div class="p-6">
+              <!-- Header -->
+              <div class="flex items-start justify-between mb-5">
+                <div>
+                  <span id="task-type-badge" class="inline-block text-[10px] font-black uppercase tracking-wider text-primary bg-primary/8 px-2.5 py-1 rounded-full border border-primary/15">Module</span>
+                  <h4 id="task-title" class="text-xl font-black text-slate-800 mt-2">Soft Skill Identification</h4>
+                  <p id="task-description" class="text-sm text-slate-500 mt-1.5 leading-relaxed">Analyze your communication patterns to identify your native soft skills and professional strengths.</p>
+                </div>
+                <div class="text-right ml-4 flex-shrink-0">
+                  <span class="text-[10px] font-black text-slate-400 uppercase tracking-wider">Est. Time</span>
+                  <p id="task-duration" class="text-sm font-black text-slate-700">45 mins</p>
+                </div>
               </div>
-              <p id="task-description" class="text-on-surface-variant leading-relaxed">
-                Identify fields and roles that excite you — the first building block of your career direction.
-              </p>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                <button class="flex items-center justify-center gap-2 py-3 bg-white border border-outline-variant/30 rounded-xl font-bold text-sm hover:bg-surface shadow-sm transition-all active:scale-[0.98]">
-                  <span class="material-symbols-outlined">download</span>
-                  Download task
+              <!-- Steps -->
+              <div class="mb-5" id="task-steps">
+                <p class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-3">Task Steps</p>
+                <div class="task-step"><div class="step-num">1</div><p class="text-sm text-slate-600 leading-snug">Read the framework document on communication archetypes.</p></div>
+                <div class="task-step"><div class="step-num">2</div><p class="text-sm text-slate-600 leading-snug">Complete the 10-question self-assessment worksheet.</p></div>
+                <div class="task-step"><div class="step-num">3</div><p class="text-sm text-slate-600 leading-snug">Identify your top 3 soft skills from the results.</p></div>
+                <div class="task-step"><div class="step-num">4</div><p class="text-sm text-slate-600 leading-snug">Write a 100-word reflection on how they show up in your work.</p></div>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex gap-3 mb-5">
+                <button class="flex-1 flex items-center justify-center gap-2 py-3 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl font-bold text-sm text-slate-700 transition-all active:scale-[0.98]">
+                  <span class="material-symbols-outlined text-lg">download</span> Download Task
                 </button>
-                <button class="flex items-center justify-center gap-2 py-3 bg-primary text-white rounded-xl font-bold text-sm hover:shadow-lg transition-all active:scale-[0.98]">
-                  <span class="material-symbols-outlined">upload</span>
-                  Upload answer
+                <button class="flex-1 flex items-center justify-center gap-2 py-3 bg-primary text-white rounded-xl font-bold text-sm transition-all active:scale-[0.98] shadow-md shadow-primary/20">
+                  <span class="material-symbols-outlined text-lg">upload</span> Upload Answer
                 </button>
               </div>
 
               <!-- Upload Dropzone -->
-              <div class="border-2 border-dashed border-outline-variant/20 bg-surface/50 rounded-2xl p-8 flex flex-col items-center justify-center gap-3 group hover:border-primary/30 transition-colors cursor-pointer">
-                <span class="material-symbols-outlined text-3xl opacity-30 group-hover:opacity-100 transition-opacity">upload_file</span>
-                <p class="text-xs font-bold text-on-surface-variant">Drop your file here or click to upload</p>
+              <div class="border-2 border-dashed border-slate-200 bg-slate-50/50 rounded-2xl p-6 flex flex-col items-center justify-center gap-3 group hover:border-primary/30 transition-colors cursor-pointer">
+                <div class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
+                  <span class="material-symbols-outlined text-xl">upload_file</span>
+                </div>
+                <div class="text-center">
+                  <p class="text-xs font-bold text-slate-700">Drop your file here or click to upload</p>
+                  <p class="text-[10px] text-slate-400 mt-1">PDF, DOCX or ZIP up to 10MB</p>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Sidebar (Right - Narrower) -->
-        <div class="lg:col-span-5 xl:col-span-4 flex flex-col gap-6 lg:gap-8">
-          
-          <!-- Week Overview Card -->
-          <div class="bg-white rounded-2xl border border-outline-variant/10 p-8 shadow-sm flex flex-col items-center text-center">
-            <h5 id="overview-title" class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest mb-6">Week 1 Overview</h5>
-            <div class="relative w-40 h-40">
-              <svg class="w-full h-full transform -rotate-90">
-                <circle cx="80" cy="80" r="70" stroke="currentColor" stroke-width="8" fill="transparent" class="text-surface-container"></circle>
-                <circle id="overview-circle" cx="80" cy="80" r="70" stroke="currentColor" stroke-width="8" fill="transparent" stroke-dasharray="440" stroke-dashoffset="293" class="text-primary transition-all duration-1000 ease-out"></circle>
-              </svg>
-              <div class="absolute inset-0 flex flex-col items-center justify-center">
-                <span id="overview-percentage" class="text-4xl font-black text-on-surface">33%</span>
+        <!-- Sidebar: Overview + Milestone -->
+        <div class="col-span-12 xl:col-span-5 flex flex-col gap-6">
+
+          <!-- Week Overview -->
+          <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
+            <div class="flex items-center justify-between mb-4">
+              <p id="overview-title" class="text-[10px] font-black uppercase tracking-widest text-slate-400">Week 1 Overview</p>
+              <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full">In Progress</span>
+            </div>
+            <div class="flex items-center gap-5">
+              <div class="relative w-24 h-24 flex-shrink-0">
+                <svg class="w-full h-full -rotate-90">
+                  <circle cx="48" cy="48" r="40" stroke="#f0f0f8" stroke-width="7" fill="transparent"></circle>
+                  <circle id="overview-circle" cx="48" cy="48" r="40" stroke="#24389c" stroke-width="7" fill="transparent" stroke-dasharray="251" stroke-dashoffset="168" class="transition-all duration-1000"></circle>
+                </svg>
+                <div class="absolute inset-0 flex items-center justify-center">
+                  <span id="overview-percentage" class="text-xl font-black text-slate-800">33%</span>
+                </div>
+              </div>
+              <div class="flex-grow">
+                <p class="font-black text-slate-800">Good momentum! 🚀</p>
+                <p class="text-xs text-slate-500 mt-1 leading-relaxed">2 of 6 tasks done. Finish all tasks to earn your Week 1 badge.</p>
+                <div class="mt-3 space-y-1.5">
+                  <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span class="text-xs text-slate-600">D1 Video — Done</span></div>
+                  <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span><span class="text-xs text-slate-600">D2 Task — Submitted</span></div>
+                  <div class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-slate-200"></span><span class="text-xs text-slate-400">D3–D6 — Pending</span></div>
+                </div>
               </div>
             </div>
-            <p id="overview-status" class="mt-6 text-sm font-bold text-on-surface">A good start! 🚀</p>
-            <p class="mt-1 text-xs text-on-surface-variant">Finish Week 1 to unlock your certificate.</p>
           </div>
 
-          <!-- Next Milestone Card -->
-          <div class="bg-primary rounded-2xl p-8 shadow-xl relative overflow-hidden group">
-            <div class="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-2xl group-hover:scale-110 transition-transform duration-700"></div>
+          <!-- Next Milestone -->
+          <div class="bg-gradient-to-br from-[#24389c] to-[#4355b9] rounded-2xl p-6 shadow-xl relative overflow-hidden">
+            <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-white/5 rounded-full"></div>
+            <div class="absolute -right-2 -top-4 w-16 h-16 bg-white/5 rounded-full"></div>
             <div class="relative z-10">
-              <p class="text-primary-fixed text-[10px] font-bold uppercase tracking-widest opacity-80">Next Milestone</p>
-              <h4 id="milestone-title" class="text-white text-xl font-bold mt-2 leading-tight">Complete all 6 tasks</h4>
-              <p id="milestone-desc" class="text-white/70 text-xs mt-3 leading-relaxed">Finish Week 1 to unlock Week 2 and the next module.</p>
-              <button id="milestone-btn" class="w-full py-4 mt-6 bg-white/95 hover:bg-white text-primary rounded-xl font-bold text-sm transition-all active:scale-[0.98] flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined text-lg">lock</span>
-                Access Week 2
+              <p class="text-white/50 text-[10px] font-black uppercase tracking-widest">Next Milestone</p>
+              <h4 id="milestone-title" class="text-white text-lg font-black mt-1.5 leading-snug">Complete all 6 tasks</h4>
+              <p id="milestone-desc" class="text-white/60 text-xs mt-2 leading-relaxed">Finish Week 1 to unlock Week 2 content and your first certificate.</p>
+              <div class="mt-4 flex items-center gap-2 text-amber-300 text-xs font-bold">
+                <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1">emoji_events</span>
+                Week 1 Completion Badge
+              </div>
+              <button id="milestone-btn" class="w-full py-3 mt-5 bg-white/15 hover:bg-white/25 backdrop-blur-sm border border-white/20 text-white rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2">
+                <span class="material-symbols-outlined text-base">lock</span> Access Week 2
               </button>
             </div>
           </div>
-
         </div>
-      </section>
+      </div>
 
       <!-- Premium Upgrade Banner -->
-      <section class="bg-gradient-to-br from-[#ff9800] to-[#f57c00] p-8 lg:p-12 rounded-3xl shadow-2xl relative overflow-hidden group freemium-only">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-white/20 rounded-full blur-3xl -mr-20 -mt-20 group-hover:scale-110 transition-transform duration-700"></div>
-        <div class="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-8">
-          <div class="text-center lg:text-left">
-            <span class="inline-block px-3 py-1 bg-white/20 text-white text-[10px] font-bold uppercase tracking-widest rounded-full mb-4">Level up your career</span>
-            <h2 class="text-3xl lg:text-4xl font-black text-white">Upgrade to Premium 🚀</h2>
-            <p class="text-white/90 font-medium mt-3 text-lg">Unlock all 6 weeks, assignments, and mentorship sessions instantly.</p>
+      <div class="bg-gradient-to-r from-orange-500 to-amber-500 p-8 rounded-2xl shadow-xl relative overflow-hidden group freemium-only">
+        <div class="absolute right-0 top-0 w-56 h-56 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-700"></div>
+        <div class="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div>
+            <span class="text-white/80 text-[10px] font-black uppercase tracking-widest">Level up your career</span>
+            <h2 class="text-3xl font-black text-white mt-1">Upgrade to Premium 🚀</h2>
+            <p class="text-white/80 font-medium mt-2">Unlock all 6 weeks, assignments &amp; mentorship instantly.</p>
           </div>
-          <button onclick="document.querySelector('.premium-toggle-checkbox').click()" class="px-10 py-5 bg-white text-[#f57c00] font-black text-lg rounded-2xl shadow-xl hover:shadow-2xl transition-all active:scale-95 whitespace-nowrap">
+          <button onclick="document.querySelector('.premium-toggle-checkbox').click()" class="px-8 py-4 bg-white text-orange-600 font-black text-base rounded-xl shadow-xl hover:shadow-2xl transition-all active:scale-95 whitespace-nowrap">
             Upgrade Now
           </button>
         </div>
-      </section>
+      </div>
+
     </div>
   </main>
 
@@ -416,42 +448,30 @@
     function initJourney() {
       const container = document.getElementById('journey-scroll-container');
       container.innerHTML = '';
-      
       for (let w = 1; w <= 24; w++) {
-        let circleClass = "bg-white border-outline-variant/30 text-on-surface-variant";
-        let statusIcon = "";
-        
-        if (w < ongoingWeek) {
-          circleClass = "bg-green-500 border-green-500 text-white";
-          statusIcon = '<span class="material-symbols-outlined text-[10px] block">check</span>';
-        } else if (w === ongoingWeek) {
-          circleClass = "bg-[#ffeb3b] border-[#ffeb3b] text-on-surface font-black";
-        }
-
-        const activeCircleStyle = w === activeWeek ? 'border-[3px] border-primary ring-4 ring-primary/10' : '';
-        
+        let dotClass = 'upcoming';
+        let label = '';
+        if (w < ongoingWeek) { dotClass = 'completed'; label = '✓'; }
+        else if (w === ongoingWeek) { dotClass = 'ongoing'; label = w; }
+        else { label = w; }
+        const selectedClass = w === activeWeek ? 'selected' : '';
+        const chipSelectedClass = w === activeWeek ? 'selected' : '';
+        const labelColor = w === activeWeek ? 'color:#24389c' : (w < ongoingWeek ? 'color:#16a34a' : w === ongoingWeek ? 'color:#b45309' : 'color:#9ca3af');
         container.innerHTML += `
-          <div onclick="selectWeek(${w})" class="flex flex-col items-center transition-all cursor-pointer px-2">
-            <div class="w-12 h-12 rounded-full border-2 flex flex-col items-center justify-center shadow-sm ${circleClass} ${activeCircleStyle}">
-              <span class="text-xs font-black">${w}</span>
-              ${statusIcon}
-            </div>
-            <span class="text-[11px] font-bold mt-3 font-headline ${w === activeWeek ? 'text-primary' : 'text-on-surface-variant/70'}">W${w}</span>
-          </div>
-        `;
+          <div class="week-chip py-2 ${chipSelectedClass}" onclick="selectWeek(${w})">
+            <div class="week-dot ${dotClass} ${selectedClass}">${label}</div>
+            <span class="week-label" style="${labelColor}">W${w}</span>
+          </div>`;
       }
     }
 
     function scrollJourney(dir) {
       const container = document.getElementById('journey-scroll-container');
-      const itemWidth = container.offsetWidth / 24; // Width of one grid item
-      
-      journeyOffset += (dir * -1) * (itemWidth * 5); // Scroll 5 weeks
-      const maxScroll = -(itemWidth * 14); // 24 items - 10 visible = 14 to scroll
-      
+      const itemW = container.offsetWidth / 24;
+      journeyOffset += (dir * -1) * itemW * 5;
+      const max = -(itemW * 14);
       if (journeyOffset > 0) journeyOffset = 0;
-      if (journeyOffset < maxScroll) journeyOffset = maxScroll;
-      
+      if (journeyOffset < max) journeyOffset = max;
       container.style.transform = `translateX(${journeyOffset}px)`;
     }
 
@@ -470,37 +490,43 @@
     function updateWeekProgress(prog) {
       document.getElementById('week-completion-badge').textContent = `${prog}% complete`;
       document.getElementById('overview-percentage').textContent = `${prog}%`;
+      document.getElementById('week-completion-badge').textContent = `${prog}% Complete`;
       const circle = document.getElementById('overview-circle');
-      const offset = 440 - (440 * prog) / 100;
-      circle.style.strokeDashoffset = offset;
+      circle.style.strokeDashoffset = 251 - (251 * prog / 100);
     }
 
     // Comprehensive Day Data
     const taskData = {
-      2: { type: "Module", title: "Soft Skill Identification", desc: "Analyze your internal communication patterns and non-verbal cues to identify your native soft skills." },
-      3: { type: "Interactive", title: "Value Alignment Matrix", desc: "Map your personal values against potential career roles to find your true north." },
-      4: { type: "Strategy", title: "Market Positioning Audit", desc: "Research top industry leaders and map your current skills against their early career benchmarks." },
-      5: { type: "Assignment", title: "Personal Brand Statement", desc: "Draft a compelling 30-word personal brand statement that highlights your unique value proposition." },
-      6: { type: "Review", title: "Weekly Milestone Recap", desc: "A comprehensive look back at your progress. Review your assignments before the unlock gate." }
+      2: { type: "Module", title: "Soft Skill Identification", desc: "Analyze your communication patterns to identify your native soft skills.", duration: "45 mins",
+           steps: ["Read the framework doc on communication archetypes.","Complete the 10-question self-assessment.","Identify your top 3 soft skills.","Write a 100-word reflection on how they show up in your work."] },
+      3: { type: "Interactive", title: "Value Alignment Matrix", desc: "Map your personal values against potential career roles to find your true north.", duration: "60 mins",
+           steps: ["List your top 10 personal values.","Research 5 roles that interest you.","Score each role against your values (1–5).","Write your top 2 alignment picks with reasoning."] },
+      4: { type: "Strategy", title: "Market Positioning Audit", desc: "Research top industry leaders and map your current skills against their benchmarks.", duration: "50 mins",
+           steps: ["Pick 3 professionals you admire in your target field.","List their top 5 skills from LinkedIn.","Map your current skill list against theirs.","Identify your top 2 gaps to work on."] },
+      5: { type: "Assignment", title: "Personal Brand Statement", desc: "Draft a compelling 30-word personal brand statement that highlights your value.", duration: "40 mins",
+           steps: ["Review the brand statement formula provided.","Draft 3 different versions of your statement.","Get feedback from a peer or mentor.","Finalize and submit your best version."] },
+      6: { type: "Review", title: "Weekly Milestone Recap", desc: "A comprehensive review of your Week 1 progress before the unlock gate.", duration: "30 mins",
+           steps: ["Review all D2–D5 submissions.","Self-grade your work against the rubric.","Identify your biggest insight from the week.","Submit your Week 1 reflection summary."] }
     };
 
     function selectDay(d) {
       const isFreemium = document.documentElement.classList.contains('freemium-mode');
       if (isFreemium && d >= 5) {
-        alert("Day 5 & 6 are Premium only. Upgrade to unlock!");
+        alert('Day 5 & 6 are Premium only. Upgrade to unlock!');
         return;
       }
-
       activeDay = d;
-      document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('border-primary', 'text-primary', 'bg-primary/5'));
-      const activeTab = document.getElementById(`tab-d${d}`);
-      activeTab.classList.add('border-primary', 'text-primary', 'bg-primary/5');
+      document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(`tab-d${d}`).classList.add('active');
 
-      // Update task content dynamically
       const data = taskData[d];
       document.getElementById('task-type-badge').textContent = data.type;
       document.getElementById('task-title').textContent = data.title;
       document.getElementById('task-description').textContent = data.desc;
+      document.getElementById('task-duration').textContent = data.duration;
+      const stepsEl = document.getElementById('task-steps');
+      stepsEl.innerHTML = '<p class="text-[10px] font-black uppercase tracking-wider text-slate-400 mb-3">Task Steps</p>' +
+        data.steps.map((s, i) => `<div class="task-step"><div class="step-num">${i+1}</div><p class="text-sm text-slate-600 leading-snug">${s}</p></div>`).join('');
     }
 
     // Video Player Logic

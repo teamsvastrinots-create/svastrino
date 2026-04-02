@@ -877,51 +877,51 @@
       </div>
 
       <!-- PDF Canvas wrapper (Scrollable area) -->
-      <div class="overflow-y-auto flex-grow w-full py-6 md:py-8 px-4 flex justify-center items-start">
+      <div class="overflow-y-auto flex-grow w-full py-6 px-4 flex justify-center items-start">
         
-        <!-- The Mock Document -->
-        <div id="report-document" class="bg-white max-w-[800px] w-full shadow-2xl flex flex-col relative font-body text-on-surface-variant group">
+        <!-- The Mock Document — 100% inline styles for html2canvas compatibility -->
+        <div id="report-document" style="background:#fff; width:794px; min-width:794px; font-family:'Inter',sans-serif; color:#191c1e; display:flex; flex-direction:column; box-shadow:0 20px 60px rgba(0,0,0,0.15);">
         
-        <!-- Inner content padded area -->
-        <div class="p-8 sm:p-12 md:p-16 flex flex-col flex-grow select-none">
+          <!-- Inner content padded area -->
+          <div style="padding:48px 56px; display:flex; flex-direction:column; flex:1; user-select:none;">
           
-          <!-- Header -->
-          <div class="border-l-4 border-primary pl-4 mb-10">
-             <h5 class="text-[10px] font-[800] tracking-[0.2em] text-outline-variant mb-1 uppercase">SVASTRINO CAREER INTELLIGENCE REPORT</h5>
-             <p id="report-user-meta" class="text-sm font-[600] text-on-surface">Sample User &middot; Class 11 &middot; India &middot; Assessed: 1 Apr 2026</p>
-          </div>
+            <!-- Header -->
+            <div style="border-left:4px solid #24389c; padding-left:16px; margin-bottom:28px;">
+              <p style="font-size:10px; font-weight:800; letter-spacing:0.2em; color:#757684; text-transform:uppercase; margin:0 0 4px 0;">SVASTRINO CAREER INTELLIGENCE REPORT</p>
+              <p id="report-user-meta" style="font-size:14px; font-weight:600; color:#191c1e; margin:0;">Sample User &middot; Class 11 &middot; India &middot; Assessed: 1 Apr 2026</p>
+            </div>
 
-          <!-- Profile Title & Score -->
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 pb-8 border-b border-outline-variant/10 gap-6">
-             <div>
-                <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest mb-2">YOUR PERSONALITY TYPE</h6>
-                <h1 class="font-headline text-4xl lg:text-5xl font-[800] text-primary mb-3 text-on-surface">The Explorer</h1>
-                <p class="font-bold text-on-surface mb-3">Creative Problem-Solver &middot; Right-Brain Dominant</p>
-                <p class="text-sm text-on-surface-variant leading-relaxed max-w-xl">You think in big ideas, connect dots others miss, and thrive when given freedom to create. You bring originality to everything you touch.</p>
-             </div>
-             <div class="flex flex-col items-start md:items-end relative md:pt-4">
-                <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest mb-1">PROFILE SCORE</h6>
-                <div class="flex items-baseline text-[#6060c5]">
-                  <span class="font-headline text-5xl lg:text-6xl font-extrabold tracking-tighter">78</span>
-                  <span class="font-headline text-lg font-bold text-outline-variant ml-2 mt-2">/ 100</span>
+            <!-- Profile Title & Score -->
+            <div style="display:flex; flex-direction:row; justify-content:space-between; align-items:flex-end; margin-bottom:28px; padding-bottom:28px; border-bottom:1px solid #e8e8f0; gap:24px;">
+              <div style="max-width:420px;">
+                <p style="font-size:10px; font-weight:700; color:#757684; text-transform:uppercase; letter-spacing:0.12em; margin:0 0 8px 0;">YOUR PERSONALITY TYPE</p>
+                <h1 style="font-family:'Plus Jakarta Sans',sans-serif; font-size:36px; font-weight:800; color:#24389c; margin:0 0 10px 0; line-height:1.15;">The Explorer</h1>
+                <p style="font-size:14px; font-weight:700; color:#191c1e; margin:0 0 10px 0;">Creative Problem-Solver &middot; Right-Brain Dominant</p>
+                <p style="font-size:13px; color:#454652; line-height:1.65; margin:0;">You think in big ideas, connect dots others miss, and thrive when given freedom to create. You bring originality to everything you touch.</p>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:flex-end; flex-shrink:0;">
+                <p style="font-size:10px; font-weight:700; color:#757684; text-transform:uppercase; letter-spacing:0.12em; margin:0 0 4px 0;">PROFILE SCORE</p>
+                <div style="display:flex; align-items:baseline; color:#6060c5;">
+                  <span style="font-family:'Plus Jakarta Sans',sans-serif; font-size:56px; font-weight:900; letter-spacing:-2px; line-height:1;">78</span>
+                  <span style="font-size:16px; font-weight:700; color:#9a9ab0; margin-left:8px;">/ 100</span>
                 </div>
-                <div class="mt-3 bg-[#f0f2ff] border border-primary/20 text-[#6060c5] text-[10px] uppercase font-bold px-3 py-1.5 rounded-full whitespace-nowrap">Top 8% of students</div>
-             </div>
-          </div>
+                <div style="margin-top:10px; background:#f0f2ff; border:1px solid rgba(36,56,156,0.2); color:#6060c5; font-size:10px; text-transform:uppercase; font-weight:700; padding:5px 12px; border-radius:999px; white-space:nowrap;">Top 8% of students</div>
+              </div>
+            </div>
 
           <!-- Dimensions -->
-          <div class="mb-10">
-             <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest mb-6 border-b border-outline-variant/20 inline-block pb-1">PERSONALITY DIMENSIONS</h6>
+          <div class="mb-8">
+             <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest mb-5 border-b border-outline-variant/20 pb-2 block">PERSONALITY DIMENSIONS</h6>
              
-             <div class="space-y-6">
+             <div class="space-y-5">
                <!-- Creativity -->
                <div>
                  <div class="flex justify-between items-center mb-1">
                    <span class="font-[600] text-sm text-on-surface">Creativity</span>
                    <span class="font-bold text-xs text-[#6060c5]">91%</span>
                  </div>
-                 <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-1">
-                   <div class="bg-[#6060c5] h-full rounded-full w-[91%]"></div>
+                 <div class="w-full bg-surface-container rounded-full overflow-hidden mb-1" style="height:10px;">
+                   <div class="bg-[#6060c5] h-full rounded-full" style="width:91%;"></div>
                  </div>
                  <p class="text-[11px] text-on-surface-variant">Ideas come naturally — you generate what others cannot imagine</p>
                </div>
@@ -931,8 +931,8 @@
                    <span class="font-[600] text-sm text-on-surface">Empathy</span>
                    <span class="font-bold text-xs text-[#006471]">82%</span>
                  </div>
-                 <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-1">
-                   <div class="bg-[#008f86] h-full rounded-full w-[82%]"></div>
+                 <div class="w-full bg-surface-container rounded-full overflow-hidden mb-1" style="height:10px;">
+                   <div class="bg-[#008f86] h-full rounded-full" style="width:82%;"></div>
                  </div>
                  <p class="text-[11px] text-on-surface-variant">You read people and situations with rare accuracy</p>
                </div>
@@ -942,8 +942,8 @@
                    <span class="font-[600] text-sm text-on-surface">Resilience</span>
                    <span class="font-bold text-xs text-[#523da1]">77%</span>
                  </div>
-                 <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-1">
-                   <div class="bg-[#523da1] h-full rounded-full w-[77%]"></div>
+                 <div class="w-full bg-surface-container rounded-full overflow-hidden mb-1" style="height:10px;">
+                   <div class="bg-[#523da1] h-full rounded-full" style="width:77%;"></div>
                  </div>
                  <p class="text-[11px] text-on-surface-variant">You recover fast and keep moving under pressure</p>
                </div>
@@ -953,8 +953,8 @@
                    <span class="font-[600] text-sm text-on-surface">Logical Thinking</span>
                    <span class="font-bold text-xs text-blue-600">74%</span>
                  </div>
-                 <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-1">
-                   <div class="bg-blue-600 h-full rounded-full w-[74%]"></div>
+                 <div class="w-full bg-surface-container rounded-full overflow-hidden mb-1" style="height:10px;">
+                   <div class="bg-blue-600 h-full rounded-full" style="width:74%;"></div>
                  </div>
                  <p class="text-[11px] text-on-surface-variant">You back your instincts with structured reasoning</p>
                </div>
@@ -962,10 +962,10 @@
                <div>
                  <div class="flex justify-between items-center mb-1">
                    <span class="font-[600] text-sm text-on-surface">Leadership</span>
-                   <span class="font-bold text-xs text-secondary-container text-orange-500">68%</span>
+                   <span class="font-bold text-xs text-orange-500">68%</span>
                  </div>
-                 <div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden mb-1">
-                   <div class="bg-orange-500 h-full rounded-full w-[68%]"></div>
+                 <div class="w-full bg-surface-container rounded-full overflow-hidden mb-1" style="height:10px;">
+                   <div class="bg-orange-500 h-full rounded-full" style="width:68%;"></div>
                  </div>
                  <p class="text-[11px] text-on-surface-variant">You naturally step up when direction is needed</p>
                </div>
@@ -973,33 +973,33 @@
           </div>
 
           <!-- Top Career Matches -->
-          <div class="mb-10">
-             <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest border-b border-outline-variant/20 pb-2 mb-6 block">TOP CAREER MATCHES</h6>
-             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="mb-8">
+             <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest border-b border-outline-variant/20 pb-2 mb-5 block">TOP CAREER MATCHES</h6>
+             <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">
                <!-- Card 1 -->
-               <div class="bg-white border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                 <div class="h-1.5 bg-[#6060c5] w-full"></div>
-                 <div class="p-4">
-                   <span class="bg-[#f0f0ff] border border-[#6060c5]/30 text-[#6060c5] text-[10px] px-2.5 py-1 rounded-full font-bold mb-3 inline-block">94% match</span>
-                   <h5 class="text-sm font-[700] mb-1.5 text-on-surface">Design &amp; Creative Media</h5>
+               <div class="bg-white border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm">
+                 <div class="bg-[#6060c5]" style="height:6px; width:100%;"></div>
+                 <div style="padding:14px;">
+                   <span class="bg-[#f0f0ff] border border-[#6060c5]/30 text-[#6060c5] text-[10px] px-2.5 py-1 rounded-full font-bold inline-block" style="margin-bottom:10px;">94% match</span>
+                   <h5 class="text-sm font-[700] text-on-surface" style="margin-bottom:6px;">Design &amp; Creative Media</h5>
                    <p class="text-[11px] text-on-surface-variant leading-relaxed">Visual thinking and originality in top 5%</p>
                  </div>
                </div>
                <!-- Card 2 -->
-               <div class="bg-white border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                 <div class="h-1.5 bg-[#008f86] w-full"></div>
-                 <div class="p-4">
-                   <span class="bg-[#f0fffe] border border-[#008f86]/30 text-[#008f86] text-[10px] px-2.5 py-1 rounded-full font-bold mb-3 inline-block">88% match</span>
-                   <h5 class="text-sm font-[700] mb-1.5 text-on-surface">Entrepreneurship &amp; Business</h5>
+               <div class="bg-white border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm">
+                 <div class="bg-[#008f86]" style="height:6px; width:100%;"></div>
+                 <div style="padding:14px;">
+                   <span class="bg-[#f0fffe] border border-[#008f86]/30 text-[#008f86] text-[10px] px-2.5 py-1 rounded-full font-bold inline-block" style="margin-bottom:10px;">88% match</span>
+                   <h5 class="text-sm font-[700] text-on-surface" style="margin-bottom:6px;">Entrepreneurship &amp; Business</h5>
                    <p class="text-[11px] text-on-surface-variant leading-relaxed">Independence and risk appetite are exceptional</p>
                  </div>
                </div>
                <!-- Card 3 -->
-               <div class="bg-white border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-                 <div class="h-1.5 bg-[#2978a3] w-full"></div>
-                 <div class="p-4">
-                   <span class="bg-[#eef5ff] border border-[#2978a3]/30 text-[#2978a3] text-[10px] px-2.5 py-1 rounded-full font-bold mb-3 inline-block">81% match</span>
-                   <h5 class="text-sm font-[700] mb-1.5 text-on-surface">Psychology &amp; Counselling</h5>
+               <div class="bg-white border border-outline-variant/30 rounded-xl overflow-hidden shadow-sm">
+                 <div class="bg-[#2978a3]" style="height:6px; width:100%;"></div>
+                 <div style="padding:14px;">
+                   <span class="bg-[#eef5ff] border border-[#2978a3]/30 text-[#2978a3] text-[10px] px-2.5 py-1 rounded-full font-bold inline-block" style="margin-bottom:10px;">81% match</span>
+                   <h5 class="text-sm font-[700] text-on-surface" style="margin-bottom:6px;">Psychology &amp; Counselling</h5>
                    <p class="text-[11px] text-on-surface-variant leading-relaxed">Empathy score higher than 90% of students</p>
                  </div>
                </div>
@@ -1007,46 +1007,48 @@
           </div>
 
           <!-- Top Strengths -->
-          <div class="mb-4">
-             <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest inline-block pb-1 mb-5">TOP STRENGTHS</h6>
-             <div class="flex flex-wrap gap-x-6 gap-y-3 text-xs font-[600] text-on-surface px-1">
-               <span>Originality</span>
-               <span>Empathy</span>
-               <span>Pattern Recognition</span>
-               <span>Adaptability</span>
-               <span>Visual Thinking</span>
-               <span>Communication</span>
+          <div class="mb-6">
+             <h6 class="text-[10px] font-bold text-outline-variant uppercase tracking-widest inline-block pb-1 mb-4">TOP STRENGTHS</h6>
+             <div style="display:flex; flex-wrap:wrap; gap:8px 24px;">
+               <span class="text-xs font-[600] text-on-surface">Originality</span>
+               <span class="text-xs font-[600] text-on-surface">Empathy</span>
+               <span class="text-xs font-[600] text-on-surface">Pattern Recognition</span>
+               <span class="text-xs font-[600] text-on-surface">Adaptability</span>
+               <span class="text-xs font-[600] text-on-surface">Visual Thinking</span>
+               <span class="text-xs font-[600] text-on-surface">Communication</span>
              </div>
           </div>
 
           <!-- Locked Section -->
-          <div class="mt-8 relative overflow-hidden flex flex-col items-center justify-center p-12 bg-surface-container-low/30 rounded-xl text-center">
-             <h6 class="text-[10px] font-bold text-outline uppercase tracking-widest top-4 left-0 absolute opacity-80">STREAM RECOMMENDATION &amp; 12-WEEK ROADMAP</h6>
-             <p class="text-[14px] font-[600] text-on-surface mb-0.5 mt-8">Your personalised career roadmap is locked</p>
-             <p class="text-xs text-on-surface-variant mb-4">Available with Career Pro plan</p>
-             <button onclick="document.querySelector('.premium-toggle-checkbox').click()" class="bg-[#5c5cce] hover:bg-primary text-white font-bold text-sm px-6 py-2.5 rounded-full shadow-md transition-all active:scale-95 z-10 transition-colors">
+          <div class="relative overflow-hidden flex flex-col items-center justify-center bg-surface-container-low/30 rounded-xl text-center" style="margin-top:24px; padding:48px 32px;">
+             <h6 class="text-[10px] font-bold text-outline uppercase tracking-widest opacity-80" style="position:absolute; top:16px; left:16px;">STREAM RECOMMENDATION &amp; 12-WEEK ROADMAP</h6>
+             <p class="text-[14px] font-[600] text-on-surface" style="margin-bottom:4px; margin-top:16px;">Your personalised career roadmap is locked</p>
+             <p class="text-xs text-on-surface-variant" style="margin-bottom:16px;">Available with Career Pro plan</p>
+             <button onclick="document.querySelector('.premium-toggle-checkbox').click()" class="bg-[#5c5cce] hover:bg-primary text-white font-bold text-sm px-6 py-2.5 rounded-full shadow-md transition-all active:scale-95">
                 Upgrade to unlock
              </button>
           </div>
         </div>
         
-        <!-- Bottom Action Bar (Floating exactly like mockup) -->
-        <div class="bg-[#f2efff] p-5 sm:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-[#e2dfff] shadow-[0_-10px_20px_rgba(0,0,0,0.02)] rounded-b-xl z-20 m-3 sm:m-4 mt-0">
+        <!-- Bottom Action Bar -->
+        <div class="bg-[#f2efff] border-t border-[#e2dfff]" style="padding:20px 24px; display:flex; align-items:center; justify-content:space-between; gap:16px; margin:12px; margin-top:0; border-radius:0 0 12px 12px;">
           <div>
-            <p class="font-bold text-[14px] text-on-surface mb-1">Unlock your complete career report</p>
-            <p class="text-[11px] text-[#5c5cce] font-[600] flex flex-wrap gap-2 items-center">
-              <span>Stream guide</span>&middot;<span>College roadmap</span>&middot;<span>12-week plan</span>&middot;<span>1-on-1 session</span>
+            <p class="font-bold text-[14px] text-on-surface" style="margin-bottom:4px;">Unlock your complete career report</p>
+            <p class="text-[11px] text-[#5c5cce] font-[600]">
+              Stream guide &middot; College roadmap &middot; 12-week plan &middot; 1-on-1 session
             </p>
           </div>
-          <button onclick="document.querySelector('.premium-toggle-checkbox').click()" class="bg-[#5c5cce] hover:bg-primary w-full sm:w-auto text-white font-bold text-sm px-7 py-3 rounded-xl shadow-[0_4px_12px_rgba(92,92,206,0.2)] transition-all active:scale-95 whitespace-nowrap">
+          <button onclick="document.querySelector('.premium-toggle-checkbox').click()" class="bg-[#5c5cce] hover:bg-primary text-white font-bold text-sm px-7 py-3 rounded-xl shadow-md transition-all active:scale-95 whitespace-nowrap">
             Upgrade to Career Pro
           </button>
         </div>
       </div>
+      
     </div>
   </div>
 
-  <!-- jsPDF CDN for real PDF generation -->
+  <!-- html2canvas + jsPDF for pixel-perfect screenshot-to-PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
@@ -1097,186 +1099,49 @@
       document.body.style.overflow = '';
     }
 
-    // Real PDF download using jsPDF (programmatic, not screenshot)
-    function downloadReportPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ unit: 'mm', format: 'a4' });
-      const pageW = doc.internal.pageSize.getWidth();
-      const margin = 18;
-      const col = margin;
-      let y = 20;
+    // Screenshot-to-PDF download using html2canvas + jsPDF
+    async function downloadReportPDF() {
+      const btn = document.querySelector('button[onclick="downloadReportPDF()"]');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<span class="material-symbols-outlined text-[18px]">progress_activity</span> Generating...';
+      btn.disabled = true;
 
-      const today = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+      try {
+        const reportEl = document.getElementById('report-document');
+        const canvas = await html2canvas(reportEl, {
+          scale: 2,
+          useCORS: true,
+          backgroundColor: '#ffffff',
+          scrollX: 0,
+          scrollY: 0,
+          width: 794,              // fixed A4 capture width
+          height: reportEl.scrollHeight,
+          windowWidth: 794,        // no responsive breakpoint shifts
+        });
 
-      // ── Header bar ──
-      doc.setFillColor(36, 56, 156);
-      doc.rect(0, 0, 8, 297, 'F');
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
 
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor(140, 140, 160);
-      doc.text('SVASTRINO CAREER INTELLIGENCE REPORT', col + 6, y);
-      y += 6;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(30, 30, 30);
-      doc.text(`${reportUserName}  ·  ${reportUserClass}  ·  ${reportUserCity}  ·  Assessed: ${today}`, col + 6, y);
-      y += 14;
+        const pdfW = 210; // A4 mm width
+        const pdfH = (canvas.height / canvas.width) * pdfW;
 
-      // ── Divider ──
-      doc.setDrawColor(220, 220, 235);
-      doc.line(col + 6, y, pageW - margin, y);
-      y += 10;
+        const doc = new jsPDF({
+          orientation: 'portrait',
+          unit: 'mm',
+          format: [pdfW, Math.max(pdfH, 297)],
+        });
 
-      // ── Personality Type ──
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor(140, 140, 160);
-      doc.text('YOUR PERSONALITY TYPE', col + 6, y);
-      y += 7;
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(26);
-      doc.setTextColor(36, 56, 156);
-      doc.text('The Explorer', col + 6, y);
-      y += 8;
-      doc.setFontSize(10);
-      doc.setTextColor(30, 30, 30);
-      doc.text('Creative Problem-Solver  ·  Right-Brain Dominant', col + 6, y);
-      y += 6;
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(90, 90, 110);
-      const desc = doc.splitTextToSize('You think in big ideas, connect dots others miss, and thrive when given freedom to create. You bring originality to everything you touch.', pageW - margin * 2 - 6);
-      doc.text(desc, col + 6, y);
-      y += desc.length * 5 + 6;
+        doc.addImage(imgData, 'PNG', 0, 0, pdfW, pdfH);
 
-      // Profile score badge
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(36);
-      doc.setTextColor(96, 96, 197);
-      doc.text('78', pageW - margin - 14, 58);
-      doc.setFontSize(9);
-      doc.setTextColor(140, 140, 160);
-      doc.text('/ 100', pageW - margin - 2, 64);
-      doc.setFontSize(7);
-      doc.setTextColor(96, 96, 197);
-      doc.text('PROFILE SCORE', pageW - margin - 20, 50);
-
-      // ── Divider ──
-      doc.setDrawColor(220, 220, 235);
-      doc.line(col + 6, y, pageW - margin, y);
-      y += 10;
-
-      // ── Personality Dimensions ──
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor(140, 140, 160);
-      doc.text('PERSONALITY DIMENSIONS', col + 6, y);
-      y += 7;
-
-      const dims = [
-        { label: 'Creativity',       pct: 91, color: [96,96,197] },
-        { label: 'Empathy',          pct: 82, color: [0,143,134] },
-        { label: 'Resilience',       pct: 77, color: [82,61,161] },
-        { label: 'Logical Thinking', pct: 74, color: [37,99,235] },
-        { label: 'Leadership',       pct: 68, color: [249,115,22] },
-      ];
-      const barW = pageW - margin * 2 - 6;
-      dims.forEach(d => {
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(9);
-        doc.setTextColor(30, 30, 30);
-        doc.text(d.label, col + 6, y);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(...d.color);
-        doc.text(`${d.pct}%`, pageW - margin, y, { align: 'right' });
-        y += 4;
-        // bg track
-        doc.setFillColor(236, 238, 240);
-        doc.roundedRect(col + 6, y, barW, 3, 1.5, 1.5, 'F');
-        // filled bar
-        doc.setFillColor(...d.color);
-        doc.roundedRect(col + 6, y, barW * (d.pct / 100), 3, 1.5, 1.5, 'F');
-        y += 9;
-      });
-
-      y += 4;
-      // ── Divider ──
-      doc.setDrawColor(220, 220, 235);
-      doc.line(col + 6, y, pageW - margin, y);
-      y += 10;
-
-      // ── Top Career Matches ──
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor(140, 140, 160);
-      doc.text('TOP CAREER MATCHES', col + 6, y);
-      y += 7;
-
-      const careers = [
-        { title: 'Design & Creative Media',      match: '94%', desc: 'Visual thinking in top 5%',            color: [96,96,197] },
-        { title: 'Entrepreneurship & Business',  match: '88%', desc: 'Independence & risk appetite high',    color: [0,143,134] },
-        { title: 'Psychology & Counselling',     match: '81%', desc: 'Empathy higher than 90% of peers',    color: [41,120,163] },
-      ];
-      const cardW = (barW - 8) / 3;
-      careers.forEach((c, i) => {
-        const cx = col + 6 + i * (cardW + 4);
-        doc.setFillColor(248, 249, 251);
-        doc.roundedRect(cx, y, cardW, 28, 2, 2, 'F');
-        doc.setFillColor(...c.color);
-        doc.rect(cx, y, cardW, 2, 'F');
-        // badge
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(7);
-        doc.setTextColor(...c.color);
-        doc.text(`${c.match} match`, cx + 3, y + 8);
-        // title
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(8);
-        doc.setTextColor(30, 30, 30);
-        const titleLines = doc.splitTextToSize(c.title, cardW - 6);
-        doc.text(titleLines, cx + 3, y + 14);
-        // desc
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(7);
-        doc.setTextColor(100, 100, 120);
-        doc.text(c.desc, cx + 3, y + 14 + titleLines.length * 4 + 2);
-      });
-      y += 36;
-
-      // ── Top Strengths ──
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(7);
-      doc.setTextColor(140, 140, 160);
-      doc.text('TOP STRENGTHS', col + 6, y);
-      y += 6;
-      const strengths = ['Originality', 'Empathy', 'Pattern Recognition', 'Adaptability', 'Visual Thinking', 'Communication'];
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(9);
-      doc.setTextColor(40, 40, 60);
-      doc.text(strengths.join('  ·  '), col + 6, y);
-      y += 14;
-
-      // ── Locked section note ──
-      doc.setFillColor(242, 239, 255);
-      doc.roundedRect(col + 6, y, barW, 22, 3, 3, 'F');
-      doc.setFont('helvetica', 'bold');
-      doc.setFontSize(8);
-      doc.setTextColor(92, 92, 206);
-      doc.text('STREAM RECOMMENDATION & 12-WEEK ROADMAP', col + 6 + barW/2, y + 8, { align: 'center' });
-      doc.setFont('helvetica', 'normal');
-      doc.setFontSize(8);
-      doc.setTextColor(100, 100, 120);
-      doc.text('Your personalised career roadmap is available with Career Pro plan.', col + 6 + barW/2, y + 15, { align: 'center' });
-
-      // ── Footer ──
-      doc.setFont('helvetica', 'italic');
-      doc.setFontSize(7);
-      doc.setTextColor(180, 180, 180);
-      doc.text('Generated by Svastrino · svastrino.com · Career Intelligence Platform', pageW / 2, 289, { align: 'center' });
-
-      const slug = reportUserName.replace(/\s+/g, '_');
-      doc.save(`Career_Report_${slug}.pdf`);
+        const slug = reportUserName.replace(/\s+/g, '_');
+        doc.save(`Career_Report_${slug}.pdf`);
+      } catch (err) {
+        console.error('PDF generation failed:', err);
+        alert('Could not generate PDF. Please try again.');
+      } finally {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+      }
     }
 
     function shareReport() {
