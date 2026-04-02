@@ -231,7 +231,7 @@
       <header class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 lg:mb-12 gap-4">
         <div>
           <span class="font-label text-sm uppercase tracking-[0.2em] text-on-surface-variant/70 mb-2 block">Welcome back</span>
-          <h1 class="font-headline text-3xl lg:text-5xl font-extrabold tracking-tight text-primary">Good morning, Rahul</h1>
+          <h1 class="font-headline text-3xl lg:text-5xl font-extrabold tracking-tight text-primary">Good morning, <span class="greeting-name">Rahul</span></h1>
         </div>
         <div class="flex items-center gap-3 px-5 py-2.5 lg:px-6 lg:py-3 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10">
           <span class="material-symbols-outlined text-outline" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
@@ -484,7 +484,7 @@
       <header class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 lg:mb-12 gap-4">
         <div>
           <span class="font-label text-sm uppercase tracking-[0.2em] text-on-surface-variant/70 mb-2 block">Welcome back</span>
-          <h1 class="font-headline text-3xl lg:text-5xl font-extrabold tracking-tight text-primary">Good morning, Rahul</h1>
+          <h1 class="font-headline text-3xl lg:text-5xl font-extrabold tracking-tight text-primary">Good morning, <span class="greeting-name">Rahul</span></h1>
         </div>
         <button onclick="showStreakModal()" class="flex items-center gap-3 px-5 py-2.5 lg:px-6 lg:py-3 bg-secondary-fixed rounded-xl shadow-sm border border-secondary/10 transition-transform active:scale-95 hover:shadow-md hover:bg-secondary-fixed/90 cursor-pointer">
           <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
@@ -1356,6 +1356,16 @@
             setTimeout(() => { circle.style.strokeDashoffset = offset; }, 200);
           }
         }
+      }
+    });
+
+    // ─── Dynamic Name Update ──────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      const savedName = localStorage.getItem('svastrino_user_name');
+      if (savedName) {
+        document.querySelectorAll('.greeting-name').forEach(el => {
+          el.textContent = savedName;
+        });
       }
     });
   </script>

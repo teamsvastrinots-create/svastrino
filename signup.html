@@ -585,6 +585,8 @@
   function completeProfile() {
     const name = document.getElementById('profile-name').value.trim();
     if (!name) { document.getElementById('profile-name').focus(); return; }
+    // Store name locally for dynamic greeting
+    localStorage.setItem('svastrino_user_name', name);
     // New user — redirect with flag to trigger test popup on dashboard
     window.location.href = 'dashboard.html?newUser=true';
   }
