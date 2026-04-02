@@ -512,27 +512,20 @@
       sendOtpBtn.textContent = 'Sending...';
       sendOtpBtn.disabled = true;
 
-      try {
-        const { data, error } = await window.supabaseClient.auth.signInWithOtp({
-          phone: '+91' + mobileNumber
-        });
+      // --- MOCK OTP FLOW ---
+      console.log("Mock OTP: Simulating send to:", mobileNumber);
+      
+      // Simulate a small delay for "Realism"
+      await new Promise(resolve => setTimeout(resolve, 600));
 
-        if (error) throw error;
+      document.getElementById('mobileModal').classList.remove('show');
+      sendOtpBtn.textContent = 'Send OTP';
+      sendOtpBtn.disabled = false;
 
-        document.getElementById('mobileModal').classList.remove('show');
-        sendOtpBtn.textContent = 'Send OTP';
-        sendOtpBtn.disabled = false;
-
-        document.getElementById('otpMobileDisplay').textContent = '+91 ' + mobileNumber.slice(0, 2) + '••••' + mobileNumber.slice(-4);
-        document.getElementById('otpModal').classList.add('show');
-        document.querySelectorAll('.otp-input')[0].focus();
-        startResendTimer();
-      } catch (err) {
-        console.error("Auth Error:", err);
-        document.getElementById('mobileError').textContent = err.message || "Failed to send OTP. Check your connection.";
-        sendOtpBtn.textContent = 'Send OTP';
-        sendOtpBtn.disabled = false;
-      }
+      document.getElementById('otpMobileDisplay').textContent = '+91 ' + mobileNumber.slice(0, 2) + '••••' + mobileNumber.slice(-4);
+      document.getElementById('otpModal').classList.add('show');
+      document.querySelectorAll('.otp-input')[0].focus();
+      startResendTimer();
     }
 
 
@@ -589,16 +582,13 @@
       const phoneString = '+91' + mobileNumber;
 
 
-      try {
-        const { data, error } = await window.supabaseClient.auth.verifyOtp({
-          phone: '+91' + mobileNumber,
-          token: otp,
-          type: 'sms'
-        });
+      // --- MOCK OTP FLOW ---
+      console.log("Mock OTP: Simulating verification for code:", otp);
+      
+      // Simulate a small delay
+      await new Promise(resolve => setTimeout(resolve, 800));
 
-        if (error) throw error;
-
-        const user = data.user;
+      const user = { id: "mock-user-" + Date.now() }; // Mock user object
 
 
       // User verified successfully. Send results to REST API.
@@ -640,8 +630,6 @@
           });
 
         if (saveError) throw saveError;
-           throw new Error("Failed to save results on server.");
-        }
         
         // Securely store for dashboard retrieval
         localStorage.setItem('userPhone', phoneString);
