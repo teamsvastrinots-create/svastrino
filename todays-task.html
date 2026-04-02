@@ -136,7 +136,7 @@
     <!-- Brand & Toggle -->
     <div class="px-5 pt-5 pb-4 flex items-center justify-between">
       <a href="index.html"
-        class="text-xl font-extrabold text-[#24389c] tracking-tight hover:opacity-80 transition-opacity">Svastrino</a>
+        class="hover:opacity-80 transition-opacity"><img src="logo.png" alt="Svastrino" class="h-14 w-auto"></a>
       <label class="relative inline-flex items-center cursor-pointer" title="Toggle Premium Mode">
         <input type="checkbox" class="sr-only peer premium-toggle-checkbox" onchange="toggleFreemiumMode(this)">
         <div
@@ -215,7 +215,7 @@
     <button onclick="toggleSidebar()" class="p-1 text-[#191c1e]">
       <span class="material-symbols-outlined">menu</span>
     </button>
-    <span class="font-headline font-bold text-[#24389c]">Svastrino</span>
+    <img src="logo.png" alt="Svastrino" class="h-10 w-auto">
     <div class="w-8 h-8 rounded-full bg-[#dee0ff] flex items-center justify-center text-[#00105c] font-bold text-xs">RS
     </div>
   </header>
@@ -610,19 +610,67 @@
       if (window.innerWidth >= 1024) document.getElementById('sidebar-overlay').classList.add('hidden');
     });
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const videoCompleted = localStorage.getItem('videoCompleted') === 'true';
+    function getVideoKey() {
+      const isFreemium = localStorage.getItem('isFreemium') === 'true';
+      return isFreemium ? 'videoCompleted_freemium' : 'videoCompleted_premium';
+    }
+
+    function applyTaskState() {
+      const videoCompleted = localStorage.getItem(getVideoKey()) === 'true';
       if (videoCompleted) {
         document.getElementById('task1-active')?.classList.add('hidden');
         document.getElementById('task1-done')?.classList.remove('hidden');
         document.getElementById('task2-locked')?.classList.add('hidden');
         document.getElementById('task2-active')?.classList.remove('hidden');
+
+        // Update progress summary card
+        const progressRing = document.querySelector('path.text-\\[\\#4a7df2\\]');
+        if (progressRing) progressRing.setAttribute('stroke-dasharray', '50, 100');
+        const progressText = document.querySelector('.absolute.inset-0 span');
+        if (progressText) progressText.textContent = '2 / 4';
+        const statusText = document.querySelector('.text-white\\/70');
+        if (statusText) statusText.textContent = 'Video done! Task 2 is now active and waiting for you.';
+        const dotsContainer = document.querySelector('.flex.flex-wrap.xl\\:flex-nowrap');
+        if (dotsContainer) {
+          dotsContainer.innerHTML = `
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#4a7df2] shadow-sm shadow-[#4a7df2]/50"></span> 1 done</span>
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#1b3482] border-[2.5px] border-[#4a7df2]"></span> 1 active</span>
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-white/10"></span> 2 locked</span>
+          `;
+        }
       } else {
         document.getElementById('task1-done')?.classList.add('hidden');
         document.getElementById('task1-active')?.classList.remove('hidden');
         document.getElementById('task2-active')?.classList.add('hidden');
         document.getElementById('task2-locked')?.classList.remove('hidden');
+
+        // Reset progress summary card
+        const progressRing = document.querySelector('path.text-\\[\\#4a7df2\\]');
+        if (progressRing) progressRing.setAttribute('stroke-dasharray', '25, 100');
+        const progressText = document.querySelector('.absolute.inset-0 span');
+        if (progressText) progressText.textContent = '1 / 4';
+        const statusText = document.querySelector('.text-white\\/70');
+        if (statusText) statusText.textContent = 'Lecture completed. Task 1 is active and waiting for you.';
+        const dotsContainer = document.querySelector('.flex.flex-wrap.xl\\:flex-nowrap');
+        if (dotsContainer) {
+          dotsContainer.innerHTML = `
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#4a7df2] shadow-sm shadow-[#4a7df2]/50"></span> 1 done</span>
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#1b3482] border-[2.5px] border-[#4a7df2]"></span> 1 active</span>
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-white/10"></span> 2 locked</span>
+          `;
+        }
       }
+    }
+
+    // Re-apply task state when mode is toggled
+    const origToggle = window.toggleFreemiumMode;
+    window.toggleFreemiumMode = function(checkbox) {
+      origToggle(checkbox);
+      applyTaskState();
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyTaskState();
     });
   </script>
 </body>
