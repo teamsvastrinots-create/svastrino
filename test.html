@@ -512,20 +512,27 @@
       sendOtpBtn.textContent = 'Sending...';
       sendOtpBtn.disabled = true;
 
-      // --- MOCK OTP FLOW ---
-      console.log("Mock OTP: Skipping Supabase signInWithOtp");
-      
-      // Simulate a small delay for "Realism"
-      await new Promise(resolve => setTimeout(resolve, 500));
+      try {
+        const { data, error } = await window.supabaseClient.auth.signInWithOtp({
+          phone: '+91' + mobileNumber
+        });
 
-      document.getElementById('mobileModal').classList.remove('show');
-      sendOtpBtn.textContent = 'Send OTP';
-      sendOtpBtn.disabled = false;
+        if (error) throw error;
 
-      document.getElementById('otpMobileDisplay').textContent = '+91 ' + mobileNumber.slice(0, 2) + '••••' + mobileNumber.slice(-4);
-      document.getElementById('otpModal').classList.add('show');
-      document.querySelectorAll('.otp-input')[0].focus();
-      startResendTimer();
+        document.getElementById('mobileModal').classList.remove('show');
+        sendOtpBtn.textContent = 'Send OTP';
+        sendOtpBtn.disabled = false;
+
+        document.getElementById('otpMobileDisplay').textContent = '+91 ' + mobileNumber.slice(0, 2) + '••••' + mobileNumber.slice(-4);
+        document.getElementById('otpModal').classList.add('show');
+        document.querySelectorAll('.otp-input')[0].focus();
+        startResendTimer();
+      } catch (err) {
+        console.error("Auth Error:", err);
+        document.getElementById('mobileError').textContent = err.message || "Failed to send OTP. Check your connection.";
+        sendOtpBtn.textContent = 'Send OTP';
+        sendOtpBtn.disabled = false;
+      }
     }
 
 
@@ -582,13 +589,16 @@
       const phoneString = '+91' + mobileNumber;
 
 
-      // --- MOCK OTP FLOW ---
-      console.log("Mock OTP: Skipping Supabase verifyOtp validation");
-      
-      // Simulate a small delay
-      await new Promise(resolve => setTimeout(resolve, 800));
+      try {
+        const { data, error } = await window.supabaseClient.auth.verifyOtp({
+          phone: '+91' + mobileNumber,
+          token: otp,
+          type: 'sms'
+        });
 
-      const user = { id: "anonymous-" + Date.now() }; // Mock user object
+        if (error) throw error;
+
+        const user = data.user;
 
 
       // User verified successfully. Send results to REST API.
@@ -621,18 +631,15 @@
 
 
       try {
-        const response = await fetch('/api/test-results', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            user_id: user ? user.id : "anonymous",
+        const { error: saveError } = await window.supabaseClient
+          .from('free_test_attempts')
+          .insert({
             phone: phoneString,
             answers: answers,
             score: percentageScore
-          })
-        });
+          });
 
-        if (!response.ok) {
+        if (saveError) throw saveError;
            throw new Error("Failed to save results on server.");
         }
         
