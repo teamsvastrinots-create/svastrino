@@ -379,6 +379,48 @@
     </div>
   </main>
 
+  <!-- ════════════════════════════════════════════════════ -->
+  <!-- Congratulations Popup (Logged-in users only)        -->
+  <!-- ════════════════════════════════════════════════════ -->
+  <div id="congrats-modal" class="hidden fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div id="congrats-modal-content" class="bg-white w-full max-w-sm rounded-2xl shadow-2xl border border-outline-variant/10 overflow-hidden relative"
+         style="transform:scale(0.9) translateY(16px); transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease; opacity:0;">
+
+      <!-- Confetti header -->
+      <div class="bg-gradient-to-br from-emerald-500 to-emerald-600 px-6 pt-8 pb-6 text-white text-center relative overflow-hidden">
+        <div class="absolute -bottom-8 -left-8 w-32 h-32 bg-white/10 rounded-full blur-2xl"></div>
+        <div class="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+        <div class="text-6xl mb-3 relative z-10">🎉</div>
+        <h2 class="font-headline text-2xl font-black text-white mb-1 relative z-10">Test Complete!</h2>
+        <p class="text-white/80 text-sm relative z-10">You've unlocked your psychometric profile.</p>
+      </div>
+
+      <!-- Score preview -->
+      <div class="px-6 pt-6 pb-2">
+        <div class="flex items-center justify-between bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 mb-4">
+          <div>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Your Score</p>
+            <p class="font-headline text-4xl font-black text-primary leading-none">78<span class="text-lg text-slate-400 font-semibold">/100</span></p>
+          </div>
+          <div class="text-right">
+            <span class="inline-block bg-emerald-100 text-emerald-700 text-xs font-black px-3 py-1.5 rounded-full mb-1">Top 8%</span>
+            <p class="text-xs text-slate-400 font-medium">of students</p>
+          </div>
+        </div>
+        <div class="bg-primary/5 border border-primary/10 rounded-xl px-4 py-3 mb-5">
+          <p class="text-xs text-slate-600 leading-relaxed">
+            <span class="font-bold text-primary">Personality Type:</span> The Explorer — Creative Problem-Solver with a right-brain dominant profile.
+          </p>
+        </div>
+        <button onclick="viewResults()" class="w-full py-3.5 bg-primary text-white rounded-xl font-bold text-sm hover:bg-primary/90 transition-colors shadow-md shadow-primary/20 active:scale-95 flex items-center justify-center gap-2 mb-3">
+          <span class="material-symbols-outlined text-lg" style="font-variation-settings:'FILL' 1">dashboard</span>
+          View Results on Dashboard
+        </button>
+        <p class="text-center text-xs text-slate-400 pb-4">Your detailed report is now available on your dashboard.</p>
+      </div>
+    </div>
+  </div>
+
   <script>
     function toggleSidebar() {
       document.getElementById('sidebar').classList.toggle('sidebar-hidden');
@@ -390,9 +432,6 @@
 
     // Simulate completion of the test and updating the UI
     function simulateTestCompletion() {
-      // In a real app, this would route to test.html, user completes it, and redirects back with a parameter
-      // For this prototype, we transform the UI instantly
-      
       const hero = document.getElementById('hero-section');
       const blob = document.getElementById('hero-bg-blob');
       const statusBadge = document.getElementById('status-badge');
@@ -405,58 +444,77 @@
       const iconContainer = document.getElementById('icon-container');
       const mainIcon = document.getElementById('main-icon');
       const iconGlow = document.getElementById('icon-glow');
-      
-      // Update Hero background to Completed Gradient
+
+      // Update Hero background
       hero.className = "relative overflow-hidden bg-gradient-to-br from-primary to-primary-container rounded-xl p-8 lg:p-12 text-white flex flex-col md:flex-row justify-between items-center shadow-xl transition-all duration-500 border border-primary-container/50";
-      
-      blob.className = "absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none transition-colors duration-500";
-      
-      // Update Status Badge
-      statusBadge.className = "inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 transition-all duration-500";
+      blob.className = "absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl pointer-events-none";
+
+      statusBadge.className = "inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20";
       statusText.innerHTML = "Status: Achievement Unlocked";
       statusIcon.innerHTML = "check_circle";
       statusIcon.style.fontVariationSettings = "'FILL' 1";
-      
-      // Update Texts
-      title.className = "text-3xl lg:text-4xl font-bold tracking-tight leading-tight text-white transition-colors duration-500";
+
       title.innerHTML = "Psychometric test completed";
-      
       const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
-      desc.className = "text-primary-fixed-dim text-lg leading-relaxed transition-colors duration-500";
-      desc.innerHTML = `Your cognitive and behavioral assessment was successfully processed on <span class="text-white font-semibold">${today}</span>.`;
-      
-      // Update Buttons
+      desc.innerHTML = `Your cognitive and behavioral assessment was processed on <span class="text-white font-semibold">${today}</span>.`;
+
       btnPrimary.className = "bg-white text-primary px-8 py-3.5 rounded-xl font-bold text-sm hover:shadow-xl hover:scale-[1.02] active:scale-95 transition-all flex items-center justify-center gap-2 shadow-black/10";
       btnPrimary.innerHTML = `View results <span class="material-symbols-outlined text-sm">arrow_forward</span>`;
       btnPrimary.onclick = function() { window.location.href = 'my-test-results.html'; };
-      
+
       btnSecondary.classList.remove('hidden');
-      
-      // Update Illustration
-      iconGlow.className = "absolute inset-0 bg-secondary-fixed/20 rounded-full blur-2xl transition-colors duration-500";
-      iconContainer.className = "relative w-full h-full flex items-center justify-center bg-white/10 backdrop-blur-xl rounded-full border border-white/20 shadow-2xl transition-all duration-500";
-      mainIcon.className = "material-symbols-outlined text-7xl lg:text-8xl text-white opacity-90 transition-colors duration-500";
+
+      iconGlow.className = "absolute inset-0 bg-secondary-fixed/20 rounded-full blur-2xl";
+      iconContainer.className = "relative w-full h-full flex items-center justify-center bg-white/10 backdrop-blur-xl rounded-full border border-white/20 shadow-2xl";
+      mainIcon.className = "material-symbols-outlined text-7xl lg:text-8xl text-white opacity-90";
       mainIcon.style.fontVariationSettings = "'FILL' 1";
+
+      // Show correct completion popup depending on login state
+      const isLoggedIn = sessionStorage.getItem('svastrinoLoggedIn') === 'true';
+      if (isLoggedIn) {
+        showCongratsModal();
+      }
+      // If not logged in, no phone popup — just update the UI (old flow removed)
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Direct user to start test route (simulated)
+      // Persist login state from URL param into sessionStorage
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('loggedIn') === 'true') {
+        sessionStorage.setItem('svastrinoLoggedIn', 'true');
+        // Clean up URL
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+
       document.getElementById('btn-primary').onclick = function() {
         if (this.innerText.includes('View results')) {
           window.location.href = 'my-test-results.html';
         } else {
-          window.location.href = 'test.html';
+          simulateTestCompletion();
         }
       };
 
-      // Check URL for completion flag
-      const urlParams = new URLSearchParams(window.location.search);
-      if (urlParams.get('completed') === 'true') {
-        // Strip the query param to keep URL clean (optional but good practice)
-        window.history.replaceState({}, document.title, window.location.pathname);
+      // Check URL for completion flag (returning visit)
+      if (params.get('completed') === 'true') {
+        window.history.replaceState({}, '', window.location.pathname);
         simulateTestCompletion();
       }
     });
+
+    // ─── Congratulations Modal (logged-in flow) ─────────────
+    function showCongratsModal() {
+      document.getElementById('congrats-modal').classList.remove('hidden');
+      const content = document.getElementById('congrats-modal-content');
+      requestAnimationFrame(() => {
+        content.style.transform = 'scale(1) translateY(0)';
+        content.style.opacity = '1';
+      });
+    }
+
+    function viewResults() {
+      // Redirect to dashboard with testDone flag and a demo score
+      window.location.href = 'dashboard.html?testDone=true&score=78';
+    }
   </script>
 </body>
 </html>
