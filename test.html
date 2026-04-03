@@ -621,6 +621,7 @@
 
 
       try {
+        // 1. Save test attempt score
         const { error: saveError } = await window.supabaseClient
           .from('free_test_attempts')
           .insert({
@@ -631,8 +632,24 @@
 
         if (saveError) throw saveError;
         
-        // Securely store for dashboard retrieval
+        // 2. IMPORTANT: Register/Update user in the main 'users' table
+        // This is what signup.html checks to see if you are an "existing user"
+        const { error: userError } = await window.supabaseClient
+          .from('users')
+          .upsert({
+            phone: phoneString,
+            name: 'Career Explorer', // Default name for new test takers
+            email: `user_${mobileNumber}@svastrino.com`, // Required unique email placeholder
+            plan: 'free'
+          }, { onConflict: 'phone' });
+
+        if (userError) {
+          console.warn("User upsert failed (continuing anyway):", userError);
+        }
+
+        // Securely store for dashboard retrieval and greeting
         localStorage.setItem('userPhone', phoneString);
+        localStorage.setItem('svastrino_user_name', 'Career Explorer');
         
         // Success: Only now we redirect
         document.getElementById('otpModal').classList.remove('show');

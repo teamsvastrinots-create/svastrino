@@ -87,3 +87,40 @@ CREATE TABLE webinar_registrations (
     registered_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now()),
     UNIQUE(user_id, webinar_id)
 );
+
+-- --- ROW LEVEL SECURITY POLICIES ---
+-- These policies allow our frontend (client) to select and insert data.
+
+-- 1. Users table (Allow finding by phone and creating new profiles)
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public select on users" ON users FOR SELECT USING (true);
+CREATE POLICY "Allow public insert on users" ON users FOR INSERT WITH CHECK (true);
+
+-- 2. Psychometric Results (Allow viewing and saving results)
+ALTER TABLE psychometric_results ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public access to results" ON psychometric_results FOR ALL USING (true);
+
+-- 3. Courses, Weeks, Tasks (Public viewing)
+ALTER TABLE courses ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public view courses" ON courses FOR SELECT USING (true);
+
+ALTER TABLE weeks ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public view weeks" ON weeks FOR SELECT USING (true);
+
+ALTER TABLE tasks ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public view tasks" ON tasks FOR SELECT USING (true);
+
+-- 4. Enrollments & Completions
+ALTER TABLE course_enrollments ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public manage enrollments" ON course_enrollments FOR ALL USING (true);
+
+ALTER TABLE task_completions ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public manage completions" ON task_completions FOR ALL USING (true);
+
+-- 5. Webinars
+ALTER TABLE webinars ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public view webinars" ON webinars FOR SELECT USING (true);
+
+ALTER TABLE webinar_registrations ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow public manage webinar registrations" ON webinar_registrations FOR ALL USING (true);
+

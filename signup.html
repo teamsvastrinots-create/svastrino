@@ -403,7 +403,13 @@
   </section>
 </main>
 
-<script>
+  <!-- Supabase Data Fetching -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = 'https://yrwpvekpafzkqowrtloi.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlyd3B2ZWtwYWZ6a3Fvd3J0bG9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODY3MDEsImV4cCI6MjA5MDQ2MjcwMX0.XjantcbriIik1OCzikksTjOfTlIzqodoD4zA85Fw-gY';
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
   /* ═══════════════════════════════════
      STATE
   ═══════════════════════════════════ */
@@ -411,6 +417,8 @@
   let currentLang = 'en';
   let resendTimer = null;
   let phoneNumber = '';
+  let isExistingUser = false;
+  let existingUserData = null;
 
   /* ═══════════════════════════════════
      LANGUAGE TOGGLE
@@ -487,19 +495,75 @@
     }
   }
 
-  function requestOTP() {
+  async function requestOTP() {
     const input = document.getElementById('phone-input');
     const val = input.value.replace(/\D/g, '');
     if (val.length !== 10) {
       document.getElementById('phone-error').classList.remove('hidden');
       return;
     }
+
+    const btn = document.getElementById('send-otp-btn');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Checking...';
+    btn.disabled = true;
+
     phoneNumber = val;
-    document.getElementById('phone-display').textContent = `+91 ${val.slice(0,5)} ${val.slice(5)}`;
-    goToStep(2);
-    startResendTimer();
-    // Focus first OTP input
-    setTimeout(() => document.querySelector('.otp-input').focus(), 100);
+    const phoneToQuery = '+91' + val;
+
+    try {
+      console.log("Searching for phone:", phoneToQuery);
+
+      // Check if user exists in Supabase
+      const { data, error } = await supabaseClient
+        .from('users')
+        .select('*')
+        .eq('phone', phoneToQuery)
+        .limit(1);
+
+      if (error) {
+        console.error("Supabase query error:", error);
+        throw error;
+      }
+
+      console.log("Raw query result from Supabase:", data);
+
+      if (data && data.length > 0) {
+        isExistingUser = true;
+        existingUserData = data[0];
+        console.log("Existing user detected:", existingUserData.name);
+      } else {
+        // Fallback: try without +91 just in case formatting varies
+        console.log("No result with +91, trying without prefix...");
+        const { data: dataAlt, error: errorAlt } = await supabaseClient
+          .from('users')
+          .select('*')
+          .eq('phone', val)
+          .limit(1);
+        
+        if (dataAlt && dataAlt.length > 0) {
+          isExistingUser = true;
+          existingUserData = dataAlt[0];
+          console.log("Existing user detected (no-prefix match):", existingUserData.name);
+        } else {
+          isExistingUser = false;
+          existingUserData = null;
+          console.log("Final decision: New user detected.");
+        }
+      }
+
+      document.getElementById('phone-display').textContent = `+91 ${val.slice(0,5)} ${val.slice(5)}`;
+      goToStep(2);
+      startResendTimer();
+      // Focus first OTP input
+      setTimeout(() => document.querySelector('.otp-input').focus(), 100);
+    } catch (err) {
+      console.error("Database check failed:", err);
+      alert("Something went wrong. Please try again.");
+    } finally {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
   }
 
   /* ═══════════════════════════════════
@@ -542,8 +606,16 @@
     // Demo: correct OTP is 123456
     if (otp === '123456') {
       errEl.classList.add('hidden');
-      // For demo: always show profile step (new user)
-      goToStep(3);
+      
+      if (isExistingUser && existingUserData) {
+        // Logged in — save name locally and go to dashboard
+        localStorage.setItem('svastrino_user_name', existingUserData.name);
+        localStorage.setItem('userPhone', existingUserData.phone);
+        window.location.href = 'dashboard.html';
+      } else {
+        // New user — go to profile setup
+        goToStep(3);
+      }
     } else {
       errEl.classList.remove('hidden');
       inputs.forEach(i => { i.style.borderColor = '#ef4444'; });
@@ -582,16 +654,60 @@
   /* ═══════════════════════════════════
      STEP 3: PROFILE
   ═══════════════════════════════════ */
-  function completeProfile() {
+  async function completeProfile() {
     const name = document.getElementById('profile-name').value.trim();
+    const cls = document.getElementById('profile-class').value;
+    const city = document.getElementById('profile-city').value.trim();
+
     if (!name) { document.getElementById('profile-name').focus(); return; }
-    // Store name locally for dynamic greeting
-    localStorage.setItem('svastrino_user_name', name);
-    // New user — redirect with flag to trigger test popup on dashboard
-    window.location.href = 'dashboard.html?newUser=true';
+    if (!cls) { document.getElementById('profile-class').focus(); return; }
+    if (!city) { document.getElementById('profile-city').focus(); return; }
+
+    const btn = document.querySelector('button[onclick="completeProfile()"]');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = 'Saving...';
+    btn.disabled = true;
+
+    const phoneToSave = '+91' + phoneNumber;
+    // Generate a placeholder email as the table requires it and it must be unique
+    const emailToSave = `user_${phoneNumber}@svastrino.com`;
+
+    try {
+      const { data, error } = await supabaseClient
+        .from('users')
+        .insert([
+          { 
+            name: name, 
+            phone: phoneToSave, 
+            email: emailToSave,
+            plan: 'free'
+          }
+        ]);
+
+      if (error) throw error;
+
+      // Store name locally for dynamic greeting
+      localStorage.setItem('svastrino_user_name', name);
+      localStorage.setItem('userPhone', phoneToSave);
+      
+      // New user — redirect with flag to trigger test popup on dashboard
+      window.location.href = 'dashboard.html?newUser=true';
+    } catch (err) {
+      console.error("Profile save failed:", err);
+      if (err.message && err.message.includes("unique")) {
+        alert("This phone number is already registered. Please try logging in.");
+      } else {
+        alert("Failed to save profile. Please try again.");
+      }
+    } finally {
+      btn.innerHTML = originalText;
+      btn.disabled = false;
+    }
   }
 
   function skipProfile() {
+    // If skipping, we still need to at least save the phone if we want them to be "known"
+    // But for now, we'll just redirect to dashboard
     window.location.href = 'dashboard.html?newUser=true';
   }
 
