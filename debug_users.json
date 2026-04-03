@@ -1,0 +1,35 @@
+[
+  {
+    "id": "db982814-2952-44ab-b297-98afeb849350",
+    "name": "Sunnyy",
+    "email": "user_2020202020@svastrino.com",
+    "phone": "+912020202020",
+    "plan": "free",
+    "class": null,
+    "city": null,
+    "created_at": "2026-04-03T19:37:44.621819+00:00",
+    "aspirations": []
+  },
+  {
+    "id": "9b7ae12f-a7e2-4ebf-97a5-dd67621e1fba",
+    "name": "Career Explorer",
+    "email": "user_9090909090@svastrino.com",
+    "phone": "+919090909090",
+    "plan": "free",
+    "class": null,
+    "city": null,
+    "created_at": "2026-04-03T19:15:10.95056+00:00",
+    "aspirations": []
+  },
+  {
+    "id": "2c8fc58c-eda9-4156-b716-2c6c20b26580",
+    "name": "Career Explorer",
+    "email": "user_9148863403@svastrino.com",
+    "phone": "+919148863403",
+    "plan": "free",
+    "class": null,
+    "city": null,
+    "created_at": "2026-04-03T17:31:10.71243+00:00",
+    "aspirations": []
+  }
+]

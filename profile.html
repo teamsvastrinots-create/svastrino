@@ -100,6 +100,8 @@
     .freemium-mode .freemium-only-block { display: block !important; }
   </style>
   <script src="freemium-state.js"></script>
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body class="bg-surface text-on-surface antialiased min-h-screen">
   
@@ -202,23 +204,23 @@
           </div>
           
           <div class="text-center md:text-left mt-2">
-            <h1 class="text-3xl font-bold font-headline text-on-surface tracking-tight">Rahul Sharma</h1>
-            <p class="text-on-surface-variant font-medium mt-1">rahulsharma@email.com</p>
+            <h1 id="hero-name" class="text-3xl font-bold font-headline text-on-surface tracking-tight">Career Explorer</h1>
+            <p id="hero-phone" class="text-on-surface-variant font-medium mt-1">Add your email</p>
             
             <div class="flex flex-wrap justify-center md:justify-start gap-3 mt-5">
               <!-- Success Badge -->
-              <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-secondary-container/10 text-secondary font-bold text-xs border border-secondary-container/20">
+              <span id="hero-plan" class="inline-flex items-center px-4 py-1.5 rounded-full bg-secondary-container/10 text-secondary font-bold text-xs border border-secondary-container/20">
                 <span class="material-symbols-outlined text-[16px] mr-1.5" style="font-variation-settings: 'FILL' 1;">verified</span>
-                Paid plan
+                Free plan
               </span>
               <!-- Info Badge -->
-              <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-primary-fixed/50 text-on-primary-fixed-variant font-bold text-xs border border-primary-fixed">
+              <span id="hero-class" class="inline-flex items-center px-4 py-1.5 rounded-full bg-primary-fixed/50 text-on-primary-fixed-variant font-bold text-xs border border-primary-fixed">
                 <span class="material-symbols-outlined text-[16px] mr-1.5">school</span>
                 Class 11
               </span>
               <!-- Neutral Badge -->
-              <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-semibold text-xs border border-outline-variant/10">
-                Joined Jan 2024
+              <span id="hero-joined" class="inline-flex items-center px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-semibold text-xs border border-outline-variant/10">
+                Joined April 2026
               </span>
             </div>
           </div>
@@ -244,17 +246,17 @@
             </div>
           </div>
 
-          <form class="flex flex-col gap-6">
+          <form class="flex flex-col gap-6" onsubmit="event.preventDefault(); saveProfileSettings();">
             <!-- Full Name -->
             <div class="flex flex-col gap-2">
               <label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Full Name</label>
-              <input class="bg-surface-container-low border border-outline-variant/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl p-3.5 text-on-surface font-medium transition-all duration-200 outline-none" type="text" value="Rahul Sharma"/>
+              <input id="profile-name-input" class="bg-surface-container-low border border-outline-variant/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl p-3.5 text-on-surface font-medium transition-all duration-200 outline-none" type="text" value=""/>
             </div>
             
             <!-- Phone -->
             <div class="flex flex-col gap-2">
-              <label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Phone Number</label>
-              <input class="bg-surface-container-low border border-outline-variant/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl p-3.5 text-on-surface font-medium transition-all duration-200 outline-none" type="tel" value="+91 98765 43210"/>
+              <label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Phone Number (Read-only)</label>
+              <input id="profile-phone-input" class="bg-surface-container-low border border-outline-variant/20 focus:outline-none rounded-xl p-3.5 text-on-surface-variant font-medium opacity-70 cursor-not-allowed" type="tel" value="" readonly/>
             </div>
             
             <div class="grid grid-cols-2 gap-4">
@@ -262,11 +264,12 @@
               <div class="flex flex-col gap-2">
                 <label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Class</label>
                 <div class="relative">
-                  <select class="w-full bg-surface-container-low border border-outline-variant/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl p-3.5 text-on-surface font-medium transition-all duration-200 appearance-none outline-none">
+                  <select id="profile-class-input" class="w-full bg-surface-container-low border border-outline-variant/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl p-3.5 text-on-surface font-medium transition-all duration-200 appearance-none outline-none">
                     <option>Class 10</option>
                     <option selected>Class 11</option>
                     <option>Class 12</option>
                     <option>Undergrad</option>
+                    <option>Graduate</option>
                   </select>
                   <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
                 </div>
@@ -275,12 +278,12 @@
               <!-- City -->
               <div class="flex flex-col gap-2">
                 <label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">City</label>
-                <input class="w-full bg-surface-container-low border border-outline-variant/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl p-3.5 text-on-surface font-medium transition-all duration-200 outline-none" type="text" value="New Delhi"/>
+                <input id="profile-city-input" class="w-full bg-surface-container-low border border-outline-variant/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl p-3.5 text-on-surface font-medium transition-all duration-200 outline-none" type="text" value=""/>
               </div>
             </div>
             
             <div class="pt-4 mt-2 border-t border-outline-variant/10">
-              <button class="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-sm hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all" type="button">
+              <button id="profile-save-btn" class="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-sm hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all" type="submit">
                 Save changes
               </button>
             </div>
@@ -297,25 +300,14 @@
                 <h2 class="text-xl font-bold font-headline text-on-surface mb-1">Aspiration chips</h2>
                 <p class="text-[13px] text-on-surface-variant font-medium">Personalize feed based on interests</p>
               </div>
-              <button class="text-primary font-bold text-sm flex items-center gap-1 hover:underline underline-offset-4 decoration-2">
-                 Edit <span class="material-symbols-outlined text-sm">edit</span>
+              <button onclick="toggleEditAspirations()" class="text-primary font-bold text-sm flex items-center gap-1 hover:underline underline-offset-4 decoration-2">
+                 <span id="aspiration-edit-text">Edit</span> <span id="aspiration-edit-icon" class="material-symbols-outlined text-sm">edit</span>
               </button>
             </div>
             
-            <div class="flex flex-wrap gap-3">
-              <div class="bg-secondary-fixed/50 border border-secondary/20 text-on-secondary-fixed px-4 py-2 rounded-full flex items-center gap-2 shadow-sm transition-transform hover:scale-105 cursor-pointer">
-                <span class="material-symbols-outlined text-[16px]">architecture</span>
-                <span class="font-bold text-[11px] uppercase tracking-wide">Design</span>
-              </div>
-              <div class="bg-secondary-fixed/50 border border-secondary/20 text-on-secondary-fixed px-4 py-2 rounded-full flex items-center gap-2 shadow-sm transition-transform hover:scale-105 cursor-pointer">
-                <span class="material-symbols-outlined text-[16px]">code</span>
-                <span class="font-bold text-[11px] uppercase tracking-wide">Tech</span>
-              </div>
-              <div class="bg-secondary-fixed/50 border border-secondary/20 text-on-secondary-fixed px-4 py-2 rounded-full flex items-center gap-2 shadow-sm transition-transform hover:scale-105 cursor-pointer">
-                <span class="material-symbols-outlined text-[16px]">psychology</span>
-                <span class="font-bold text-[11px] uppercase tracking-wide">Psychology</span>
-              </div>
-              <div class="bg-surface-container border border-outline-variant/20 text-on-surface-variant px-4 py-2 rounded-full flex items-center gap-2 transition-transform hover:scale-105 cursor-pointer hover:bg-surface-container-high">
+            <div id="aspiration-chips-container" class="flex flex-wrap gap-3">
+              <!-- Chips will be dynamically populated here -->
+              <div onclick="addAspirationChip()" class="bg-surface-container border border-outline-variant/20 text-on-surface-variant px-4 py-2 rounded-full flex items-center gap-2 transition-transform hover:scale-105 cursor-pointer hover:bg-surface-container-high border-dashed">
                 <span class="material-symbols-outlined text-[16px]">add</span>
                 <span class="font-bold text-[11px] uppercase tracking-wide">Add More</span>
               </div>
@@ -402,6 +394,141 @@
     window.addEventListener('resize', () => {
       if (window.innerWidth >= 1024) document.getElementById('sidebar-overlay').classList.add('hidden');
     });
+
+    // --- SUPABASE SYNC LOGIC ---
+    const supabaseUrl = 'https://yrwpvekpafzkqowrtloi.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlyd3B2ZWtwYWZ6a3Fvd3J0bG9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODY3MDEsImV4cCI6MjA5MDQ2MjcwMX0.XjantcbriIik1OCzikksTjOfTlIzqodoD4zA85Fw-gY';
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+    let userPhone = localStorage.getItem('userPhone');
+    let currentUserData = null;
+    let aspirations = [
+      { name: 'Design', icon: 'architecture' },
+      { name: 'Tech', icon: 'code' },
+      { name: 'Psychology', icon: 'psychology' }
+    ];
+    let isEditingAspirations = false;
+
+    async function loadProfile() {
+      if (!userPhone) return;
+      
+      // Pre-fill phone field
+      document.getElementById('profile-phone-input').value = userPhone;
+      document.getElementById('hero-phone').textContent = userPhone;
+
+      try {
+        const { data, error } = await supabaseClient
+          .from('users')
+          .select('*')
+          .eq('phone', userPhone)
+          .single();
+
+        if (error) {
+          console.error("Error fetching user:", error);
+        } else if (data) {
+          currentUserData = data;
+          
+          if (data.name) {
+             document.getElementById('profile-name-input').value = data.name;
+             document.getElementById('hero-name').textContent = data.name;
+          }
+          if (data.class) {
+             document.getElementById('profile-class-input').value = data.class;
+             document.getElementById('hero-class').innerHTML = `<span class="material-symbols-outlined text-[16px] mr-1.5">school</span>${data.class}`;
+          }
+          if (data.city) document.getElementById('profile-city-input').value = data.city;
+          
+          if (data.aspirations && Array.isArray(data.aspirations)) {
+            aspirations = data.aspirations;
+          }
+          renderAspirations();
+        }
+      } catch (e) { console.error("Profile load error:", e); }
+    }
+
+    function renderAspirations() {
+      const container = document.getElementById('aspiration-chips-container');
+      // Clear all except "Add More" which is the last child
+      const addMoreBtn = container.querySelector('[onclick="addAspirationChip()"]');
+      container.innerHTML = '';
+      
+      aspirations.forEach((asp, index) => {
+        const chip = document.createElement('div');
+        chip.className = 'bg-secondary-fixed/50 border border-secondary/20 text-on-secondary-fixed px-4 py-2 rounded-full flex items-center gap-2 shadow-sm transition-transform hover:scale-105 cursor-pointer relative group';
+        chip.innerHTML = `
+          <span class="material-symbols-outlined text-[16px]">${asp.icon || 'star'}</span>
+          <span class="font-bold text-[11px] uppercase tracking-wide">${asp.name}</span>
+          ${isEditingAspirations ? `<button onclick="removeAspiration(${index})" class="absolute -top-1 -right-1 bg-error text-on-error w-4 h-4 rounded-full flex items-center justify-center text-[10px] shadow-lg">✕</button>` : ''}
+        `;
+        container.appendChild(chip);
+      });
+      
+      container.appendChild(addMoreBtn);
+    }
+
+    function toggleEditAspirations() {
+      isEditingAspirations = !isEditingAspirations;
+      document.getElementById('aspiration-edit-text').textContent = isEditingAspirations ? 'Done' : 'Edit';
+      document.getElementById('aspiration-edit-icon').textContent = isEditingAspirations ? 'check' : 'edit';
+      renderAspirations();
+    }
+
+    function removeAspiration(index) {
+      aspirations.splice(index, 1);
+      renderAspirations();
+    }
+
+    function addAspirationChip() {
+      const name = prompt("Enter your career interest (e.g. Finance, Biology):");
+      if (name && name.trim()) {
+        aspirations.push({ name: name.trim(), icon: 'stars' });
+        renderAspirations();
+      }
+    }
+
+    async function saveProfileSettings() {
+      if (!userPhone) return;
+      const name = document.getElementById('profile-name-input').value.trim();
+      const cls = document.getElementById('profile-class-input').value;
+      const city = document.getElementById('profile-city-input').value.trim();
+      
+      const btn = document.getElementById('profile-save-btn');
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+
+      try {
+        const { error } = await supabaseClient
+          .from('users')
+          .update({ 
+            name: name,
+            class: cls,
+            city: city,
+            aspirations: aspirations
+          })
+          .eq('phone', userPhone);
+
+        if (error) throw error;
+        
+        // Update LocalStorage for other pages
+        localStorage.setItem('svastrino_user_name', name);
+        localStorage.setItem('userClass', cls);
+        localStorage.setItem('userCity', city);
+        
+        // Update Hero
+        document.getElementById('hero-name').textContent = name || 'Career Explorer';
+        document.getElementById('hero-class').innerHTML = `<span class="material-symbols-outlined text-[16px] mr-1.5">school</span>${cls}`;
+        
+        alert("Profile updated successfully!");
+      } catch (err) {
+        console.error("Save error:", err);
+        alert("Error saving profile: " + err.message);
+      } finally {
+        btn.textContent = 'Save changes';
+        btn.disabled = false;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadProfile);
   </script>
 </body>
 </html>
