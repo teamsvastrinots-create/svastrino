@@ -372,7 +372,7 @@
       <div class="bg-white rounded-2xl p-5 md:p-6 shadow-sm border border-slate-100 mb-6 md:mb-8">
         <div class="flex flex-row items-start md:items-center justify-between mb-6 gap-4">
           <div>
-            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">24-Week Learning Path</p>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">24-Week Journey</p>
             <h1 class="text-lg md:text-2xl font-bold text-slate-800 leading-tight">Week <span id="active-week-label">1</span> &mdash; Self Discovery</h1>
           </div>
           
@@ -472,8 +472,7 @@
               <span class="material-symbols-outlined text-[40px]" style="font-variation-settings:'FILL' 1">forum</span>
             </div>
             <h4 class="font-black text-slate-800 text-xl text-center">Need help?</h4>
-            <p class="text-[14px] text-slate-500 mt-3 leading-relaxed flex-grow text-center px-2">Our mentors and
-              community are here to help you bridge the gap in Week <span id="help-week-label">1</span>.</p>
+            <p class="text-[14px] text-slate-500 mt-3 leading-relaxed flex-grow text-center px-2">Our mentors and community are here to help you bridge the gap in course.</p>
             <div class="mt-5 space-y-2">
               <button
                 class="w-full flex items-center justify-center gap-2 py-3 bg-primary hover:bg-primary/90 text-white rounded-xl font-bold text-sm transition-all active:scale-95 shadow-lg shadow-primary/20">
@@ -500,26 +499,25 @@
                 id="active-week-label-3">1</span> &ndash; Weekly Tasks</span>
           </div>
           <div class="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden h-full">
-            <!-- Tabs -->
-            <div class="flex border-b border-slate-100">
-              <button onclick="selectDay(2)" id="tab-d2"
-                class="day-tab flex-1 py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all">Day
-                2</button>
-              <button onclick="selectDay(3)" id="tab-d3"
-                class="day-tab flex-1 py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all">Day
-                3</button>
-              <button onclick="selectDay(4)" id="tab-d4"
-                class="day-tab flex-1 py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all">Day
-                4</button>
-              <button onclick="selectDay(5)" id="tab-d5"
-                class="day-tab flex-1 py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all relative">
-                Day 5 <span
-                  class="freemium-only absolute top-1.5 right-1.5 material-symbols-outlined text-[12px] text-slate-300">lock</span>
+            <!-- Tabs (D2-D7) -->
+            <div class="flex border-b border-slate-100 overflow-x-auto" style="scrollbar-width: none;">
+              <button onclick="selectDay(2, true)" id="tab-d2" class="day-tab flex-1 min-w-[70px] py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all relative">
+                Day 2 <span id="lock-icon-d2" class="absolute top-1.5 right-1.5 material-symbols-outlined text-[12px] text-slate-300">lock</span>
               </button>
-              <button onclick="selectDay(6)" id="tab-d6"
-                class="day-tab flex-1 py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all relative">
-                Day 6 <span
-                  class="freemium-only absolute top-1.5 right-1.5 material-symbols-outlined text-[12px] text-slate-300">lock</span>
+              <button onclick="selectDay(3, true)" id="tab-d3" class="day-tab flex-1 min-w-[70px] py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all relative">
+                Day 3 <span id="lock-icon-d3" class="absolute top-1.5 right-1.5 material-symbols-outlined text-[12px] text-slate-300">lock</span>
+              </button>
+              <button onclick="selectDay(4, true)" id="tab-d4" class="day-tab flex-1 min-w-[70px] py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all relative">
+                Day 4 <span id="lock-icon-d4" class="absolute top-1.5 right-1.5 material-symbols-outlined text-[12px] text-slate-300">lock</span>
+              </button>
+              <button onclick="selectDay(5, true)" id="tab-d5" class="day-tab flex-1 min-w-[70px] py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all relative">
+                Day 5 <span id="lock-icon-d5" class="absolute top-1.5 right-1.5 material-symbols-outlined text-[12px] text-slate-300">lock</span>
+              </button>
+              <button onclick="selectDay(6, true)" id="tab-d6" class="day-tab flex-1 min-w-[70px] py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all relative">
+                Day 6 <span id="lock-icon-d6" class="absolute top-1.5 right-1.5 material-symbols-outlined text-[12px] text-slate-300">lock</span>
+              </button>
+              <button onclick="selectDay(7, true)" id="tab-d7" class="day-tab flex-1 min-w-[70px] py-3.5 text-sm font-black tracking-wide text-slate-400 border-b-2 border-transparent hover:text-primary transition-all relative">
+                Day 7 <span id="lock-icon-d7" class="absolute top-1.5 right-1.5 material-symbols-outlined text-[12px] text-slate-300">lock</span>
               </button>
             </div>
 
@@ -568,7 +566,7 @@
                 <!-- View Assignment Split Button -->
                 <div
                   class="flex-1 flex items-stretch border border-slate-200 rounded-xl shadow-sm overflow-hidden group">
-                  <button
+                  <button onclick="handleViewAssignment()" id="view-assignment-btn"
                     class="flex-1 py-3 px-2 md:px-4 bg-white text-slate-700 font-semibold text-[13px] sm:text-sm flex items-center justify-center gap-1.5 hover:bg-slate-50 transition-colors">
                     <span class="material-symbols-outlined text-[16px] text-slate-500">visibility</span>
                     <span class="hidden sm:inline">View Assignment</span>
@@ -752,10 +750,13 @@
         const selectedClass = w === activeWeek ? 'selected' : '';
         const chipSelectedClass = w === activeWeek ? 'selected' : '';
         const labelColor = w === activeWeek ? 'color:#24389c' : (w < ongoingWeek ? 'color:#16a34a' : w === ongoingWeek ? 'color:#b45309' : 'color:#9ca3af');
+        
+        let chipAction = w === 1 ? `onclick="selectWeek(${w})"` : `style="cursor:not-allowed; opacity:0.75"`;
+
         container.innerHTML += `
-          <div class="week-chip py-2 ${chipSelectedClass}" onclick="selectWeek(${w})">
+          <div class="week-chip py-2 ${chipSelectedClass} relative" ${chipAction}>
             <div class="week-dot ${dotClass} ${selectedClass}">${label}</div>
-            <span class="week-label" style="${labelColor}">W${w}</span>
+            <span class="week-label flex items-center justify-center relative" style="${labelColor}">W${w}</span>
           </div>`;
       }
     }
@@ -812,18 +813,82 @@
       6: {
         type: "Review", title: "Weekly Milestone Recap", desc: "A comprehensive review of your Week 1 progress before the unlock gate.", duration: "30 mins",
         steps: ["Review all D2–D5 submissions.", "Self-grade your work against the rubric.", "Identify your biggest insight from the week.", "Submit your Week 1 reflection summary."]
+      },
+      7: {
+        type: "Capstone", title: "Final Synthesis", desc: "Compile your learnings into a cohesive career document.", duration: "60 mins",
+        steps: ["Review Day 2 to Day 6 work.", "Draft your final master document.", "Submit for mentor review."]
       }
     };
 
-    function selectDay(d) {
+    function showContentLockedPopup() {
+      const overlay = document.getElementById('content-locked-popup-overlay');
+      const card = document.getElementById('content-locked-popup-card');
+      if(overlay && card) {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        card.classList.remove('scale-95');
+        card.classList.add('scale-100');
+      }
+    }
+
+    function closeContentLockedPopup() {
+      const overlay = document.getElementById('content-locked-popup-overlay');
+      const card = document.getElementById('content-locked-popup-card');
+      if(overlay && card) {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        card.classList.remove('scale-100');
+        card.classList.add('scale-95');
+      }
+    }
+
+    function handleViewAssignment() {
+       const isLocked = (activeDay === 2 && !videoCompleted) || activeDay > 2;
+       if (isLocked) {
+          showContentLockedPopup();
+       } else {
+          // Future real assignment routing here
+       }
+    }
+
+    function selectDay(d, isUserAction = false) {
       const isFreemium = document.documentElement.classList.contains('freemium-mode');
       if (isFreemium && d >= 5) {
-        alert('Day 5 & 6 are Premium only. Upgrade to unlock!');
+        alert('Days 5, 6, 7 are Premium only. Upgrade to unlock!');
         return;
       }
+      
+      const isLocked = (d === 2 && !videoCompleted) || d > 2;
+
+      if (isLocked && isUserAction) {
+         showContentLockedPopup();
+         return; // prevent active tab transition
+      }
+
       activeDay = d;
       document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
-      document.getElementById(`tab-d${d}`).classList.add('active');
+      const activeTab = document.getElementById(`tab-d${d}`);
+      if(activeTab) activeTab.classList.add('active');
+
+      if (isLocked) { // Boot skeleton setup
+         document.getElementById('task-type-badge').textContent = "Locked";
+         document.getElementById('task-title').textContent = `Day ${d} Task Locked`;
+         document.getElementById('task-description').textContent = (d === 2) ? "Please complete the video lecture to unlock Day 2." : "Please complete the previous requirements to unlock this task.";
+         document.getElementById('task-duration').textContent = "--";
+         const stepsEl = document.getElementById('task-steps');
+         stepsEl.innerHTML = '<div class="flex items-center gap-2 text-slate-400 mt-4"><span class="material-symbols-outlined">lock</span> Content locked</div>';
+         
+         const dz = document.getElementById('upload-dropzone');
+         if(dz) dz.classList.add('hidden');
+         
+         const submitBtn = document.getElementById('submit-assignment-btn');
+         if(submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.className = 'flex-1 py-3 px-2 md:px-4 rounded-xl font-semibold text-[13px] sm:text-sm flex items-center justify-center gap-1.5 transition-colors shadow-sm bg-slate-100 text-slate-400 cursor-not-allowed';
+         }
+         return;
+      }
+
+      const dz = document.getElementById('upload-dropzone');
+      if(dz) dz.classList.remove('hidden');
 
       const data = taskData[d];
       document.getElementById('task-type-badge').textContent = data.type;
@@ -847,7 +912,16 @@
 
     let videoCompleted = localStorage.getItem(getVideoKey()) === 'true';
 
-    function showVideoCompletedState() {
+    function recalculateOverallProgress() {
+      let completedTasks = 0;
+      if (videoCompleted) completedTasks++;
+      // currently Day tasks are only mocked submissions, so we only track video for now as requested.
+      // Progress incrementally calculated out of 7 tasks.
+      let pct = Math.round((completedTasks / 7) * 100);
+      updateWeekProgress(pct);
+    }
+
+    function showVideoCompletedState(triggerPopup = false) {
       videoCompleted = true;
       isPlaying = false;
       clearInterval(videoInterval);
@@ -866,6 +940,30 @@
       const statusLabel = document.querySelector('#video-container + div p');
       if (statusLabel) statusLabel.textContent = 'Completed ✓';
       localStorage.setItem(getVideoKey(), 'true');
+      
+      recalculateOverallProgress();
+      
+      const lockIcon2 = document.getElementById('lock-icon-d2');
+      if(lockIcon2) lockIcon2.style.display = 'none';
+      
+      if (triggerPopup) {
+         document.getElementById('unlock-popup-overlay').classList.remove('opacity-0', 'pointer-events-none');
+         document.getElementById('unlock-popup-card').classList.remove('scale-95');
+         document.getElementById('unlock-popup-card').classList.add('scale-100');
+      }
+      
+      if (activeDay === 2) selectDay(2); // re-trigger to refresh unlock state visually
+    }
+    
+    function closeUnlockPopup() {
+      document.getElementById('unlock-popup-overlay').classList.add('opacity-0', 'pointer-events-none');
+      document.getElementById('unlock-popup-card').classList.add('scale-95');
+      document.getElementById('unlock-popup-card').classList.remove('scale-100');
+    }
+    
+    function goToUnlockedDay2() {
+       closeUnlockPopup();
+       selectDay(2);
     }
 
     function resetVideoPlayerUI() {
@@ -903,11 +1001,11 @@
       if (isPlaying) {
         btn.textContent = 'pause';
         videoInterval = setInterval(() => {
-          videoProgress += 0.2;
+          videoProgress += 2.0; // Sets duration of 5 seconds to complete
           if (videoProgress >= 100) {
             videoProgress = 100;
             clearInterval(videoInterval);
-            showVideoCompletedState();
+            showVideoCompletedState(true);
           }
           document.getElementById('video-progress-bar').style.width = videoProgress + '%';
           document.getElementById('video-time-text').textContent = `${Math.floor(videoProgress / 3)}:00 / 34:00`;
@@ -925,11 +1023,32 @@
       refreshVideoState();
     };
 
-    function toggleNotes() { alert("Opening Week Notes..."); }
+    function toggleNotes() { 
+      const overlay = document.getElementById('notes-modal-overlay');
+      const card = document.getElementById('notes-modal-card');
+      if(overlay && card) {
+        overlay.classList.remove('opacity-0', 'pointer-events-none');
+        card.classList.remove('translate-y-full', 'md:translate-y-4', 'md:scale-95');
+        card.classList.add('translate-y-0', 'md:scale-100');
+        setTimeout(() => {
+          document.getElementById('notes-textarea')?.focus();
+        }, 300);
+      }
+    }
+    
+    function closeNotesPopup() {
+      const overlay = document.getElementById('notes-modal-overlay');
+      const card = document.getElementById('notes-modal-card');
+      if(overlay && card) {
+        overlay.classList.add('opacity-0', 'pointer-events-none');
+        card.classList.add('translate-y-full', 'md:translate-y-4', 'md:scale-95');
+        card.classList.remove('translate-y-0', 'md:scale-100');
+      }
+    }
 
     // Initialize
     initJourney();
-    updateWeekProgress(33);
+    recalculateOverallProgress();
     selectDay(2);
 
     // Restore completed state on page load
@@ -1042,6 +1161,45 @@
         class="w-full py-3.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-bold text-sm transition-all active:scale-95 shadow-md">
         Awesome! Let's go
       </button>
+    </div>
+  </div>
+  <!-- Notes Modal Overlay -->
+  <div id="notes-modal-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex flex-col md:items-center justify-end md:justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white rounded-t-2xl md:rounded-2xl shadow-2xl w-full md:max-w-xl mx-auto transform translate-y-full md:translate-y-4 md:scale-95 transition-transform duration-300 relative flex flex-col h-[75vh] md:h-[60vh]" id="notes-modal-card">
+      <div class="flex items-center justify-between p-4 border-b border-slate-100 shrink-0">
+        <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><span class="material-symbols-outlined text-primary">edit_note</span> Video Notes</h3>
+        <button onclick="closeNotesPopup()" class="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 transition-colors">
+          <span class="material-symbols-outlined text-[20px]">close</span>
+        </button>
+      </div>
+      <textarea id="notes-textarea" class="w-full flex-grow p-5 text-sm font-medium leading-relaxed text-slate-700 bg-slate-50/50 resize-none focus:outline-none focus:bg-white placeholder-slate-400" placeholder="Start typing your notes here. Don't worry about saving..."></textarea>
+    </div>
+  </div>
+
+  <!-- Day 2 Unlock Popup Overlay -->
+  <div id="unlock-popup-overlay" class="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white/90 backdrop-blur-xl border border-white/20 rounded-[28px] shadow-2xl p-8 max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300 text-center relative overflow-hidden" id="unlock-popup-card">
+      <button onclick="closeUnlockPopup()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-black/5 hover:bg-black/10 text-slate-500 transition-colors z-10"><span class="material-symbols-outlined text-[20px]">close</span></button>
+      <div class="w-24 h-24 mx-auto bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mb-6 shadow-xl shadow-indigo-500/30">
+        <span class="material-symbols-outlined text-[48px] text-white" style="font-variation-settings:'FILL' 1">lock_open</span>
+      </div>
+      <h3 class="text-2xl font-black text-slate-800 tracking-tight">Day 2 Unlocked!</h3>
+      <p class="text-sm font-medium text-slate-500 mt-2 mb-8 leading-relaxed px-4">Great job finishing the lecture. Your next task "Soft Skill Identification" is waiting for you.</p>
+      <button onclick="goToUnlockedDay2()" class="w-full py-4 bg-gradient-to-r from-primary to-indigo-600 text-white rounded-[16px] font-bold text-[15px] transition-all active:scale-95 shadow-lg flex items-center justify-center gap-2">
+        View Task <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Content Locked Popup Overlay -->
+  <div id="content-locked-popup-overlay" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-white rounded-2xl shadow-2xl p-6 md:p-8 max-w-sm w-full mx-4 transform scale-95 transition-transform duration-300 text-center relative overflow-hidden" id="content-locked-popup-card">
+      <button onclick="closeContentLockedPopup()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-50 hover:bg-slate-100 text-slate-500 transition-colors z-10"><span class="material-symbols-outlined text-[20px]">close</span></button>
+      <div class="w-16 h-16 mx-auto bg-slate-100 rounded-full flex items-center justify-center mb-5">
+        <span class="material-symbols-outlined text-[32px] text-slate-400" style="font-variation-settings:'FILL' 1">lock_outline</span>
+      </div>
+      <h3 class="text-xl font-black text-slate-800 tracking-tight">Content Locked</h3>
+      <p class="text-[15px] text-slate-600 mt-2 mb-2 leading-relaxed">Please complete the previous task to unlock this.</p>
     </div>
   </div>
 </body>
