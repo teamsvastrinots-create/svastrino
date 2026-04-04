@@ -210,7 +210,7 @@
 </div>
 </div>
 <div class="flex justify-between items-center text-[10px] font-bold text-outline uppercase tracking-widest">
-<span>© 2024 Sapphire Career. All rights reserved.</span>
+<span>© 2026 Sapphire Career. All rights reserved.</span>
 <div class="flex gap-4">
 <a class="hover:text-primary" href="#">Contact Support</a>
 </div>
@@ -218,4 +218,18 @@
 </footer>
 </section>
 </main>
+  <script>
+    // Ensure a clean state when starting a new authentication flow with a number
+    // This prevents stale name/data leakage from previous sessions on the same browser
+    (function() {
+      const keysToClear = [
+        'svastrino_user_name', 
+        'userPhone', 
+        'userClass', 
+        'userCity',
+        'isFreemium'
+      ];
+      keysToClear.forEach(key => localStorage.removeItem(key));
+    })();
+  </script>
 </body></html>
