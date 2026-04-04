@@ -5,6 +5,9 @@ CREATE TABLE users (
     name TEXT NOT NULL,
     email TEXT UNIQUE NOT NULL,
     phone TEXT UNIQUE,
+    class TEXT,
+    city TEXT,
+    aspirations JSONB DEFAULT '[]'::jsonb,
     plan VARCHAR(10) NOT NULL DEFAULT 'free' CHECK (plan IN ('free','paid')),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc', now())
 );
@@ -91,10 +94,11 @@ CREATE TABLE webinar_registrations (
 -- --- ROW LEVEL SECURITY POLICIES ---
 -- These policies allow our frontend (client) to select and insert data.
 
--- 1. Users table (Allow finding by phone and creating new profiles)
+-- 1. Users table (Allow finding by phone, creating, and updating profiles)
 ALTER TABLE users ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Allow public select on users" ON users FOR SELECT USING (true);
 CREATE POLICY "Allow public insert on users" ON users FOR INSERT WITH CHECK (true);
+CREATE POLICY "Allow public update on users" ON users FOR UPDATE USING (true);
 
 -- 2. Psychometric Results (Allow viewing and saving results)
 ALTER TABLE psychometric_results ENABLE ROW LEVEL SECURITY;

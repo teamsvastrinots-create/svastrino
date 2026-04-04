@@ -605,6 +605,8 @@
         // Logged in — save name locally and go to dashboard
         localStorage.setItem('svastrino_user_name', existingUserData.name);
         localStorage.setItem('userPhone', existingUserData.phone);
+        if (existingUserData.class) localStorage.setItem('userClass', existingUserData.class);
+        if (existingUserData.city) localStorage.setItem('userCity', existingUserData.city);
         window.location.href = 'dashboard.html';
       } else {
         // New user — go to profile setup
@@ -674,15 +676,19 @@
             name: name, 
             phone: phoneToSave, 
             email: emailToSave,
-            plan: 'free'
+            plan: 'free',
+            class: cls,
+            city: city
           }
         ]);
 
       if (error) throw error;
 
-      // Store name locally for dynamic greeting
+      // Store name locally for dynamic greeting, and also class/city for skipping modals
       localStorage.setItem('svastrino_user_name', name);
       localStorage.setItem('userPhone', phoneToSave);
+      localStorage.setItem('userClass', cls);
+      localStorage.setItem('userCity', city);
       
       // New user — redirect with flag to trigger test popup on dashboard
       window.location.href = 'dashboard.html?newUser=true';

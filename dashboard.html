@@ -1066,30 +1066,109 @@
     let reportUserClass = 'Class 11';
     let reportUserCity = 'India';
 
-    // Step 1: Open profile prompt first
+    // Step 1: Open profile prompt first OR bypass if filled
     function openPdfModal() {
-      const phoneInput = document.getElementById('prof-phone');
-      if (phoneInput && !phoneInput.value) {
-        const storedPhone = localStorage.getItem('userPhone');
-        if (storedPhone) {
-          phoneInput.value = storedPhone;
-        }
+      const storedName = localStorage.getItem('svastrino_user_name');
+      const storedClass = localStorage.getItem('userClass');
+      const storedCity = localStorage.getItem('userCity');
+      const storedPhone = localStorage.getItem('userPhone');
+
+      // 1. If we have full details, skip the profile modal entirely!
+      if (storedName && storedName !== 'Career Explorer' && storedClass && storedCity) {
+          reportUserName = storedName;
+          reportUserClass = storedClass;
+          reportUserCity = storedCity;
+          
+          const today = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+          document.getElementById('report-user-meta').textContent = `${storedName} \u00B7 ${storedClass} \u00B7 ${storedCity} \u00B7 Assessed: ${today}`;
+          const slug = storedName.replace(/\s+/g, '_');
+          document.getElementById('pdf-filename').textContent = `Psychometric_Report_${slug}.pdf`;
+          
+          const dashboardScore = document.getElementById('testScoreDisplay').textContent;
+          if (dashboardScore && dashboardScore !== '--') {
+            document.getElementById('report-score').textContent = dashboardScore;
+          }
+
+          // Open PDF modal directly
+          pdfModal.classList.remove('hidden');
+          pdfModal.classList.add('flex');
+          document.body.style.overflow = 'hidden';
+          return;
       }
+
+      // 2. Otherwise, we need them to fill details. Pre-fill any partial data.
+      const phoneInput = document.getElementById('prof-phone');
+      if (phoneInput && !phoneInput.value && storedPhone) {
+        phoneInput.value = storedPhone;
+      }
+      
+      const nameInput = document.getElementById('prof-name');
+      if (nameInput && !nameInput.value && storedName && storedName !== 'Career Explorer') {
+        nameInput.value = storedName;
+      }
+      
+      const classInput = document.getElementById('prof-class');
+      if (classInput && !classInput.value && storedClass) {
+        classInput.value = storedClass;
+      }
+      
+      const cityInput = document.getElementById('prof-city');
+      if (cityInput && !cityInput.value && storedCity) {
+        cityInput.value = storedCity;
+      }
+
       profileModal.classList.remove('hidden');
       profileModal.classList.add('flex');
       document.body.style.overflow = 'hidden';
     }
 
     // Step 2: Save profile, update report, show PDF
-    function saveProfileAndOpenPdf() {
+    async function saveProfileAndOpenPdf() {
+      // Show loading
+      const btn = document.querySelector('#profile-modal button');
+      const originalText = btn.innerText;
+      btn.innerText = 'Saving...';
+      btn.disabled = true;
+
       const name = document.getElementById('prof-name').value.trim() || 'Sample User';
       const cls  = document.getElementById('prof-class').value || 'Class 11';
       const city = document.getElementById('prof-city').value.trim() || 'India';
-      const today = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
+      
+      let phone = localStorage.getItem('userPhone');
+      const phoneInput = document.getElementById('prof-phone');
+      if (phoneInput && phoneInput.value) {
+          phone = phoneInput.value.trim();
+      }
 
       reportUserName  = name;
       reportUserClass = cls;
       reportUserCity  = city;
+
+      // Update LocalStorage
+      localStorage.setItem('svastrino_user_name', name);
+      localStorage.setItem('userClass', cls);
+      localStorage.setItem('userCity', city);
+
+      // Update Header
+      const headerName = document.querySelector('.greeting-name');
+      if (headerName) headerName.textContent = `Hey, ${name}`;
+
+      // Update Supabase Database
+      if (phone && window.supabaseClient) {
+          try {
+              await window.supabaseClient
+                  .from('users')
+                  .update({ name: name, class: cls, city: city })
+                  .eq('phone', phone);
+          } catch(err) {
+              console.error("Failed to save profile details to Supabase", err);
+          }
+      }
+
+      btn.innerText = originalText;
+      btn.disabled = false;
+
+      const today = new Date().toLocaleDateString('en-IN', { day:'numeric', month:'short', year:'numeric' });
 
       // Dynamically inject user details into report header
       document.getElementById('report-user-meta').textContent =
