@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Notifications | Svastrino</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-secondary": "#ffffff",
+            "surface": "#f8f9fb",
+            "primary": "#24389c",
+            "error": "#ba1a1a",
+            "secondary-fixed-dim": "#ffb870",
+            "on-secondary-fixed-variant": "#693c00",
+            "tertiary-fixed": "#a1efff",
+            "tertiary-container": "#006471",
+            "background": "#f8f9fb",
+            "secondary-fixed": "#ffdcbe",
+            "primary-fixed": "#dee0ff",
+            "inverse-surface": "#2d3133",
+            "surface-tint": "#4355b9",
+            "tertiary": "#004a55",
+            "on-secondary-fixed": "#2c1600",
+            "on-tertiary-fixed": "#001f25",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-highest": "#e0e3e5",
+            "outline": "#757684",
+            "on-error-container": "#93000a",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#653900",
+            "surface-bright": "#f8f9fb",
+            "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "surface-dim": "#d8dadc",
+            "on-tertiary-container": "#55e4fd",
+            "surface-container-low": "#f2f4f6",
+            "on-primary-fixed": "#00105c",
+            "outline-variant": "#c5c5d4",
+            "secondary-container": "#ff9800",
+            "on-tertiary-fixed-variant": "#004e59",
+            "primary-container": "#3f51b5",
+            "on-background": "#191c1e",
+            "surface-container": "#eceef0",
+            "on-surface-variant": "#454652",
+            "secondary": "#8b5000",
+            "on-surface": "#191c1e",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#44d8f1",
+            "on-tertiary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "primary-fixed-dim": "#bac3ff",
+            "on-primary-container": "#cacfff",
+            "inverse-primary": "#bac3ff",
+            "on-primary-fixed-variant": "#293ca0",
+            "surface-container-high": "#e6e8ea"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fb; }
+    h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    #sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    #sidebar.sidebar-hidden { transform: translateX(-100%); }
+    @media (min-width: 1024px) {
+      #sidebar { transform: translateX(0) !important; }
+      #sidebar-overlay { display: none !important; }
+    }
+
+    /* Global Freemium Lock Overlay */
+    .freemium-mode .freemium-section-lock::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(8px);
+      z-index: 40;
+    }
+    .freemium-mode .freemium-section-lock .lock-message {
+      display: flex !important;
+    }
+  
+    .freemium-only { display: none !important; }
+    .freemium-mode .freemium-only { display: flex !important; }
+    .freemium-mode .freemium-only-block { display: block !important; }
+  </style>
+  <script src="freemium-state.js"></script>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen">
+  
+  <!-- Mobile overlay -->
+  <div class="fixed inset-0 bg-black/30 z-30 hidden lg:!hidden" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- SideNavBar — Claude-inspired clean layout -->
+  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-surface-container-low flex flex-col border-r border-outline-variant/10 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
+    <!-- Brand & Toggle -->
+    <div class="px-5 pt-5 pb-4 flex items-center justify-between">
+      <a href="index.html" class="hover:opacity-80 transition-opacity"><img src="logo.png" alt="Svastrino" class="h-14 w-auto"></a>
+      <label class="relative inline-flex items-center cursor-pointer" title="Toggle Premium Mode">
+        <input type="checkbox" class="sr-only peer premium-toggle-checkbox" onchange="toggleFreemiumMode(this)">
+        <div class="w-8 h-4 bg-outline-variant/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-secondary shadow-sm"></div>
+      </label>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-grow px-3 space-y-1">
+      <p class="px-3 pt-4 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Overview</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="dashboard.html">
+        <span class="material-symbols-outlined text-[20px]">home</span>
+        <span class="text-[13px]">Home</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">My Learning</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="my-course.html">
+        <span class="material-symbols-outlined text-[20px]">book</span>
+        <span class="text-[13px]">My course</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="todays-task.html">
+        <span class="material-symbols-outlined text-[20px]">check_box</span>
+        <span class="text-[13px]">Today's task</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Career Tools</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="psychometric-test.html">
+        <span class="material-symbols-outlined text-[20px]">psychology</span>
+        <span class="text-[13px] flex-1">Psychometric test</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="my-test-results.html">
+        <span class="material-symbols-outlined text-[20px]">trending_up</span>
+        <span class="text-[13px] flex-1">My test results</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="webinars.html">
+        <span class="material-symbols-outlined text-[20px]">monitor</span>
+        <span class="text-[13px] flex-1">Webinars</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Account</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary font-semibold transition-all active:scale-[0.98]" href="notifications.html">
+        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">notifications</span>
+        <span class="text-[13px]">Notifications</span>
+      </a>
+    </nav>
+
+    <!-- Bottom Pinned -->
+    <div class="px-3 py-4 border-t border-outline-variant/10 space-y-1">
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="profile.html">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span class="text-[13px]">Profile</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-error hover:bg-error-container/20 transition-colors duration-200 active:scale-[0.98]" href="signin.html">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span class="text-[13px]">Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Mobile header -->
+  <header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-b border-outline-variant/10 px-4 py-3 flex items-center justify-between">
+    <button onclick="toggleSidebar()" class="p-1 text-on-surface">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <img src="logo.png" alt="Svastrino" class="h-10 w-auto">
+    <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-xs">RS</div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="lg:ml-[260px] min-h-screen p-6 pt-16 lg:p-10 lg:pt-10 max-w-[1240px] relative">
+    <div class="max-w-4xl mx-auto space-y-8 lg:space-y-10">
+      
+
+
+      <!-- Zone 1: Page Header Card -->
+      <section class="bg-surface-container-lowest rounded-xl p-8 flex flex-col md:flex-row justify-between items-start md:items-end relative overflow-hidden group border border-outline-variant/10 shadow-sm gap-4">
+        <div class="absolute -right-4 -top-4 w-32 h-32 bg-primary-fixed/30 rounded-full blur-3xl group-hover:bg-primary-fixed/40 transition-colors pointer-events-none"></div>
+        <div class="relative z-10">
+          <span class="text-[11px] font-extrabold text-primary tracking-[0.2em] uppercase mb-2 block font-headline">Student Portal</span>
+          <h1 class="text-4xl lg:text-5xl font-extrabold tracking-tight text-on-surface font-headline leading-none">Notifications</h1>
+        </div>
+        <button class="relative z-10 flex items-center gap-2 text-primary font-bold text-sm hover:underline decoration-2 underline-offset-4 transition-all active:scale-95">
+          <span class="material-symbols-outlined text-lg">done_all</span>
+          Mark all as read
+        </button>
+      </section>
+
+      <!-- Zone 2: Notification List Card -->
+      <div class="bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/10 shadow-sm">
+        
+        <!-- Today Section -->
+        <div class="p-6 md:p-8 pb-4">
+          <h2 class="text-xs font-bold text-outline tracking-widest uppercase mb-6 flex items-center gap-3">
+            Today
+            <span class="h-px flex-1 bg-outline-variant/30"></span>
+          </h2>
+          <div class="space-y-4">
+            
+            <!-- N1: Archetype Alert -->
+            <div class="flex gap-4 md:gap-5 p-5 md:p-6 rounded-xl bg-primary-fixed/10 border border-primary-fixed/20 hover:bg-primary-fixed/30 transition-all cursor-pointer relative group">
+              <div class="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(36,56,156,0.5)]"></div>
+              <div class="w-12 h-12 rounded-full bg-secondary-fixed flex items-center justify-center text-secondary shrink-0 shadow-sm">
+                <span class="material-symbols-outlined">psychology</span>
+              </div>
+              <div class="flex-1 pr-6">
+                <div class="flex justify-between items-start mb-1.5">
+                  <h3 class="font-bold text-on-surface text-base">Psychometric Profile Ready!</h3>
+                  <span class="text-[11px] text-outline font-semibold tracking-wide">2h ago</span>
+                </div>
+                <p class="text-[13px] md:text-sm text-on-surface-variant leading-relaxed">Discover your top 3 career archetypes now. Your detailed analysis is waiting!</p>
+              </div>
+            </div>
+
+            <!-- N2: Course Progress -->
+            <div class="flex gap-4 md:gap-5 p-5 md:p-6 rounded-xl bg-primary-fixed/10 border border-primary-fixed/20 hover:bg-primary-fixed/30 transition-all cursor-pointer relative group">
+              <div class="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(36,56,156,0.5)]"></div>
+              <div class="w-12 h-12 rounded-full bg-tertiary-fixed flex items-center justify-center text-tertiary shrink-0 shadow-sm">
+                <span class="material-symbols-outlined">stars</span>
+              </div>
+              <div class="flex-1 pr-6">
+                <div class="flex justify-between items-start mb-1.5">
+                  <h3 class="font-bold text-on-surface text-base">Unit 1 Mastered!</h3>
+                  <span class="text-[11px] text-outline font-semibold tracking-wide">5h ago</span>
+                </div>
+                <p class="text-[13px] md:text-sm text-on-surface-variant leading-relaxed">You've finished 'Career Fundamentals'. You earned a <span class="text-secondary font-bold">Fast Starter</span> badge!</p>
+              </div>
+            </div>
+
+            <!-- N3: Webinar Hub -->
+            <div class="flex gap-4 md:gap-5 p-5 md:p-6 rounded-xl bg-primary-fixed/10 border border-primary-fixed/20 hover:bg-primary-fixed/30 transition-all cursor-pointer relative group">
+              <div class="absolute right-4 top-1/2 -translate-y-1/2 w-2 h-2 bg-primary rounded-full shadow-[0_0_8px_rgba(36,56,156,0.5)]"></div>
+              <div class="w-12 h-12 rounded-full bg-primary-fixed flex items-center justify-center text-primary shrink-0 shadow-sm">
+                <span class="material-symbols-outlined">live_tv</span>
+              </div>
+              <div class="flex-1 pr-6">
+                <div class="flex justify-between items-start mb-1.5">
+                  <h3 class="font-bold text-on-surface text-base">Webinar Starting Soon</h3>
+                  <span class="text-[11px] text-outline font-semibold tracking-wide">15m from now</span>
+                </div>
+                <p class="text-[13px] md:text-sm text-on-surface-variant leading-relaxed">Join Rohith for 'Decoding Your Psychometric Report' starting in 15 minutes.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Yesterday Section -->
+        <div class="p-6 md:p-8 pt-4">
+          <h2 class="text-xs font-bold text-outline tracking-widest uppercase mb-6 flex items-center gap-3">
+            Yesterday
+            <span class="h-px flex-1 bg-outline-variant/30"></span>
+          </h2>
+          <div class="space-y-4">
+            
+            <!-- N4: Premium Exclusive -->
+            <div class="premium-only-block flex gap-4 md:gap-5 p-5 md:p-6 rounded-xl bg-surface-container-lowest border border-primary/20 hover:border-primary/40 transition-all cursor-pointer group opacity-90 hover:opacity-100 shadow-sm relative overflow-hidden">
+              <div class="absolute top-0 right-0 px-2 py-1 bg-secondary text-white text-[10px] font-bold uppercase rounded-bl-lg tracking-wider">Premium</div>
+              <div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center text-primary shrink-0 group-hover:bg-primary/5 transition-colors border border-primary/10">
+                <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+              </div>
+              <div class="flex-1 pr-2">
+                <div class="flex justify-between items-start mb-1.5">
+                  <h3 class="font-bold text-primary text-base">10-Year Career Roadmap Generated</h3>
+                  <span class="text-[11px] text-outline font-medium tracking-wide">1d ago</span>
+                </div>
+                <p class="text-[13px] md:text-sm text-on-surface-variant leading-relaxed font-medium">Your personalized long-term success path based on your archetype is now available for review.</p>
+              </div>
+            </div>
+
+            <!-- N5: Community Feature -->
+            <div class="flex gap-4 md:gap-5 p-5 md:p-6 rounded-xl bg-surface-container-lowest border border-outline-variant/15 hover:border-outline-variant/40 transition-all cursor-pointer group opacity-80 hover:opacity-100 shadow-sm">
+              <div class="w-12 h-12 rounded-full bg-surface-container-low flex items-center justify-center text-outline shrink-0 group-hover:text-primary transition-colors border border-outline-variant/10">
+                <span class="material-symbols-outlined">person_pin</span>
+              </div>
+              <div class="flex-1 pr-2">
+                <div class="flex justify-between items-start mb-1.5">
+                  <h3 class="font-semibold text-on-surface text-base group-hover:text-primary transition-colors">New Mentor Match</h3>
+                  <span class="text-[11px] text-outline font-medium tracking-wide">1d ago</span>
+                </div>
+                <p class="text-[13px] md:text-sm text-on-surface-variant leading-relaxed font-medium">We've found 3 new mentors from Top Indian Universities who align with your interest in Law & Tech.</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Pagination / Footer -->
+        <div class="p-6 bg-surface-container-low/50 border-t border-outline-variant/10 flex justify-center mt-2">
+          <button class="text-xs font-bold text-primary px-8 py-3 rounded-full bg-primary/5 hover:bg-primary/10 transition-colors uppercase tracking-widest active:scale-95">
+            Load Older Notifications
+          </button>
+        </div>
+
+      </div>
+
+      <footer class="pt-8 pb-4 text-center">
+        <p class="text-xs text-on-surface-variant font-medium tracking-wide">© 2026 Svastrino. All rights reserved. Data privacy compliant.</p>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('sidebar-hidden');
+      document.getElementById('sidebar-overlay').classList.toggle('hidden');
+    }
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024) document.getElementById('sidebar-overlay').classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

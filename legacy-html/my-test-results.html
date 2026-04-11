@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>My Test Results | Svastrino</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-secondary": "#ffffff",
+            "surface": "#f8f9fb",
+            "primary": "#24389c",
+            "error": "#ba1a1a",
+            "secondary-fixed-dim": "#ffb870",
+            "on-secondary-fixed-variant": "#693c00",
+            "tertiary-fixed": "#a1efff",
+            "tertiary-container": "#006471",
+            "background": "#f8f9fb",
+            "secondary-fixed": "#ffdcbe",
+            "primary-fixed": "#dee0ff",
+            "inverse-surface": "#2d3133",
+            "surface-tint": "#4355b9",
+            "tertiary": "#004a55",
+            "on-secondary-fixed": "#2c1600",
+            "on-tertiary-fixed": "#001f25",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-highest": "#e0e3e5",
+            "outline": "#757684",
+            "on-error-container": "#93000a",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#653900",
+            "surface-bright": "#f8f9fb",
+            "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "surface-dim": "#d8dadc",
+            "on-tertiary-container": "#55e4fd",
+            "surface-container-low": "#f2f4f6",
+            "on-primary-fixed": "#00105c",
+            "outline-variant": "#c5c5d4",
+            "secondary-container": "#ff9800",
+            "on-tertiary-fixed-variant": "#004e59",
+            "primary-container": "#3f51b5",
+            "on-background": "#191c1e",
+            "surface-container": "#eceef0",
+            "on-surface-variant": "#454652",
+            "secondary": "#8b5000",
+            "on-surface": "#191c1e",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#44d8f1",
+            "on-tertiary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "primary-fixed-dim": "#bac3ff",
+            "on-primary-container": "#cacfff",
+            "inverse-primary": "#bac3ff",
+            "on-primary-fixed-variant": "#293ca0",
+            "surface-container-high": "#e6e8ea"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fb; }
+    h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    #sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    #sidebar.sidebar-hidden { transform: translateX(-100%); }
+    @media (min-width: 1024px) {
+      #sidebar { transform: translateX(0) !important; }
+      #sidebar-overlay { display: none !important; }
+    }
+    .glass-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); }
+
+    /* Global Freemium Lock Overlay */
+    .freemium-mode .freemium-section-lock::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(8px);
+      z-index: 40;
+    }
+    .freemium-mode .freemium-section-lock .lock-message {
+      display: flex !important;
+    }
+  
+    .freemium-only { display: none !important; }
+    .freemium-mode .freemium-only { display: flex !important; }
+    .freemium-mode .freemium-only-block { display: block !important; }
+  </style>
+  <script src="freemium-state.js"></script>
+</head>
+<body class="bg-surface-container-low text-on-surface antialiased min-h-screen">
+  
+  <!-- Mobile overlay -->
+  <div class="fixed inset-0 bg-black/30 z-30 hidden lg:!hidden" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- SideNavBar — Claude-inspired clean layout -->
+  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-white flex flex-col border-r border-outline-variant/20 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
+    <!-- Brand & Toggle -->
+    <div class="px-5 pt-5 pb-4 flex items-center justify-between">
+      <a href="index.html" class="hover:opacity-80 transition-opacity"><img src="logo.png" alt="Svastrino" class="h-14 w-auto"></a>
+      <label class="relative inline-flex items-center cursor-pointer" title="Toggle Premium Mode">
+        <input type="checkbox" class="sr-only peer premium-toggle-checkbox" onchange="toggleFreemiumMode(this)">
+        <div class="w-8 h-4 bg-outline-variant/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-secondary shadow-sm"></div>
+      </label>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-grow px-3 space-y-1">
+      <p class="px-3 pt-4 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Overview</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="dashboard.html">
+        <span class="material-symbols-outlined text-[20px]">home</span>
+        <span class="text-[13px]">Home</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">My Learning</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="my-course.html">
+        <span class="material-symbols-outlined text-[20px]">book</span>
+        <span class="text-[13px]">My course</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="todays-task.html">
+        <span class="material-symbols-outlined text-[20px]">check_box</span>
+        <span class="text-[13px]">Today's task</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Career Tools</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="psychometric-test.html">
+        <span class="material-symbols-outlined text-[20px]">psychology</span>
+        <span class="text-[13px] flex-1">Psychometric test</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary font-semibold transition-all active:scale-[0.98]" href="my-test-results.html">
+        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">trending_up</span>
+        <span class="text-[13px] flex-1">My test results</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="webinars.html">
+        <span class="material-symbols-outlined text-[20px]">monitor</span>
+        <span class="text-[13px] flex-1">Webinars</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Account</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="notifications.html">
+        <span class="material-symbols-outlined text-[20px]">notifications</span>
+        <span class="text-[13px]">Notifications</span>
+      </a>
+    </nav>
+
+    <!-- Bottom Pinned -->
+    <div class="px-3 py-4 border-t border-outline-variant/10 space-y-1">
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="profile.html">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span class="text-[13px]">Profile</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-error hover:bg-error-container/20 transition-colors duration-200 active:scale-[0.98]" href="signin.html">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span class="text-[13px]">Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Mobile header -->
+  <header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-b border-outline-variant/10 px-4 py-3 flex items-center justify-between">
+    <button onclick="toggleSidebar()" class="p-1 text-on-surface">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <img src="logo.png" alt="Svastrino" class="h-10 w-auto">
+    <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-xs">RS</div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="lg:ml-[260px] min-h-screen p-6 pt-16 lg:p-10 lg:pt-10 xl:p-12 relative freemium-section-lock">
+    <div class="max-w-6xl mx-auto space-y-10 lg:space-y-12">
+    <!-- Header Section -->
+    <header class="mb-4">
+      <h1 class="text-3xl lg:text-4xl font-[800] text-on-surface tracking-tight mb-2">My Test Results</h1>
+      <p class="text-on-surface-variant text-sm font-[500]">Last updated: October 24, 2023</p>
+    </header>
+
+    <!-- ZONE 1: Personality Hero -->
+    <section>
+      <div class="bg-[#00105c] border-[1px] border-primary-container rounded-2xl p-[24px_28px] lg:p-[40px_48px] flex flex-col md:flex-row items-start md:items-end justify-between text-white overflow-hidden relative shadow-2xl">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6 lg:gap-10 z-10 w-full mb-6 md:mb-0">
+          <div class="flex flex-col items-center justify-center bg-white/10 p-6 rounded-2xl backdrop-blur-sm border border-white/20 sm:flex-shrink-0">
+            <div class="w-[72px] h-[72px] bg-white/25 rounded-full flex items-center justify-center mb-4 shadow-inner">
+              <span class="material-symbols-outlined text-[36px]" style="font-variation-settings: 'FILL' 1;">star</span>
+            </div>
+            <div class="text-[28px] font-extrabold leading-none mb-1 tracking-tight">INTJ</div>
+            <div class="text-[13px] font-bold text-tertiary-fixed uppercase tracking-wider">The Architect</div>
+          </div>
+          <div class="max-w-2xl md:pb-4">
+            <h2 class="text-[18px] lg:text-[22px] font-[800] mb-3 text-white tracking-tight">Your personality type</h2>
+            <p class="text-[14px] lg:text-[15px] font-[500] leading-relaxed text-white/90">
+              You are a strategic and independent thinker. You have a natural ability to analyze complex problems and design efficient systems to solve them. Your drive for excellence and objectivity makes you a valuable asset in highly technical and innovative fields.
+            </p>
+          </div>
+        </div>
+        <button class="bg-surface-container-lowest text-primary px-8 py-4 rounded-xl text-sm font-extrabold whitespace-nowrap z-10 hover:shadow-xl hover:bg-white transition-all active:scale-95 w-full md:w-auto mt-4 md:mt-0 md:ml-8 flex-shrink-0">
+          Download full report (PDF)
+        </button>
+        <!-- Abstract Pattern Decoration -->
+        <div class="absolute -right-10 -bottom-10 opacity-10 pointer-events-none">
+          <span class="material-symbols-outlined text-[200px]" style="font-variation-settings: 'FILL' 1;">architecture</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ZONE 2: Trait Scores -->
+    <section class="mt-4">
+      <div class="text-[11px] font-bold text-on-surface-variant tracking-[0.15em] uppercase mb-4 px-1">Your Trait Scores</div>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+        <!-- Trait 1 -->
+        <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-[20px] p-[24px] shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+          <div class="w-full flex justify-between items-center mb-6">
+            <span class="text-on-surface text-[14px] font-[800]">Analytical</span>
+            <span class="text-[18px] font-extrabold text-primary">88%</span>
+          </div>
+          <div class="relative w-28 h-28 mb-5 group cursor-pointer">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-outline-variant/20" d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke="currentColor" stroke-width="3"></path>
+              <path class="text-primary group-hover:text-secondary transition-colors duration-500" stroke-dasharray="88, 100" d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.4] group-hover:-translate-y-1">
+               <span class="material-symbols-outlined text-primary group-hover:text-secondary text-3xl drop-shadow-sm" style="font-variation-settings: 'FILL' 1;">psychology_alt</span>
+            </div>
+          </div>
+          <div class="text-[13px] font-[800] text-secondary bg-secondary/10 px-3 py-1 rounded-full uppercase tracking-widest">Very high</div>
+        </div>
+        <!-- Trait 2 -->
+        <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-[20px] p-[24px] shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+          <div class="w-full flex justify-between items-center mb-6">
+            <span class="text-on-surface text-[14px] font-[800]">Creative</span>
+            <span class="text-[18px] font-extrabold text-[#006471]">64%</span>
+          </div>
+          <div class="relative w-28 h-28 mb-5 group cursor-pointer">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-outline-variant/20" d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke="currentColor" stroke-width="3"></path>
+              <path class="text-[#006471] group-hover:text-secondary transition-colors duration-500" stroke-dasharray="64, 100" d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.4] group-hover:-translate-y-1">
+               <span class="material-symbols-outlined text-[#006471] group-hover:text-secondary text-3xl drop-shadow-sm" style="font-variation-settings: 'FILL' 1;">palette</span>
+            </div>
+          </div>
+          <div class="text-[13px] font-[800] text-[#006471] bg-[#006471]/10 px-3 py-1 rounded-full uppercase tracking-widest">High</div>
+        </div>
+        <!-- Trait 3 -->
+        <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-[20px] p-[24px] shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+          <div class="w-full flex justify-between items-center mb-6">
+            <span class="text-on-surface text-[14px] font-[800]">Social</span>
+            <span class="text-[18px] font-extrabold text-on-surface-variant">42%</span>
+          </div>
+          <div class="relative w-28 h-28 mb-5 group cursor-pointer">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-outline-variant/20" d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke="currentColor" stroke-width="3"></path>
+              <path class="text-outline-variant group-hover:text-secondary transition-colors duration-500" stroke-dasharray="42, 100" d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.4] group-hover:-translate-y-1">
+               <span class="material-symbols-outlined text-outline-variant group-hover:text-secondary text-3xl drop-shadow-sm" style="font-variation-settings: 'FILL' 1;">group</span>
+            </div>
+          </div>
+          <div class="text-[13px] font-[800] text-on-surface-variant bg-surface-container-highest px-3 py-1 rounded-full uppercase tracking-widest">Moderate</div>
+        </div>
+        <!-- Trait 4 -->
+        <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-[20px] p-[24px] shadow-sm hover:shadow-md transition-shadow flex flex-col items-center">
+          <div class="w-full flex justify-between items-center mb-6">
+            <span class="text-on-surface text-[14px] font-[800]">Leadership</span>
+            <span class="text-[18px] font-extrabold text-primary">76%</span>
+          </div>
+          <div class="relative w-28 h-28 mb-5 group cursor-pointer">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-outline-variant/20" d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke="currentColor" stroke-width="3"></path>
+              <path class="text-primary group-hover:text-secondary transition-colors duration-500" stroke-dasharray="76, 100" d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-[1.4] group-hover:-translate-y-1">
+               <span class="material-symbols-outlined text-primary group-hover:text-secondary text-3xl drop-shadow-sm" style="font-variation-settings: 'FILL' 1;">military_tech</span>
+            </div>
+          </div>
+          <div class="text-[13px] font-[800] text-secondary bg-secondary/10 px-3 py-1 rounded-full uppercase tracking-widest">High</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ZONE 3: Career Fit + Strengths -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 mt-4">
+      <!-- Left Card: Career Matches -->
+      <div class="bg-[#fffcf4] border-2 border-[#ffe4cc] rounded-2xl p-[24px_28px] shadow-sm h-full flex flex-col">
+        <h3 class="text-[16px] font-[700] text-on-surface mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary text-xl">work</span>
+          Top career matches
+        </h3>
+        <div class="flex flex-col gap-2 flex-grow">
+          <div class="flex items-center justify-between p-3 lg:p-4 hover:bg-surface-container-low rounded-xl transition-colors group cursor-pointer border border-transparent hover:border-outline-variant/10">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">computer</span>
+              </div>
+              <span class="text-[15px] font-[600] text-on-surface">Software Architect</span>
+            </div>
+            <span class="bg-secondary-fixed text-on-secondary-container text-[11px] font-bold px-3 py-1.5 rounded-full tracking-wide">98% Match</span>
+          </div>
+          <div class="flex items-center justify-between p-3 lg:p-4 hover:bg-surface-container-low rounded-xl transition-colors group cursor-pointer border border-transparent hover:border-outline-variant/10">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">analytics</span>
+              </div>
+              <span class="text-[15px] font-[600] text-on-surface">Data Scientist</span>
+            </div>
+            <span class="bg-secondary-fixed text-on-secondary-container text-[11px] font-bold px-3 py-1.5 rounded-full tracking-wide">94% Match</span>
+          </div>
+          <div class="flex items-center justify-between p-3 lg:p-4 hover:bg-surface-container-low rounded-xl transition-colors group cursor-pointer border border-transparent hover:border-outline-variant/10">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">account_balance</span>
+              </div>
+              <span class="text-[15px] font-[600] text-on-surface">Strategic Planner</span>
+            </div>
+            <span class="bg-surface-container-highest text-on-surface-variant text-[11px] font-bold px-3 py-1.5 rounded-full tracking-wide">89% Match</span>
+          </div>
+          <div class="flex items-center justify-between p-3 lg:p-4 hover:bg-surface-container-low rounded-xl transition-colors group cursor-pointer border border-transparent hover:border-outline-variant/10">
+            <div class="flex items-center gap-4">
+              <div class="w-10 h-10 rounded-full bg-primary/5 flex items-center justify-center text-primary group-hover:bg-primary/10 transition-colors">
+                <span class="material-symbols-outlined">biotech</span>
+              </div>
+              <span class="text-[15px] font-[600] text-on-surface">Systems Engineer</span>
+            </div>
+            <span class="bg-surface-container-highest text-on-surface-variant text-[11px] font-bold px-3 py-1.5 rounded-full tracking-wide">86% Match</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Right Card: Your top strengths -->
+      <div class="bg-[#fffcf4] border-2 border-[#ffe4cc] rounded-2xl p-[24px_28px] shadow-sm h-full flex flex-col">
+        <h3 class="text-[16px] font-[700] text-on-surface mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined text-tertiary text-xl">insights</span>
+          Your top strengths
+        </h3>
+        <div class="flex flex-col gap-6 flex-grow justify-center">
+          <div class="flex items-start gap-4">
+            <div class="bg-secondary/10 p-2 rounded-full flex-shrink-0 mt-0.5">
+              <span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            </div>
+            <div>
+              <div class="text-[15px] font-[700] text-on-surface mb-1">Strategic Foresight</div>
+              <p class="text-[13px] font-[500] text-on-surface-variant leading-relaxed">Ability to predict long-term outcomes and plan accordingly.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="bg-secondary/10 p-2 rounded-full flex-shrink-0 mt-0.5">
+              <span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            </div>
+            <div>
+              <div class="text-[15px] font-[700] text-on-surface mb-1">Complex Problem Solving</div>
+              <p class="text-[13px] font-[500] text-on-surface-variant leading-relaxed">High proficiency in deconstructing multi-layered technical challenges.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="bg-secondary/10 p-2 rounded-full flex-shrink-0 mt-0.5">
+              <span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            </div>
+            <div>
+              <div class="text-[15px] font-[700] text-on-surface mb-1">Objective Logic</div>
+              <p class="text-[13px] font-[500] text-on-surface-variant leading-relaxed">Decisions are driven by data and rational frameworks.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="bg-secondary/10 p-2 rounded-full flex-shrink-0 mt-0.5">
+              <span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+            </div>
+            <div>
+              <div class="text-[15px] font-[700] text-on-surface mb-1">Independent Drive</div>
+              <p class="text-[13px] font-[500] text-on-surface-variant leading-relaxed">Strong self-motivation with minimal need for external supervision.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Final Call to Action -->
+    <section class="mt-8 mb-4 flex justify-center">
+      <button class="flex items-center gap-2 text-primary font-bold text-[14px] px-6 py-3 rounded-full hover:bg-primary/5 transition-all active:scale-95 group">
+        <span>See detailed trait breakdown</span>
+        <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+      </button>
+    </section>
+
+    </div>
+
+    <!-- Global Lock Message -->
+    <div class="lock-message hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex-col items-center justify-center bg-white p-8 md:p-10 rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-outline-variant/20 text-center max-w-sm w-[90%] lg:ml-[130px]">
+      <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-5">
+        <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">lock</span>
+      </div>
+      <h2 class="text-2xl font-bold font-headline mb-3 text-on-surface tracking-tight">Premium Feature</h2>
+      <p class="text-sm text-on-surface-variant mb-8 leading-relaxed">Upgrade to Svastrino Premium to unlock the advanced psychometric testing portal and personalized insights.</p>
+      <button onclick="document.querySelector('.premium-toggle-checkbox').click()" class="w-full py-3.5 bg-primary text-white font-bold rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 active:scale-95">
+        Unlock Premium <span class="material-symbols-outlined text-lg">workspace_premium</span>
+      </button>
+    </div>
+  </main>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('sidebar-hidden');
+      document.getElementById('sidebar-overlay').classList.toggle('hidden');
+    }
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024) document.getElementById('sidebar-overlay').classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

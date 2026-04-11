@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Profile | Svastrino</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-secondary": "#ffffff",
+            "surface": "#f8f9fb",
+            "primary": "#24389c",
+            "error": "#ba1a1a",
+            "secondary-fixed-dim": "#ffb870",
+            "on-secondary-fixed-variant": "#693c00",
+            "tertiary-fixed": "#a1efff",
+            "tertiary-container": "#006471",
+            "background": "#f8f9fb",
+            "secondary-fixed": "#ffdcbe",
+            "primary-fixed": "#dee0ff",
+            "inverse-surface": "#2d3133",
+            "surface-tint": "#4355b9",
+            "tertiary": "#004a55",
+            "on-secondary-fixed": "#2c1600",
+            "on-tertiary-fixed": "#001f25",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-highest": "#e0e3e5",
+            "outline": "#757684",
+            "on-error-container": "#93000a",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#653900",
+            "surface-bright": "#f8f9fb",
+            "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "surface-dim": "#d8dadc",
+            "on-tertiary-container": "#55e4fd",
+            "surface-container-low": "#f2f4f6",
+            "on-primary-fixed": "#00105c",
+            "outline-variant": "#c5c5d4",
+            "secondary-container": "#ff9800",
+            "on-tertiary-fixed-variant": "#004e59",
+            "primary-container": "#3f51b5",
+            "on-background": "#191c1e",
+            "surface-container": "#eceef0",
+            "on-surface-variant": "#454652",
+            "secondary": "#8b5000",
+            "on-surface": "#191c1e",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#44d8f1",
+            "on-tertiary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "primary-fixed-dim": "#bac3ff",
+            "on-primary-container": "#cacfff",
+            "inverse-primary": "#bac3ff",
+            "on-primary-fixed-variant": "#293ca0",
+            "surface-container-high": "#e6e8ea"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fb; }
+    h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    #sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    #sidebar.sidebar-hidden { transform: translateX(-100%); }
+    @media (min-width: 1024px) {
+      #sidebar { transform: translateX(0) !important; }
+      #sidebar-overlay { display: none !important; }
+    }
+
+    /* Global Freemium Lock Overlay */
+    .freemium-mode .freemium-section-lock::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(8px);
+      z-index: 40;
+    }
+    .freemium-mode .freemium-section-lock .lock-message {
+      display: flex !important;
+    }
+  
+    .freemium-only { display: none !important; }
+    .freemium-mode .freemium-only { display: flex !important; }
+    .freemium-mode .freemium-only-block { display: block !important; }
+  </style>
+  <script src="freemium-state.js"></script>
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen">
+  
+  <!-- Mobile overlay -->
+  <div class="fixed inset-0 bg-black/30 z-30 hidden lg:!hidden" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- SideNavBar — Claude-inspired clean layout -->
+  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-surface-container-low flex flex-col border-r border-outline-variant/10 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
+    <!-- Brand & Toggle -->
+    <div class="px-5 pt-5 pb-4 flex items-center justify-between">
+      <a href="index.html" class="hover:opacity-80 transition-opacity"><img src="logo.png" alt="Svastrino" class="h-14 w-auto"></a>
+      <label class="relative inline-flex items-center cursor-pointer" title="Toggle Premium Mode">
+        <input type="checkbox" class="sr-only peer premium-toggle-checkbox" onchange="toggleFreemiumMode(this)">
+        <div class="w-8 h-4 bg-outline-variant/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-secondary shadow-sm"></div>
+      </label>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-grow px-3 space-y-1">
+      <p class="px-3 pt-4 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Overview</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="dashboard.html">
+        <span class="material-symbols-outlined text-[20px]">home</span>
+        <span class="text-[13px]">Home</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">My Learning</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="my-course.html">
+        <span class="material-symbols-outlined text-[20px]">book</span>
+        <span class="text-[13px]">My course</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="todays-task.html">
+        <span class="material-symbols-outlined text-[20px]">check_box</span>
+        <span class="text-[13px]">Today's task</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Career Tools</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="psychometric-test.html">
+        <span class="material-symbols-outlined text-[20px]">psychology</span>
+        <span class="text-[13px] flex-1">Psychometric test</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="my-test-results.html">
+        <span class="material-symbols-outlined text-[20px]">trending_up</span>
+        <span class="text-[13px] flex-1">My test results</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="webinars.html">
+        <span class="material-symbols-outlined text-[20px]">monitor</span>
+        <span class="text-[13px] flex-1">Webinars</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Account</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="notifications.html">
+        <span class="material-symbols-outlined text-[20px]">notifications</span>
+        <span class="text-[13px]">Notifications</span>
+      </a>
+    </nav>
+
+    <!-- Bottom Pinned -->
+    <div class="px-3 py-4 border-t border-outline-variant/10 space-y-1">
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary font-semibold transition-all active:scale-[0.98]" href="profile.html">
+        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">person</span>
+        <span class="text-[13px]">Profile</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-error hover:bg-error-container/20 transition-colors duration-200 active:scale-[0.98]" href="signin.html">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span class="text-[13px]">Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Mobile header -->
+  <header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-b border-outline-variant/10 px-4 py-3 flex items-center justify-between">
+    <button onclick="toggleSidebar()" class="p-1 text-on-surface">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <img src="logo.png" alt="Svastrino" class="h-10 w-auto">
+    <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-xs">RS</div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="lg:ml-[260px] min-h-screen p-6 pt-16 lg:p-10 lg:pt-10 max-w-[1240px] relative">
+    <div class="max-w-5xl mx-auto space-y-6 lg:space-y-8">
+      
+      <!-- ZONE 1: Profile Hero Card -->
+      <section class="bg-surface-container-lowest rounded-xl p-[24px] md:p-[32px] flex flex-col md:flex-row items-center md:items-start justify-between gap-6 overflow-hidden relative border border-outline-variant/10 shadow-sm">
+        <!-- Background Pattern -->
+        <div class="absolute top-0 right-0 w-64 h-full opacity-5 pointer-events-none">
+          <svg class="w-full h-full text-primary" fill="currentColor" viewBox="0 0 100 100">
+            <circle cx="80" cy="20" r="15"></circle>
+            <rect height="2" transform="rotate(-45 10 60)" width="40" x="10" y="60"></rect>
+          </svg>
+        </div>
+
+        <div class="flex flex-col md:flex-row items-center md:items-start gap-8 relative z-10 w-full md:w-auto">
+          <!-- Avatar -->
+          <div class="w-28 h-28 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-white text-4xl font-extrabold tracking-tighter shadow-lg ring-4 ring-surface-container-low shrink-0">
+            RS
+          </div>
+          
+          <div class="text-center md:text-left mt-2">
+            <h1 id="hero-name" class="text-3xl font-bold font-headline text-on-surface tracking-tight">Career Explorer</h1>
+            <p id="hero-phone" class="text-on-surface-variant font-medium mt-1">Add your email</p>
+            
+            <div class="flex flex-wrap justify-center md:justify-start gap-3 mt-5">
+              <!-- Success Badge -->
+              <span id="hero-plan" class="inline-flex items-center px-4 py-1.5 rounded-full bg-secondary-container/10 text-secondary font-bold text-xs border border-secondary-container/20">
+                <span class="material-symbols-outlined text-[16px] mr-1.5" style="font-variation-settings: 'FILL' 1;">verified</span>
+                Free plan
+              </span>
+              <!-- Info Badge -->
+              <span id="hero-class" class="inline-flex items-center px-4 py-1.5 rounded-full bg-primary-fixed/50 text-on-primary-fixed-variant font-bold text-xs border border-primary-fixed">
+                <span class="material-symbols-outlined text-[16px] mr-1.5">school</span>
+                Class 11
+              </span>
+              <!-- Neutral Badge -->
+              <span id="hero-joined" class="inline-flex items-center px-4 py-1.5 rounded-full bg-surface-container-high text-on-surface-variant font-semibold text-xs border border-outline-variant/10">
+                Joined April 2026
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col items-center md:items-end gap-2 relative z-10 mt-6 md:mt-0 pt-4 md:pt-2 border-t md:border-t-0 border-outline-variant/10 w-full md:w-auto">
+          <div class="text-center md:text-right">
+            <span class="block text-[11px] font-bold text-outline uppercase tracking-[0.1em] mb-1">Current Momentum</span>
+            <div class="text-2xl font-black text-primary font-headline">Advanced Explorer</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ZONE 2: Settings Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Left Card: Personal Details -->
+        <div class="bg-surface-container-lowest rounded-xl p-6 md:p-8 flex flex-col gap-8 border border-outline-variant/10 shadow-sm">
+          <div class="flex items-center justify-between pb-4 border-b border-outline-variant/10">
+            <h2 class="text-xl font-bold font-headline text-on-surface">Personal details</h2>
+            <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+              <span class="material-symbols-outlined text-xl">manage_accounts</span>
+            </div>
+          </div>
+
+          <form class="flex flex-col gap-6" onsubmit="event.preventDefault(); saveProfileSettings();">
+            <!-- Full Name -->
+            <div class="flex flex-col gap-2">
+              <label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Full Name</label>
+              <input id="profile-name-input" class="bg-surface-container-low border border-outline-variant/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl p-3.5 text-on-surface font-medium transition-all duration-200 outline-none" type="text" value=""/>
+            </div>
+            
+            <!-- Phone -->
+            <div class="flex flex-col gap-2">
+              <label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Phone Number (Read-only)</label>
+              <input id="profile-phone-input" class="bg-surface-container-low border border-outline-variant/20 focus:outline-none rounded-xl p-3.5 text-on-surface-variant font-medium opacity-70 cursor-not-allowed" type="tel" value="" readonly/>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Class -->
+              <div class="flex flex-col gap-2">
+                <label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">Class</label>
+                <div class="relative">
+                  <select id="profile-class-input" class="w-full bg-surface-container-low border border-outline-variant/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl p-3.5 text-on-surface font-medium transition-all duration-200 appearance-none outline-none">
+                    <option>Class 10</option>
+                    <option selected>Class 11</option>
+                    <option>Class 12</option>
+                    <option>Undergrad</option>
+                    <option>Graduate</option>
+                  </select>
+                  <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+                </div>
+              </div>
+              
+              <!-- City -->
+              <div class="flex flex-col gap-2">
+                <label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">City</label>
+                <input id="profile-city-input" class="w-full bg-surface-container-low border border-outline-variant/20 focus:bg-white focus:border-primary focus:ring-2 focus:ring-primary/20 rounded-xl p-3.5 text-on-surface font-medium transition-all duration-200 outline-none" type="text" value=""/>
+              </div>
+            </div>
+            
+            <div class="pt-4 mt-2 border-t border-outline-variant/10">
+              <button id="profile-save-btn" class="w-full bg-primary text-white py-3.5 rounded-xl font-bold text-sm hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all" type="submit">
+                Save changes
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Right Card: Notification Preferences & Career -->
+        <div class="flex flex-col gap-6">
+          
+          <!-- Career Interests Box -->
+          <div class="bg-surface-container-lowest rounded-xl p-6 md:p-8 flex flex-col gap-6 border border-outline-variant/10 shadow-sm">
+            <div class="flex items-center justify-between pb-4 border-b border-outline-variant/10">
+              <div>
+                <h2 class="text-xl font-bold font-headline text-on-surface mb-1">Aspiration chips</h2>
+                <p class="text-[13px] text-on-surface-variant font-medium">Personalize feed based on interests</p>
+              </div>
+              <button onclick="toggleEditAspirations()" class="text-primary font-bold text-sm flex items-center gap-1 hover:underline underline-offset-4 decoration-2">
+                 <span id="aspiration-edit-text">Edit</span> <span id="aspiration-edit-icon" class="material-symbols-outlined text-sm">edit</span>
+              </button>
+            </div>
+            
+            <div id="aspiration-chips-container" class="flex flex-wrap gap-3">
+              <!-- Chips will be dynamically populated here -->
+              <div onclick="addAspirationChip()" class="bg-surface-container border border-outline-variant/20 text-on-surface-variant px-4 py-2 rounded-full flex items-center gap-2 transition-transform hover:scale-105 cursor-pointer hover:bg-surface-container-high border-dashed">
+                <span class="material-symbols-outlined text-[16px]">add</span>
+                <span class="font-bold text-[11px] uppercase tracking-wide">Add More</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Notification Preferences Box -->
+          <div class="bg-surface-container-lowest rounded-xl p-6 md:p-8 flex flex-col gap-6 border border-outline-variant/10 shadow-sm flex-1">
+            <div class="flex items-center justify-between pb-4 border-b border-outline-variant/10">
+              <h2 class="text-xl font-bold font-headline text-on-surface">Notifications</h2>
+              <div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-xl">notifications_active</span>
+              </div>
+            </div>
+            
+            <div class="flex flex-col gap-4">
+              <!-- Toggle Group -->
+              <div class="flex items-center justify-between p-4 bg-surface-container/50 border border-outline-variant/10 rounded-xl hover:bg-surface-container transition-colors">
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-700">
+                    <span class="material-symbols-outlined text-[20px]">chat</span>
+                  </div>
+                  <div>
+                    <p class="font-bold text-sm text-on-surface">WhatsApp</p>
+                    <p class="text-xs text-on-surface-variant font-medium mt-0.5">Instant alerts for results</p>
+                  </div>
+                </div>
+                <!-- Custom Tailwind Toggle -->
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" checked class="sr-only peer">
+                  <div class="w-11 h-6 bg-outline-variant/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </label>
+              </div>
+
+              <div class="flex items-center justify-between p-4 bg-surface-container/50 border border-outline-variant/10 rounded-xl hover:bg-surface-container transition-colors">
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                    <span class="material-symbols-outlined text-[20px]">mail</span>
+                  </div>
+                  <div>
+                    <p class="font-bold text-sm text-on-surface">Email Digest</p>
+                    <p class="text-xs text-on-surface-variant font-medium mt-0.5">Weekly performance summary</p>
+                  </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" checked class="sr-only peer">
+                  <div class="w-11 h-6 bg-outline-variant/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </label>
+              </div>
+              
+              <div class="flex items-center justify-between p-4 bg-surface-container/50 border border-outline-variant/10 rounded-xl hover:bg-surface-container transition-colors">
+                <div class="flex items-center gap-4">
+                  <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center text-amber-700">
+                    <span class="material-symbols-outlined text-[20px]">smart_button</span>
+                  </div>
+                  <div>
+                    <p class="font-bold text-sm text-on-surface">Push Alerts</p>
+                    <p class="text-xs text-on-surface-variant font-medium mt-0.5">Daily task reminders</p>
+                  </div>
+                </div>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" class="sr-only peer">
+                  <div class="w-11 h-6 bg-outline-variant/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                </label>
+              </div>
+
+            </div>
+          </div>
+          
+        </div>
+      </div>
+
+      <footer class="pt-6 pb-4 text-center">
+        <p class="text-xs text-on-surface-variant font-medium tracking-wide">© 2026 Svastrino. All rights reserved. Data privacy compliant.</p>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('sidebar-hidden');
+      document.getElementById('sidebar-overlay').classList.toggle('hidden');
+    }
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024) document.getElementById('sidebar-overlay').classList.add('hidden');
+    });
+
+    // --- SUPABASE SYNC LOGIC ---
+    const supabaseUrl = 'https://yrwpvekpafzkqowrtloi.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlyd3B2ZWtwYWZ6a3Fvd3J0bG9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODY3MDEsImV4cCI6MjA5MDQ2MjcwMX0.XjantcbriIik1OCzikksTjOfTlIzqodoD4zA85Fw-gY';
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+    let userPhone = localStorage.getItem('userPhone');
+    let currentUserData = null;
+    let aspirations = [
+      { name: 'Design', icon: 'architecture' },
+      { name: 'Tech', icon: 'code' },
+      { name: 'Psychology', icon: 'psychology' }
+    ];
+    let isEditingAspirations = false;
+
+    async function loadProfile() {
+      if (!userPhone) return;
+      
+      // Pre-fill phone field
+      document.getElementById('profile-phone-input').value = userPhone;
+      document.getElementById('hero-phone').textContent = userPhone;
+
+      try {
+        const { data, error } = await supabaseClient
+          .from('users')
+          .select('*')
+          .eq('phone', userPhone)
+          .single();
+
+        if (error) {
+          console.error("Error fetching user:", error);
+        } else if (data) {
+          currentUserData = data;
+          
+          if (data.name) {
+             document.getElementById('profile-name-input').value = data.name;
+             document.getElementById('hero-name').textContent = data.name;
+          }
+          if (data.class) {
+             document.getElementById('profile-class-input').value = data.class;
+             document.getElementById('hero-class').innerHTML = `<span class="material-symbols-outlined text-[16px] mr-1.5">school</span>${data.class}`;
+          }
+          if (data.city) document.getElementById('profile-city-input').value = data.city;
+          
+          if (data.aspirations && Array.isArray(data.aspirations)) {
+            aspirations = data.aspirations;
+          }
+          renderAspirations();
+        }
+      } catch (e) { console.error("Profile load error:", e); }
+    }
+
+    function renderAspirations() {
+      const container = document.getElementById('aspiration-chips-container');
+      // Clear all except "Add More" which is the last child
+      const addMoreBtn = container.querySelector('[onclick="addAspirationChip()"]');
+      container.innerHTML = '';
+      
+      aspirations.forEach((asp, index) => {
+        const chip = document.createElement('div');
+        chip.className = 'bg-secondary-fixed/50 border border-secondary/20 text-on-secondary-fixed px-4 py-2 rounded-full flex items-center gap-2 shadow-sm transition-transform hover:scale-105 cursor-pointer relative group';
+        chip.innerHTML = `
+          <span class="material-symbols-outlined text-[16px]">${asp.icon || 'star'}</span>
+          <span class="font-bold text-[11px] uppercase tracking-wide">${asp.name}</span>
+          ${isEditingAspirations ? `<button onclick="removeAspiration(${index})" class="absolute -top-1 -right-1 bg-error text-on-error w-4 h-4 rounded-full flex items-center justify-center text-[10px] shadow-lg">✕</button>` : ''}
+        `;
+        container.appendChild(chip);
+      });
+      
+      container.appendChild(addMoreBtn);
+    }
+
+    function toggleEditAspirations() {
+      isEditingAspirations = !isEditingAspirations;
+      document.getElementById('aspiration-edit-text').textContent = isEditingAspirations ? 'Done' : 'Edit';
+      document.getElementById('aspiration-edit-icon').textContent = isEditingAspirations ? 'check' : 'edit';
+      renderAspirations();
+    }
+
+    function removeAspiration(index) {
+      aspirations.splice(index, 1);
+      renderAspirations();
+    }
+
+    function addAspirationChip() {
+      const name = prompt("Enter your career interest (e.g. Finance, Biology):");
+      if (name && name.trim()) {
+        aspirations.push({ name: name.trim(), icon: 'stars' });
+        renderAspirations();
+      }
+    }
+
+    async function saveProfileSettings() {
+      if (!userPhone) return;
+      const name = document.getElementById('profile-name-input').value.trim();
+      const cls = document.getElementById('profile-class-input').value;
+      const city = document.getElementById('profile-city-input').value.trim();
+      
+      const btn = document.getElementById('profile-save-btn');
+      btn.textContent = 'Saving...';
+      btn.disabled = true;
+
+      try {
+        const { error } = await supabaseClient
+          .from('users')
+          .update({ 
+            name: name,
+            class: cls,
+            city: city,
+            aspirations: aspirations
+          })
+          .eq('phone', userPhone);
+
+        if (error) throw error;
+        
+        // Update LocalStorage for other pages
+        localStorage.setItem('svastrino_user_name', name);
+        localStorage.setItem('userClass', cls);
+        localStorage.setItem('userCity', city);
+        
+        // Update Hero
+        document.getElementById('hero-name').textContent = name || 'Career Explorer';
+        document.getElementById('hero-class').innerHTML = `<span class="material-symbols-outlined text-[16px] mr-1.5">school</span>${cls}`;
+        
+        alert("Profile updated successfully!");
+      } catch (err) {
+        console.error("Save error:", err);
+        alert("Error saving profile: " + err.message);
+      } finally {
+        btn.textContent = 'Save changes';
+        btn.disabled = false;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadProfile);
+  </script>
+</body>
+</html>

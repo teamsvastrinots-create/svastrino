@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Career Test | Svastrino</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-variant": "#e5e2dd",
+            "primary-fixed": "#dce1ff",
+            "error": "#ba1a1a",
+            "surface-bright": "#fcf9f4",
+            "surface-dim": "#dcdad5",
+            "surface-tint": "#4359aa",
+            "background": "#fcf9f4",
+            "primary-container": "#002173",
+            "surface-container-low": "#f6f3ee",
+            "on-surface-variant": "#444651",
+            "on-primary-container": "#778de1",
+            "surface-container-highest": "#e5e2dd",
+            "surface": "#fcf9f4",
+            "surface-container-high": "#ebe8e3",
+            "primary": "#001044",
+            "surface-container": "#f0ede8",
+            "outline": "#757682",
+            "on-background": "#1c1c19",
+            "outline-variant": "#c5c5d3",
+            "on-primary": "#ffffff",
+            "secondary": "#555d7e",
+            "surface-container-lowest": "#ffffff",
+            "on-surface": "#1c1c19",
+            "on-error": "#ffffff",
+            "secondary-container": "#d1d8ff",
+            "on-secondary-container": "#565e7f",
+            "error-container": "#ffdad6"
+          },
+          fontFamily: { "headline": ["Inter"], "body": ["Inter"], "label": ["Inter"] },
+          borderRadius: {"DEFAULT": "1rem", "lg": "2rem", "xl": "3rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    body { font-family: 'Inter', sans-serif; background-color: #fcf9f4; }
+
+    /* Question transitions */
+    .question-card {
+      opacity: 0;
+      transform: translateX(40px);
+      transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+    .question-card.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+      position: relative;
+    }
+    .question-card.exit-left {
+      opacity: 0;
+      transform: translateX(-40px);
+    }
+
+    /* Option selection */
+    .option-btn {
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+    .option-btn:hover {
+      border-color: #001044;
+      background: #f6f3ee;
+      transform: translateY(-1px);
+    }
+    .option-btn.selected {
+      border-color: #001044;
+      background: #dce1ff;
+      box-shadow: 0 0 0 2px #001044;
+    }
+    .option-btn.selected .option-letter {
+      background: #001044;
+      color: #fff;
+    }
+
+    /* Progress bar */
+    .progress-fill {
+      transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .modal-overlay.show {
+      opacity: 1;
+      visibility: visible;
+    }
+    .modal-content {
+      transform: scale(0.95) translateY(10px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .modal-overlay.show .modal-content {
+      transform: scale(1) translateY(0);
+    }
+
+    /* OTP inputs */
+    .otp-input {
+      width: 52px;
+      height: 60px;
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      border: 2px solid #c5c5d3;
+      border-radius: 12px;
+      background: #f6f3ee;
+      color: #001044;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+    .otp-input:focus {
+      border-color: #001044;
+      box-shadow: 0 0 0 3px rgba(0, 16, 68, 0.15);
+      background: #fff;
+    }
+    .otp-input.filled {
+      border-color: #001044;
+      background: #dce1ff;
+    }
+
+    /* Confetti keyframes */
+    @keyframes confettiFall {
+      0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+    }
+    .confetti-piece {
+      position: fixed;
+      top: 0;
+      width: 10px;
+      height: 10px;
+      z-index: 200;
+      animation: confettiFall 3s ease-out forwards;
+    }
+
+    /* Pulse */
+    @keyframes softPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+    }
+  
+    .freemium-only { display: none !important; }
+    .freemium-mode .freemium-only { display: flex !important; }
+    .freemium-mode .freemium-only-block { display: block !important; }
+  </style>
+</head>
+<body class="text-on-surface selection:bg-primary-fixed min-h-screen">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-40 bg-background/90 backdrop-blur-xl border-b border-outline-variant/10">
+    <div class="flex justify-between items-center w-full px-6 md:px-8 py-4 max-w-[900px] mx-auto">
+      <a href="index.html" class="hover:opacity-80 transition-opacity"><img src="logo.png" alt="Svastrino" class="h-14 w-auto mix-blend-multiply"></a>
+      <div class="flex items-center gap-3 text-sm text-on-surface-variant">
+        <span class="material-symbols-outlined text-base">timer</span>
+        <span id="timerDisplay">0:00</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Progress Bar -->
+  <div class="sticky top-[57px] z-30 bg-background">
+    <div class="max-w-[900px] mx-auto px-6 md:px-8 py-3">
+      <div class="flex justify-between items-center mb-2">
+        <span class="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Question <span id="currentQ">1</span> of 8</span>
+        <span class="text-xs font-bold text-primary" id="progressPercent">0%</span>
+      </div>
+      <div class="h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+        <div class="h-full bg-gradient-to-r from-primary to-primary-container rounded-full progress-fill" id="progressBar" style="width: 0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Test Container -->
+  <main class="max-w-[700px] mx-auto px-6 flex flex-col justify-center min-h-[calc(100vh-160px)] pt-8 pb-32 relative" id="testContainer">
+    <!-- Questions will be rendered by JS -->
+  </main>
+
+  <!-- Navigation Buttons -->
+  <div class="fixed bottom-0 left-0 right-0 bg-background/90 backdrop-blur-xl border-t border-outline-variant/10 z-30" id="navButtons">
+    <div class="max-w-[700px] mx-auto px-6 py-4 flex justify-between items-center">
+      <button class="flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-on-surface-variant hover:bg-surface-container-high transition-all disabled:opacity-30 disabled:cursor-not-allowed" id="prevBtn" disabled onclick="prevQuestion()">
+        <span class="material-symbols-outlined text-sm">arrow_back</span>
+        Previous
+      </button>
+      <button class="flex items-center gap-2 px-8 py-3 rounded-full text-sm font-bold bg-primary text-on-primary hover:bg-primary-container transition-all disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-primary/10" id="nextBtn" disabled onclick="nextQuestion()">
+        Next
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Number Modal -->
+  <div class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40" id="mobileModal">
+    <div class="modal-content bg-surface-container-lowest rounded-2xl p-8 md:p-10 max-w-md w-full shadow-2xl">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 bg-primary-fixed rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-primary text-3xl">celebration</span>
+        </div>
+        <h2 class="text-2xl font-extrabold text-primary mb-2">Test Complete! 🎉</h2>
+        <p class="text-on-surface-variant text-sm">Enter your mobile number to receive your detailed career report with personalized insights.</p>
+      </div>
+
+      <div class="space-y-4">
+        <label class="block text-xs font-bold text-on-surface-variant uppercase tracking-widest">Mobile Number</label>
+        <div class="flex gap-3">
+          <div class="flex items-center px-4 py-3 bg-surface-container-low rounded-xl text-sm font-semibold text-primary border border-outline-variant/20">
+            +91
+          </div>
+          <input type="tel" id="mobileInput" maxlength="10" placeholder="Enter 10-digit number" class="flex-1 px-4 py-3 bg-surface-container-low border border-outline-variant/20 rounded-xl text-on-surface font-semibold focus:ring-2 focus:ring-primary/30 focus:border-primary outline-none transition-all text-base" />
+        </div>
+        <p class="text-xs text-on-surface-variant/60" id="mobileError"></p>
+        <div id="recaptcha-container" class="mt-4 flex justify-center"></div>
+      </div>
+
+      <button class="w-full mt-6 bg-gradient-to-r from-primary to-primary-container text-on-primary py-4 rounded-xl font-bold text-base hover:scale-[0.98] active:scale-95 transition-transform shadow-lg shadow-primary/15 disabled:opacity-40" id="sendOtpBtn" disabled onclick="sendOtp()">
+        Send OTP
+      </button>
+
+      <p class="text-center text-xs text-on-surface-variant/50 mt-4">We'll send a one-time password to verify your number</p>
+    </div>
+  </div>
+
+  <!-- OTP Modal -->
+  <div class="modal-overlay fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/40" id="otpModal">
+    <div class="modal-content bg-surface-container-lowest rounded-2xl p-8 md:p-10 max-w-md w-full shadow-2xl">
+      <div class="text-center mb-8">
+        <div class="w-16 h-16 bg-primary-fixed rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-primary text-3xl">sms</span>
+        </div>
+        <h2 class="text-2xl font-extrabold text-primary mb-2">Verify OTP</h2>
+        <p class="text-on-surface-variant text-sm">Enter the 6-digit code sent to <span class="font-semibold text-primary" id="otpMobileDisplay">+91 ••••••••••</span></p>
+      </div>
+
+      <div class="flex justify-center gap-2 mb-2" id="otpContainer">
+        <input type="text" maxlength="1" class="otp-input" data-index="0" inputmode="numeric" pattern="[0-9]" />
+        <input type="text" maxlength="1" class="otp-input" data-index="1" inputmode="numeric" pattern="[0-9]" />
+        <input type="text" maxlength="1" class="otp-input" data-index="2" inputmode="numeric" pattern="[0-9]" />
+        <input type="text" maxlength="1" class="otp-input" data-index="3" inputmode="numeric" pattern="[0-9]" />
+        <input type="text" maxlength="1" class="otp-input" data-index="4" inputmode="numeric" pattern="[0-9]" />
+        <input type="text" maxlength="1" class="otp-input" data-index="5" inputmode="numeric" pattern="[0-9]" />
+      </div>
+      <p class="text-xs text-center text-on-surface-variant/60 mb-6" id="otpError"></p>
+
+      <button class="w-full bg-gradient-to-r from-primary to-primary-container text-on-primary py-4 rounded-xl font-bold text-base hover:scale-[0.98] active:scale-95 transition-transform shadow-lg shadow-primary/15 disabled:opacity-40" id="verifyOtpBtn" disabled onclick="verifyOtp()">
+        Verify & Get Results
+      </button>
+
+      <div class="text-center mt-5">
+        <button class="text-sm font-semibold text-primary hover:underline disabled:opacity-40 disabled:no-underline" id="resendBtn" disabled onclick="resendOtp()">
+          Resend OTP <span id="resendTimer">(30s)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supabase SDK via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const supabaseUrl = 'https://yrwpvekpafzkqowrtloi.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inlyd3B2ZWtwYWZ6a3Fvd3J0bG9pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ4ODY3MDEsImV4cCI6MjA5MDQ2MjcwMX0.XjantcbriIik1OCzikksTjOfTlIzqodoD4zA85Fw-gY';
+    window.supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+  </script>
+
+  <script>
+    // ─── QUESTIONS DATA ───
+    const questions = [
+      {
+        id: 1,
+        category: "Logical Sequence",
+        question: "Look at the following series: 2, 6, 12, 20, ... What number should come next in the sequence?",
+        options: [
+          { letter: "A", text: "24" },
+          { letter: "B", text: "28" },
+          { letter: "C", text: "30" },
+          { letter: "D", text: "32" }
+        ]
+      },
+      {
+        id: 2,
+        category: "Deductive Reasoning",
+        question: "Read the following statements:<br><br>All birds lay eggs.<br>A swan is a bird.<br>Therefore, a swan lays eggs.<br><br>Based strictly on the statements above, this conclusion is:",
+        options: [
+          { letter: "A", text: "True" },
+          { letter: "B", text: "False" },
+          { letter: "C", text: "Only true depending on the season" },
+          { letter: "D", text: "Cannot be determined" }
+        ]
+      },
+      {
+        id: 3,
+        category: "Spatial Reasoning",
+        question: "If you fold a standard square piece of paper in half to make a rectangle, and then fold it in half again to make a smaller square, how many layers of paper thick is the final small square?",
+        options: [
+          { letter: "A", text: "2 layers" },
+          { letter: "B", text: "4 layers" },
+          { letter: "C", text: "6 layers" },
+          { letter: "D", text: "8 layers" }
+        ]
+      },
+      {
+        id: 4,
+        category: "Word Analogies",
+        question: "Hot is to Cold as Joy is to:",
+        options: [
+          { letter: "A", text: "Anger" },
+          { letter: "B", text: "Excitement" },
+          { letter: "C", text: "Sorrow" },
+          { letter: "D", text: "Peace" }
+        ]
+      },
+      {
+        id: 5,
+        category: "Word Classification",
+        question: "Which of the following words does not belong with the others?",
+        options: [
+          { letter: "A", text: "Apple" },
+          { letter: "B", text: "Banana" },
+          { letter: "C", text: "Carrot" },
+          { letter: "D", text: "Orange" }
+        ]
+      },
+      {
+        id: 6,
+        category: "Time and Distance",
+        question: "If a train travels 120 kilometers in 2 hours at a steady pace, what is its average speed per hour?",
+        options: [
+          { letter: "A", text: "50 km/h" },
+          { letter: "B", text: "60 km/h" },
+          { letter: "C", text: "100 km/h" },
+          { letter: "D", text: "240 km/h" }
+        ]
+      },
+      {
+        id: 7,
+        category: "Logical Math",
+        question: "A bat and a ball together cost ₹110. The bat costs exactly ₹100 more than the ball. How much does the ball cost?",
+        options: [
+          { letter: "A", text: "₹5" },
+          { letter: "B", text: "₹10" },
+          { letter: "C", text: "₹15" },
+          { letter: "D", text: "₹20" }
+        ]
+      },
+      {
+        id: 8,
+        category: "Real-World Scenario",
+        question: "You find a lost wallet in the school hallway. It has money and a student ID card inside. What is the most appropriate course of action?",
+        options: [
+          { letter: "A", text: "Keep the money and throw the wallet back on the floor." },
+          { letter: "B", text: "Leave it exactly where it is so the owner can come back and find it." },
+          { letter: "C", text: "Try to track down the person yourself by asking everyone walking by." },
+          { letter: "D", text: "Hand it over to the school's main office or a trusted teacher immediately." }
+        ]
+      }
+    ];
+
+    // ─── STATE ───
+    let currentQuestion = 0;
+    let answers = {};
+    let timerSeconds = 180; // 3 minutes
+    let timerInterval = null;
+    let resendInterval = null;
+    let mobileNumber = '';
+
+    // ─── RENDER QUESTIONS ───
+    function renderQuestions() {
+      const container = document.getElementById('testContainer');
+      container.innerHTML = questions.map((q, i) => `
+        <div class="question-card ${i === 0 ? 'active' : ''}" data-q="${i}">
+          <div class="mb-8">
+            <span class="inline-block px-4 py-1.5 rounded-full bg-primary-fixed text-primary text-xs font-bold uppercase tracking-widest mb-4">${q.category}</span>
+            <h2 class="text-2xl md:text-3xl font-extrabold text-primary leading-tight tracking-tight">${q.question}</h2>
+          </div>
+          <div class="space-y-3">
+            ${q.options.map(opt => `
+              <button class="option-btn w-full flex items-center gap-4 p-5 rounded-xl border-2 border-outline-variant/20 bg-surface-container-lowest text-left group" onclick="selectOption(${i}, '${opt.letter}', this)">
+                <span class="option-letter flex-shrink-0 w-10 h-10 rounded-full border-2 border-outline-variant/30 flex items-center justify-center font-bold text-sm text-on-surface-variant group-hover:border-primary transition-colors">${opt.letter}</span>
+                <span class="text-base font-medium text-on-surface">${opt.text}</span>
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ─── SELECT OPTION ───
+    function selectOption(qIndex, letter, btn) {
+      answers[qIndex] = letter;
+      const card = btn.closest('.question-card');
+      card.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('nextBtn').disabled = false;
+      if (qIndex < questions.length - 1) {
+        setTimeout(() => nextQuestion(), 500);
+      } else {
+        const nextBtn = document.getElementById('nextBtn');
+        nextBtn.innerHTML = 'Finish <span class="material-symbols-outlined text-sm">check</span>';
+      }
+    }
+
+    // ─── NAVIGATION ───
+    function nextQuestion() {
+      if (answers[currentQuestion] === undefined) return;
+      if (currentQuestion === questions.length - 1) {
+        finishTest();
+        return;
+      }
+      const cards = document.querySelectorAll('.question-card');
+      cards[currentQuestion].classList.remove('active');
+      cards[currentQuestion].classList.add('exit-left');
+      currentQuestion++;
+      cards[currentQuestion].classList.add('active');
+      updateUI();
+    }
+
+    function prevQuestion() {
+      if (currentQuestion === 0) return;
+      const cards = document.querySelectorAll('.question-card');
+      cards[currentQuestion].classList.remove('active');
+      currentQuestion--;
+      cards[currentQuestion].classList.remove('exit-left');
+      cards[currentQuestion].classList.add('active');
+      updateUI();
+    }
+
+    function updateUI() {
+      const pct = Math.round((currentQuestion / questions.length) * 100);
+      document.getElementById('progressBar').style.width = pct + '%';
+      document.getElementById('progressPercent').textContent = pct + '%';
+      document.getElementById('currentQ').textContent = currentQuestion + 1;
+      document.getElementById('prevBtn').disabled = currentQuestion === 0;
+      document.getElementById('nextBtn').disabled = answers[currentQuestion] === undefined;
+
+      const nextBtn = document.getElementById('nextBtn');
+      if (currentQuestion === questions.length - 1) {
+        nextBtn.innerHTML = answers[currentQuestion] !== undefined
+          ? 'Finish <span class="material-symbols-outlined text-sm">check</span>'
+          : 'Next <span class="material-symbols-outlined text-sm">arrow_forward</span>';
+      } else {
+        nextBtn.innerHTML = 'Next <span class="material-symbols-outlined text-sm">arrow_forward</span>';
+      }
+    }
+
+    // ─── FINISH TEST ───
+    function finishTest() {
+      clearInterval(timerInterval);
+      document.getElementById('progressBar').style.width = '100%';
+      document.getElementById('progressPercent').textContent = '100%';
+      document.getElementById('navButtons').style.display = 'none';
+      createConfetti();
+      setTimeout(() => {
+        document.getElementById('mobileModal').classList.add('show');
+      }, 800);
+    }
+
+    // ─── CONFETTI ───
+    function createConfetti() {
+      const colors = ['#001044', '#002173', '#778de1', '#dce1ff', '#ffb950', '#ffddb3'];
+      for (let i = 0; i < 50; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = Math.random() * 100 + 'vw';
+        piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        piece.style.animationDelay = Math.random() * 1.5 + 's';
+        piece.style.animationDuration = (2 + Math.random() * 2) + 's';
+        piece.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        piece.style.width = (6 + Math.random() * 8) + 'px';
+        piece.style.height = (6 + Math.random() * 8) + 'px';
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 4000);
+      }
+    }
+
+    // ─── MOBILE NUMBER & OTP (SUPABASE) ───
+    const mobileInput = document.getElementById('mobileInput');
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+
+    mobileInput.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+      sendOtpBtn.disabled = e.target.value.length !== 10;
+      document.getElementById('mobileError').textContent = '';
+    });
+
+    async function sendOtp() {
+      mobileNumber = mobileInput.value;
+      if (mobileNumber.length !== 10) {
+        document.getElementById('mobileError').textContent = 'Please enter a valid 10-digit mobile number';
+        return;
+      }
+
+      sendOtpBtn.textContent = 'Sending...';
+      sendOtpBtn.disabled = true;
+
+      // --- MOCK OTP FLOW ---
+      console.log("Mock OTP: Simulating send to:", mobileNumber);
+      
+      // Simulate a small delay for "Realism"
+      await new Promise(resolve => setTimeout(resolve, 600));
+
+      document.getElementById('mobileModal').classList.remove('show');
+      sendOtpBtn.textContent = 'Send OTP';
+      sendOtpBtn.disabled = false;
+
+      document.getElementById('otpMobileDisplay').textContent = '+91 ' + mobileNumber.slice(0, 2) + '••••' + mobileNumber.slice(-4);
+      document.getElementById('otpModal').classList.add('show');
+      document.querySelectorAll('.otp-input')[0].focus();
+      startResendTimer();
+    }
+
+
+    // ─── OTP HANDLING ───
+    const otpInputs = document.querySelectorAll('.otp-input');
+    const verifyOtpBtn = document.getElementById('verifyOtpBtn');
+
+    otpInputs.forEach((input, idx) => {
+      input.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 1);
+        if (e.target.value && idx < otpInputs.length - 1) {
+          otpInputs[idx + 1].focus();
+        }
+        if (e.target.value) input.classList.add('filled');
+        else input.classList.remove('filled');
+        checkOtpFilled();
+      });
+
+      input.addEventListener('keydown', (e) => {
+        if (e.key === 'Backspace' && !e.target.value && idx > 0) {
+          otpInputs[idx - 1].focus();
+          otpInputs[idx - 1].value = '';
+          otpInputs[idx - 1].classList.remove('filled');
+          checkOtpFilled();
+        }
+      });
+
+      // Handle paste
+      input.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6);
+        pasted.split('').forEach((char, i) => {
+          if (otpInputs[i]) {
+            otpInputs[i].value = char;
+            otpInputs[i].classList.add('filled');
+          }
+        });
+        if (pasted.length > 0) otpInputs[Math.min(pasted.length - 1, 5)].focus();
+        checkOtpFilled();
+      });
+    });
+
+    function checkOtpFilled() {
+      const filled = Array.from(otpInputs).every(i => i.value.length === 1);
+      verifyOtpBtn.disabled = !filled;
+    }
+
+    async function verifyOtp() {
+      const otp = Array.from(otpInputs).map(i => i.value).join('');
+      document.getElementById('otpError').textContent = '';
+      verifyOtpBtn.textContent = 'Verifying...';
+      verifyOtpBtn.disabled = true;
+
+      const phoneString = '+91' + mobileNumber;
+
+
+      // --- MOCK OTP FLOW ---
+      console.log("Mock OTP: Simulating verification for code:", otp);
+      
+      // Simulate a small delay
+      await new Promise(resolve => setTimeout(resolve, 800));
+
+      const user = { id: "mock-user-" + Date.now() }; // Mock user object
+
+
+      // User verified successfully. Send results to REST API.
+      const correctAnswers = {
+        0: 'C',
+        1: 'A',
+        2: 'B',
+        3: 'C',
+        4: 'C',
+        5: 'B',
+        6: 'A',
+        7: 'D'
+      };
+
+      function calculateScore(userAnswers) {
+        let score = 0;
+        for (const [qIndex, choice] of Object.entries(userAnswers)) {
+          if (correctAnswers[qIndex] === choice) {
+            score++;
+          }
+        }
+        return Math.round((score / 8) * 100);
+      }
+
+      console.log("User Answers:", answers);
+      console.log("Correct Answers:", correctAnswers);
+      console.log("Calculated Score:", calculateScore(answers));
+
+      const percentageScore = calculateScore(answers);
+
+
+      try {
+        // 1. Save test attempt score
+        const { error: saveError } = await window.supabaseClient
+          .from('free_test_attempts')
+          .insert({
+            phone: phoneString,
+            answers: answers,
+            score: percentageScore
+          });
+
+        if (saveError) throw saveError;
+        
+        // 2. IMPORTANT: Register/Update user in the main 'users' table
+        // This is what signup.html checks to see if you are an "existing user"
+        const { error: userError } = await window.supabaseClient
+          .from('users')
+          .upsert({
+            phone: phoneString,
+            name: 'Career Explorer', // Default name for new test takers
+            email: `user_${mobileNumber}@svastrino.com`, // Required unique email placeholder
+            plan: 'free'
+          }, { onConflict: 'phone' });
+
+        if (userError) {
+          console.warn("User upsert failed (continuing anyway):", userError);
+        }
+
+        // Securely store for dashboard retrieval and greeting
+        localStorage.setItem('userPhone', phoneString);
+        localStorage.setItem('svastrino_user_name', 'Career Explorer');
+        
+        // Success: Only now we redirect
+        document.getElementById('otpModal').classList.remove('show');
+        window.location.href = 'dashboard.html';
+
+      } catch (e) {
+        console.error("Critical: Failed to save test results:", e);
+        document.getElementById('otpError').textContent = "Server error saving results. Please try again.";
+        verifyOtpBtn.textContent = 'Verify & Get Results';
+        verifyOtpBtn.disabled = false;
+      }
+    }
+
+    function startResendTimer() {
+      let seconds = 30;
+      const resendBtn = document.getElementById('resendBtn');
+      const resendTimer = document.getElementById('resendTimer');
+      resendBtn.disabled = true;
+
+      if (resendInterval) clearInterval(resendInterval);
+      resendInterval = setInterval(() => {
+        seconds--;
+        resendTimer.textContent = `(${seconds}s)`;
+        if (seconds <= 0) {
+          clearInterval(resendInterval);
+          resendBtn.disabled = false;
+          resendTimer.textContent = '';
+        }
+      }, 1000);
+    }
+
+    function resendOtp() {
+      document.getElementById('otpError').textContent = 'Sending new OTP...';
+      document.getElementById('otpError').style.color = '#16a34a';
+      document.getElementById('otpModal').classList.remove('show');
+      sendOtp();
+    }
+
+    // ─── TIMER ───
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timerSeconds--;
+        if (timerSeconds <= 0) {
+          clearInterval(timerInterval);
+          timerSeconds = 0;
+          finishTest(); // Auto-finish when time's up
+        }
+        const m = Math.floor(timerSeconds / 60);
+        const s = timerSeconds % 60;
+        document.getElementById('timerDisplay').textContent = `${m}:${s.toString().padStart(2, '0')}`;
+        
+        // Visual warning for last 30 seconds
+        if (timerSeconds < 30) {
+          document.getElementById('timerDisplay').style.color = '#ba1a1a';
+          document.getElementById('timerDisplay').style.fontWeight = 'bold';
+        }
+      }, 1000);
+    }
+
+    // ─── INIT ───
+    document.addEventListener('DOMContentLoaded', () => {
+      renderQuestions();
+      startTimer();
+    });
+  </script>
+</body>
+</html>

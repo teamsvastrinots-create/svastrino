@@ -1,0 +1,25 @@
+{
+  "name": "svastrino",
+  "version": "1.0.0",
+  "description": "A modern authentication UI with Sign In and Sign Up pages.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/teamsvastrinots-create/svastrino.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/teamsvastrinots-create/svastrino/issues"
+  },
+  "homepage": "https://github.com/teamsvastrinots-create/svastrino#readme",
+  "devDependencies": {
+    "prisma": "^7.6.0",
+    "sharp": "^0.34.5"
+  }
+}

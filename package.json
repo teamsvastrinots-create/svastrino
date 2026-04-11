@@ -1,25 +1,24 @@
 {
-  "name": "svastrino",
+  "name": "svastrino-react",
+  "private": true,
   "version": "1.0.0",
-  "description": "A modern authentication UI with Sign In and Sign Up pages.",
-  "main": "app.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/teamsvastrinots-create/svastrino.git"
+  "dependencies": {
+    "@supabase/supabase-js": "^2.103.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-helmet-async": "^3.0.0",
+    "react-router-dom": "^6.28.0"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/teamsvastrinots-create/svastrino/issues"
-  },
-  "homepage": "https://github.com/teamsvastrinots-create/svastrino#readme",
   "devDependencies": {
-    "prisma": "^7.6.0",
-    "sharp": "^0.34.5"
+    "@tailwindcss/vite": "^4.2.2",
+    "@vitejs/plugin-react": "^4.3.2",
+    "tailwindcss": "^4.2.2",
+    "vite": "^6.3.2"
   }
 }

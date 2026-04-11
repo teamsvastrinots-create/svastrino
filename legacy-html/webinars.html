@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Webinars | Svastrino</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-secondary": "#ffffff",
+            "surface": "#f8f9fb",
+            "primary": "#24389c",
+            "error": "#ba1a1a",
+            "secondary-fixed-dim": "#ffb870",
+            "on-secondary-fixed-variant": "#693c00",
+            "tertiary-fixed": "#a1efff",
+            "tertiary-container": "#006471",
+            "background": "#f8f9fb",
+            "secondary-fixed": "#ffdcbe",
+            "primary-fixed": "#dee0ff",
+            "inverse-surface": "#2d3133",
+            "surface-tint": "#4355b9",
+            "tertiary": "#004a55",
+            "on-secondary-fixed": "#2c1600",
+            "on-tertiary-fixed": "#001f25",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-highest": "#e0e3e5",
+            "outline": "#757684",
+            "on-error-container": "#93000a",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#653900",
+            "surface-bright": "#f8f9fb",
+            "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "surface-dim": "#d8dadc",
+            "on-tertiary-container": "#55e4fd",
+            "surface-container-low": "#f2f4f6",
+            "on-primary-fixed": "#00105c",
+            "outline-variant": "#c5c5d4",
+            "secondary-container": "#ff9800",
+            "on-tertiary-fixed-variant": "#004e59",
+            "primary-container": "#3f51b5",
+            "on-background": "#191c1e",
+            "surface-container": "#eceef0",
+            "on-surface-variant": "#454652",
+            "secondary": "#8b5000",
+            "on-surface": "#191c1e",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#44d8f1",
+            "on-tertiary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "primary-fixed-dim": "#bac3ff",
+            "on-primary-container": "#cacfff",
+            "inverse-primary": "#bac3ff",
+            "on-primary-fixed-variant": "#293ca0",
+            "surface-container-high": "#e6e8ea"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    body { font-family: 'Inter', sans-serif; background-color: #f8f9fb; }
+    h1, h2, h3, .font-headline { font-family: 'Plus Jakarta Sans', sans-serif; }
+    #sidebar { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    #sidebar.sidebar-hidden { transform: translateX(-100%); }
+    @media (min-width: 1024px) {
+      #sidebar { transform: translateX(0) !important; }
+      #sidebar-overlay { display: none !important; }
+    }
+
+    /* Global Freemium Lock Overlay */
+    .freemium-mode .freemium-section-lock::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(8px);
+      z-index: 40;
+    }
+    .freemium-mode .freemium-section-lock .lock-message {
+      display: flex !important;
+    }
+  
+    .freemium-only { display: none !important; }
+    .freemium-mode .freemium-only { display: flex !important; }
+    .freemium-mode .freemium-only-block { display: block !important; }
+  </style>
+  <script src="freemium-state.js"></script>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen">
+  
+  <!-- Mobile overlay -->
+  <div class="fixed inset-0 bg-black/30 z-30 hidden lg:!hidden" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- SideNavBar — Claude-inspired clean layout -->
+  <aside id="sidebar" class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-surface-container-low flex flex-col border-r border-outline-variant/10 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0">
+    <!-- Brand & Toggle -->
+    <div class="px-5 pt-5 pb-4 flex items-center justify-between">
+      <a href="index.html" class="hover:opacity-80 transition-opacity"><img src="logo.png" alt="Svastrino" class="h-14 w-auto"></a>
+      <label class="relative inline-flex items-center cursor-pointer" title="Toggle Premium Mode">
+        <input type="checkbox" class="sr-only peer premium-toggle-checkbox" onchange="toggleFreemiumMode(this)">
+        <div class="w-8 h-4 bg-outline-variant/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-secondary shadow-sm"></div>
+      </label>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-grow px-3 space-y-1">
+      <p class="px-3 pt-4 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Overview</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="dashboard.html">
+        <span class="material-symbols-outlined text-[20px]">home</span>
+        <span class="text-[13px]">Home</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">My Learning</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="my-course.html">
+        <span class="material-symbols-outlined text-[20px]">book</span>
+        <span class="text-[13px]">My course</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="todays-task.html">
+        <span class="material-symbols-outlined text-[20px]">check_box</span>
+        <span class="text-[13px]">Today's task</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Career Tools</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="psychometric-test.html">
+        <span class="material-symbols-outlined text-[20px]">psychology</span>
+        <span class="text-[13px] flex-1">Psychometric test</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="my-test-results.html">
+        <span class="material-symbols-outlined text-[20px]">trending_up</span>
+        <span class="text-[13px] flex-1">My test results</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-primary/10 text-primary font-semibold transition-all active:scale-[0.98]" href="webinars.html">
+        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">monitor</span>
+        <span class="text-[13px] flex-1">Webinars</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-on-surface-variant/50 uppercase tracking-widest">Account</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="notifications.html">
+        <span class="material-symbols-outlined text-[20px]">notifications</span>
+        <span class="text-[13px]">Notifications</span>
+      </a>
+    </nav>
+
+    <!-- Bottom Pinned -->
+    <div class="px-3 py-4 border-t border-outline-variant/10 space-y-1">
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-on-surface-variant hover:bg-surface-container-high transition-colors duration-200 active:scale-[0.98]" href="profile.html">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span class="text-[13px]">Profile</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-error hover:bg-error-container/20 transition-colors duration-200 active:scale-[0.98]" href="signin.html">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span class="text-[13px]">Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Mobile header -->
+  <header class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-b border-outline-variant/10 px-4 py-3 flex items-center justify-between">
+    <button onclick="toggleSidebar()" class="p-1 text-on-surface">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <img src="logo.png" alt="Svastrino" class="h-10 w-auto">
+    <div class="w-8 h-8 rounded-full bg-primary-fixed flex items-center justify-center text-primary font-bold text-xs">RS</div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="lg:ml-[260px] min-h-screen p-6 pt-16 lg:p-10 lg:pt-10 max-w-[1240px] relative freemium-section-lock">
+    <div class="max-w-5xl mx-auto space-y-10 lg:space-y-12">
+      
+      <!-- Header -->
+      <header class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+        <div>
+          <span class="text-[10px] font-bold tracking-[0.2em] text-secondary uppercase">Live Learning</span>
+          <h1 class="text-4xl lg:text-5xl font-extrabold text-primary mt-1 tracking-tight">Webinars</h1>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="relative hidden md:block">
+            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant/50 text-sm">search</span>
+            <input class="pl-10 pr-4 py-2 bg-surface-container border border-outline-variant/20 rounded-full text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none w-64 text-on-surface" placeholder="Search sessions..." type="text"/>
+          </div>
+        </div>
+      </header>
+
+      <!-- Zone 1: Upcoming Webinar Hero Card -->
+      <section>
+        <div class="relative overflow-hidden rounded-xl bg-gradient-to-br from-primary to-primary-container p-8 lg:p-10 text-on-primary flex flex-col md:flex-row gap-8 items-center shadow-lg border border-primary-container/20">
+          <!-- Background decoration -->
+          <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full -mr-20 -mt-20 blur-3xl shadow-xl pointer-events-none"></div>
+          
+          <!-- Left: Date Block -->
+          <div class="flex flex-col items-center justify-center bg-white/20 backdrop-blur-md rounded-xl p-6 min-w-[140px] border border-white/20 shadow-sm z-10 shrink-0">
+            <span class="text-[12px] font-bold tracking-widest opacity-80 uppercase font-headline">APRIL</span>
+            <span class="text-[52px] font-black leading-none my-1 font-headline">05</span>
+            <span class="text-[14px] font-semibold opacity-90">6:00 PM IST</span>
+          </div>
+          
+          <!-- Right: Content -->
+          <div class="flex-1 flex flex-col gap-4 z-10">
+            <div class="flex items-center gap-3">
+              <span class="px-3 py-1 bg-secondary text-white text-[10px] font-black uppercase rounded-full tracking-wider shadow-sm">Upcoming</span>
+              <span class="text-[13px] font-medium text-white/90 flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">timer</span> Starts in 1 day
+              </span>
+            </div>
+            <div>
+              <h2 class="text-3xl lg:text-4xl font-extrabold font-headline leading-tight tracking-tight text-white mb-2">Decoding Your Psychometric Report: Turning Insights into a 10-Year Career Roadmap</h2>
+              <p class="text-white/80 text-lg font-medium italic">Hosted by Rohith <span class="opacity-60 not-italic mx-1">•</span> Founder of Svastrino</p>
+            </div>
+            
+            <div class="flex flex-wrap items-center gap-4 mt-4">
+              <button class="px-6 py-3 bg-white text-primary rounded-xl font-bold text-sm flex items-center gap-2 hover:bg-surface-container-lowest transition-colors shadow-md active:scale-95">
+                <span class="material-symbols-outlined text-lg">calendar_add_on</span> Add to calendar
+              </button>
+              <button class="px-6 py-3 bg-primary/20 backdrop-blur-sm text-on-primary border border-white/20 rounded-xl font-bold text-sm hover:bg-primary/40 transition-colors active:scale-95">
+                Join when live
+              </button>
+              <span class="text-[12px] text-white/70 italic block md:inline mt-2 md:mt-0 font-medium tracking-wide">Link activates 10 mins before</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Zone 2: Past Webinars -->
+      <section class="mt-8">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-[11px] font-black tracking-[0.15em] text-on-surface-variant uppercase">Past Webinars</h2>
+          <div class="h-[1px] flex-1 bg-outline-variant/30 ml-4"></div>
+        </div>
+        
+        <div class="flex flex-col gap-4">
+          <!-- Past Webinar Row 1 -->
+          <div class="group bg-surface-container-lowest hover:bg-white transition-all duration-300 rounded-xl border border-outline-variant/20 hover:border-outline-variant/40 hover:shadow-md overflow-hidden flex flex-col md:flex-row items-stretch cursor-pointer">
+            <div class="flex items-center justify-center bg-surface-container-low px-8 py-6 min-w-[130px] border-r border-outline-variant/10">
+              <div class="text-center">
+                <span class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">MAR</span>
+                <span class="block text-3xl font-black text-primary font-headline leading-none mt-1">08</span>
+              </div>
+            </div>
+            <div class="flex-1 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div>
+                <h3 class="font-bold text-xl text-on-surface group-hover:text-primary transition-colors mb-1 leading-snug">Beyond JEE & NEET: Exploring High-Growth Career Paths in 2026</h3>
+                <p class="text-sm text-on-surface-variant font-medium">Karan Verma, Independent Career Consultant & Author</p>
+              </div>
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 shrink-0">
+                <div class="flex items-center gap-1.5 px-3 py-1 bg-secondary-fixed/50 border border-secondary/10 text-on-secondary-fixed rounded-full text-[11px] font-bold uppercase tracking-tight">
+                  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span> Attended
+                </div>
+                <button class="flex items-center gap-2 text-primary font-bold text-sm hover:underline decoration-2 underline-offset-4 group/btn">
+                  <span class="material-symbols-outlined text-xl group-hover/btn:scale-110 transition-transform">play_circle</span> Watch replay
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Past Webinar Row 2 -->
+          <div class="group bg-surface-container-lowest hover:bg-white transition-all duration-300 rounded-xl border border-outline-variant/20 hover:border-outline-variant/40 hover:shadow-md overflow-hidden flex flex-col md:flex-row items-stretch cursor-pointer">
+            <div class="flex items-center justify-center bg-surface-container-low px-8 py-6 min-w-[130px] border-r border-outline-variant/10">
+              <div class="text-center">
+                <span class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">FEB</span>
+                <span class="block text-3xl font-black text-primary font-headline leading-none mt-1">22</span>
+              </div>
+            </div>
+            <div class="flex-1 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div>
+                <h3 class="font-bold text-xl text-on-surface group-hover:text-primary transition-colors mb-1 leading-snug">Building a Standout Profile: How to Impress Top Global University Admissions</h3>
+                <p class="text-sm text-on-surface-variant font-medium">Sneha Kapoor, Senior Admissions Strategist</p>
+              </div>
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 shrink-0">
+                <div class="flex items-center gap-1.5 px-3 py-1 bg-surface-container border border-outline-variant/10 text-on-surface-variant rounded-full text-[11px] font-bold uppercase tracking-tight">
+                  Missed
+                </div>
+                <button class="flex items-center gap-2 text-primary font-bold text-sm hover:underline decoration-2 underline-offset-4 group/btn">
+                  <span class="material-symbols-outlined text-xl group-hover/btn:scale-110 transition-transform">play_circle</span> Watch replay
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Past Webinar Row 3 -->
+          <div class="group bg-surface-container-lowest hover:bg-white transition-all duration-300 rounded-xl border border-outline-variant/20 hover:border-outline-variant/40 hover:shadow-md overflow-hidden flex flex-col md:flex-row items-stretch cursor-pointer">
+            <div class="flex items-center justify-center bg-surface-container-low px-8 py-6 min-w-[130px] border-r border-outline-variant/10">
+              <div class="text-center">
+                <span class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-widest">FEB</span>
+                <span class="block text-3xl font-black text-primary font-headline leading-none mt-1">05</span>
+              </div>
+            </div>
+            <div class="flex-1 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+              <div>
+                <h3 class="font-bold text-xl text-on-surface group-hover:text-primary transition-colors mb-1 leading-snug">The Soft Skill Secret: Mastering Communication & Leadership for Gen Z</h3>
+                <p class="text-sm text-on-surface-variant font-medium">Rohan Das, Soft Skills Trainer & Leadership Coach</p>
+              </div>
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 shrink-0">
+                <div class="flex items-center gap-1.5 px-3 py-1 bg-secondary-fixed/50 border border-secondary/10 text-on-secondary-fixed rounded-full text-[11px] font-bold uppercase tracking-tight">
+                  <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span> Attended
+                </div>
+                <button class="flex items-center gap-2 text-primary font-bold text-sm hover:underline decoration-2 underline-offset-4 group/btn">
+                  <span class="material-symbols-outlined text-xl group-hover/btn:scale-110 transition-transform">play_circle</span> Watch replay
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      <!-- Footer -->
+      <footer class="pt-8 pb-4 text-center">
+        <p class="text-xs text-on-surface-variant font-medium tracking-wide">© 2026 Svastrino. All rights reserved. Data privacy compliant.</p>
+      </footer>
+    </div>
+
+    <!-- Global Lock Message -->
+    <div class="lock-message hidden fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 flex-col items-center justify-center bg-white p-8 md:p-10 rounded-2xl shadow-[0_20px_60px_-15px_rgba(0,0,0,0.3)] border border-outline-variant/20 text-center max-w-sm w-[90%] lg:ml-[130px]">
+      <div class="w-16 h-16 bg-primary/10 text-primary rounded-full flex items-center justify-center mb-5">
+        <span class="material-symbols-outlined text-4xl" style="font-variation-settings: 'FILL' 1;">lock</span>
+      </div>
+      <h2 class="text-2xl font-bold font-headline mb-3 text-on-surface tracking-tight">Premium Feature</h2>
+      <p class="text-sm text-on-surface-variant mb-8 leading-relaxed">Upgrade to Svastrino Premium to unlock Live Webinars to interact with industry experts directly.</p>
+      <button class="w-full py-3.5 bg-primary text-white font-bold rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 active:scale-95">
+        Unlock Premium <span class="material-symbols-outlined text-lg">workspace_premium</span>
+      </button>
+    </div>
+  </main>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('sidebar-hidden');
+      document.getElementById('sidebar-overlay').classList.toggle('hidden');
+    }
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024) document.getElementById('sidebar-overlay').classList.add('hidden');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Today's Task | Svastrino</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-secondary": "#ffffff",
+            "surface": "#f8f9fb",
+            "primary": "#24389c",
+            "error": "#ba1a1a",
+            "secondary-fixed-dim": "#ffb870",
+            "on-secondary-fixed-variant": "#693c00",
+            "tertiary-fixed": "#a1efff",
+            "tertiary-container": "#006471",
+            "background": "#f8f9fb",
+            "secondary-fixed": "#ffdcbe",
+            "primary-fixed": "#dee0ff",
+            "inverse-surface": "#2d3133",
+            "surface-tint": "#4355b9",
+            "tertiary": "#004a55",
+            "on-secondary-fixed": "#2c1600",
+            "on-tertiary-fixed": "#001f25",
+            "inverse-on-surface": "#eff1f3",
+            "surface-container-highest": "#e0e3e5",
+            "outline": "#757684",
+            "on-error-container": "#93000a",
+            "on-error": "#ffffff",
+            "on-secondary-container": "#653900",
+            "surface-bright": "#f8f9fb",
+            "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "surface-dim": "#d8dadc",
+            "on-tertiary-container": "#55e4fd",
+            "surface-container-low": "#f2f4f6",
+            "on-primary-fixed": "#00105c",
+            "outline-variant": "#c5c5d4",
+            "secondary-container": "#ff9800",
+            "on-tertiary-fixed-variant": "#004e59",
+            "primary-container": "#3f51b5",
+            "on-background": "#191c1e",
+            "surface-container": "#eceef0",
+            "on-surface-variant": "#454652",
+            "secondary": "#8b5000",
+            "on-surface": "#191c1e",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#44d8f1",
+            "on-tertiary": "#ffffff",
+            "surface-variant": "#e0e3e5",
+            "primary-fixed-dim": "#bac3ff",
+            "on-primary-container": "#cacfff",
+            "inverse-primary": "#bac3ff",
+            "on-primary-fixed-variant": "#293ca0",
+            "surface-container-high": "#e6e8ea"
+          },
+          fontFamily: {
+            "headline": ["Plus Jakarta Sans"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          },
+          borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f2f4f6;
+    }
+
+    h1,
+    h2,
+    h3,
+    .font-headline {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    #sidebar {
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #sidebar.sidebar-hidden {
+      transform: translateX(-100%);
+    }
+
+    @media (min-width: 1024px) {
+      #sidebar {
+        transform: translateX(0) !important;
+      }
+
+      #sidebar-overlay {
+        display: none !important;
+      }
+    }
+
+    .freemium-only {
+      display: none !important;
+    }
+
+    .freemium-mode .freemium-only {
+      display: flex !important;
+    }
+
+    .freemium-mode .freemium-only-block {
+      display: block !important;
+    }
+
+    /* Simplified Freemium Lock Overlay */
+    .freemium-mode .freemium-section-lock {
+      position: relative;
+    }
+    .freemium-mode .freemium-section-lock > *:not(.lock-message) {
+      opacity: 0.4;
+      pointer-events: none;
+      user-select: none;
+    }
+    .freemium-mode .freemium-section-lock .lock-message {
+      display: flex !important;
+    }
+    /* Blurred Lock State specifically for Streak */
+    .freemium-mode .freemium-section-blur {
+      position: relative;
+    }
+    .freemium-mode .freemium-section-blur > *:not(.lock-message) {
+      filter: blur(4px);
+      opacity: 0.7;
+      pointer-events: none;
+      user-select: none;
+    }
+    .freemium-mode .freemium-section-blur .lock-message {
+      display: flex !important;
+    }
+    .lock-message {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      pointer-events: none;
+    }
+
+    /* Premium Scaling */
+    .freemium-mode .premium-only-task {
+      display: none !important;
+    }
+  </style>
+  <script src="freemium-state.js"></script>
+</head>
+
+<body class="text-on-surface antialiased bg-[#f2f4f6]">
+  <!-- Mobile overlay -->
+  <div class="fixed inset-0 bg-black/30 z-30 hidden lg:!hidden" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <!-- SideNavBar -->
+  <aside id="sidebar"
+    class="fixed left-0 top-0 h-screen w-[260px] z-40 bg-white flex flex-col border-r border-[#e0e3e5]/60 font-['Plus_Jakarta_Sans'] sidebar-hidden lg:!translate-x-0 overflow-y-auto">
+    <!-- Brand & Toggle -->
+    <div class="px-5 pt-5 pb-4 flex items-center justify-between">
+      <a href="index.html"
+        class="hover:opacity-80 transition-opacity"><img src="logo.png" alt="Svastrino" class="h-14 w-auto"></a>
+      <label class="relative inline-flex items-center cursor-pointer" title="Toggle Premium Mode">
+        <input type="checkbox" class="sr-only peer premium-toggle-checkbox" onchange="toggleFreemiumMode(this)">
+        <div
+          class="w-8 h-4 bg-outline-variant/40 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-secondary shadow-sm">
+        </div>
+      </label>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="flex-grow px-3 space-y-1">
+      <p class="px-3 pt-4 pb-2 text-[11px] font-semibold text-[#757684]/80 uppercase tracking-widest">Overview</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#454652] hover:bg-[#f8f9fb] transition-colors duration-200 active:scale-[0.98]"
+        href="dashboard.html">
+        <span class="material-symbols-outlined text-[20px]">home</span>
+        <span class="text-[13px] font-semibold">Home</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-[#757684]/80 uppercase tracking-widest">My Learning</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#454652] hover:bg-[#f8f9fb] transition-colors duration-200 active:scale-[0.98]"
+        href="my-course.html">
+        <span class="material-symbols-outlined text-[20px]">book</span>
+        <span class="text-[13px] font-semibold">My course</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-[#24389c]/10 text-[#24389c] font-bold transition-all active:scale-[0.98]"
+        href="todays-task.html">
+        <span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">check_box</span>
+        <span class="text-[13px]">Today's task</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-[#757684]/80 uppercase tracking-widest">Career Tools</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#454652] hover:bg-[#f8f9fb] transition-colors duration-200 active:scale-[0.98]"
+        href="psychometric-test.html">
+        <span class="material-symbols-outlined text-[20px]">psychology</span>
+        <span class="text-[13px] flex-1 font-semibold">Psychometric test</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#454652] hover:bg-[#f8f9fb] transition-colors duration-200 active:scale-[0.98]"
+        href="my-test-results.html">
+        <span class="material-symbols-outlined text-[20px]">trending_up</span>
+        <span class="text-[13px] flex-1 font-semibold">My test results</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#454652] hover:bg-[#f8f9fb] transition-colors duration-200 active:scale-[0.98]"
+        href="webinars.html">
+        <span class="material-symbols-outlined text-[20px]">monitor</span>
+        <span class="text-[13px] flex-1 font-semibold">Webinars</span>
+        <span class="freemium-only material-symbols-outlined text-[16px] opacity-70">lock</span>
+      </a>
+
+      <p class="px-3 pt-6 pb-2 text-[11px] font-semibold text-[#757684]/80 uppercase tracking-widest">Account</p>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#454652] hover:bg-[#f8f9fb] transition-colors duration-200 active:scale-[0.98]"
+        href="notifications.html">
+        <span class="material-symbols-outlined text-[20px]">notifications</span>
+        <span class="text-[13px] font-semibold">Notifications</span>
+      </a>
+    </nav>
+
+    <!-- Bottom Pinned -->
+    <div class="px-3 py-4 border-t border-[#e0e3e5]/60 mt-4 space-y-1">
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#454652] hover:bg-[#f8f9fb] transition-colors duration-200 active:scale-[0.98]"
+        href="profile.html">
+        <span class="material-symbols-outlined text-[20px]">person</span>
+        <span class="text-[13px] font-semibold">Profile</span>
+      </a>
+      <a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-[#ba1a1a] hover:bg-[#ba1a1a]/10 transition-colors duration-200 active:scale-[0.98]"
+        href="signin.html">
+        <span class="material-symbols-outlined text-[20px]">logout</span>
+        <span class="text-[13px] font-semibold">Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Mobile header -->
+  <header
+    class="lg:hidden fixed top-0 left-0 right-0 z-30 bg-white/90 backdrop-blur-xl border-b border-[#e0e3e5] px-4 py-3 flex items-center justify-between">
+    <button onclick="toggleSidebar()" class="p-1 text-[#191c1e]">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <img src="logo.png" alt="Svastrino" class="h-10 w-auto">
+    <div class="w-8 h-8 rounded-full bg-[#dee0ff] flex items-center justify-center text-[#00105c] font-bold text-xs">RS
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main
+    class="lg:ml-[260px] min-h-screen p-6 pt-20 lg:p-10 xl:p-12 max-w-[1540px] mx-auto flex flex-col gap-10 lg:gap-12">
+
+    <!-- 12-column Grid Container for main content split -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 xl:gap-14">
+
+      <!-- Left Column: Primary Content (8/12 spanning) -->
+      <div class="lg:col-span-8 flex flex-col">
+
+        <!-- Week 1 - Plan indicator -->
+        <span id="plan-indicator" class="text-[11px] font-extrabold text-[#757684] uppercase tracking-[0.15em] mb-4 xl:mb-5">Week 1 — Free
+          preview</span>
+
+        <!-- Week 1 progress Card (Top Position) -->
+        <div
+          class="bg-[#131627] text-white rounded-[24px] p-6 sm:p-7 shadow-xl shadow-[#24389c]/10 mb-8 lg:mb-10 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-6 xl:gap-8 relative overflow-hidden group">
+          <!-- Subtle glowing background -->
+          <div
+            class="absolute -top-20 -right-20 w-48 h-48 bg-[#4a7df2] rounded-full blur-[60px] opacity-20 pointer-events-none group-hover:opacity-30 transition-opacity">
+          </div>
+
+          <!-- Circular Progress -->
+          <div class="flex items-center gap-5 sm:gap-6 z-10 w-full xl:w-auto">
+            <div
+              class="relative w-[64px] h-[64px] sm:w-[72px] sm:h-[72px] flex-shrink-0 shadow-lg shadow-[#4a7df2]/10 rounded-full bg-[#1e233d]">
+              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                <path class="text-white/5"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none"
+                  stroke="currentColor" stroke-width="3"></path>
+                <path class="text-[#4a7df2]" stroke-dasharray="0, 100"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none"
+                  stroke="currentColor" stroke-width="3" stroke-linecap="round"></path>
+              </svg>
+              <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <span class="text-sm sm:text-base font-extrabold font-['Plus_Jakarta_Sans'] tracking-tighter">0 /
+                  4</span>
+              </div>
+            </div>
+            <div>
+              <h3 class="text-lg sm:text-[20px] font-extrabold font-['Plus_Jakarta_Sans'] text-white tracking-tight">
+                Week 1 progress</h3>
+              <p class="text-[13px] sm:text-[14px] text-white/70 mt-1 leading-relaxed font-medium">Lecture completed.
+                Task 1 is active and waiting for you.</p>
+            </div>
+          </div>
+
+          <!-- Dots info -->
+          <div
+            class="flex flex-wrap xl:flex-nowrap items-center gap-4 sm:gap-6 text-[11px] sm:text-xs font-bold text-white/80 uppercase tracking-widest bg-white/5 px-5 py-3 rounded-xl border border-white/10 shrink-0 z-10">
+            <span class="flex items-center gap-2"><span
+                class="w-2.5 h-2.5 rounded-full bg-[#4a7df2] shadow-sm shadow-[#4a7df2]/50"></span> 1 done</span>
+            <span class="flex items-center gap-2"><span
+                class="w-2.5 h-2.5 rounded-full bg-[#1b3482] border-[2.5px] border-[#4a7df2]"></span> 1 active</span>
+            <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-white/10"></span> 2
+              locked</span>
+          </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- Unified Today's Task Section Container         -->
+        <!-- ============================================== -->
+        <div class="bg-white rounded-[28px] border border-[#e0e3e5]/80 p-6 sm:p-8 lg:p-10 shadow-sm shadow-[#24389c]/5">
+
+          <!-- Header Section -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-4 sm:gap-0">
+            <h1 class="text-3xl font-extrabold tracking-tight text-[#00105c]">Today's task</h1>
+            <div
+              class="px-3.5 py-1.5 bg-[#fff6ed] text-[#e06414] rounded-full text-[11px] sm:text-xs font-extrabold uppercase tracking-wider border border-[#ffdcbe] flex items-center gap-1.5 shadow-sm">
+              <span class="material-symbols-outlined text-[14px]">flag</span> <span id="tasks-remaining">4</span> of 4 remaining
+            </div>
+          </div>
+          <div class="text-[11px] font-extrabold text-[#757684] uppercase tracking-[0.15em] mb-7 sm:mb-9">
+            CURRICULUM JOURNEY — WEEK 1
+          </div>
+
+          <!-- Vertically Stacked Tasks with Decreased Gap (gap-2.5 => 10px) -->
+          <div class="flex flex-col gap-2.5">
+
+            <!-- Task 1: Done -->
+            <div id="task1-done"
+              class="border border-[#e0e3e5] bg-[#f8f9fb] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center transition-all hidden">
+              <div
+                class="w-10 h-10 rounded-full bg-[#4a7df2] flex-shrink-0 flex items-center justify-center text-white shadow-md shadow-[#4a7df2]/20">
+                <span class="material-symbols-outlined text-[20px] font-bold"
+                  style="font-variation-settings: 'FILL' 1;">check</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3
+                  class="text-[16px] sm:text-[17px] font-bold text-[#454652] line-through decoration-[#c5c5d4] decoration-2">
+                  Self Discovery - Video</h3>
+              </div>
+              <div
+                class="bg-[#e6f0ff] text-[#1e40af] px-4 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest shrink-0 self-start sm:self-auto border border-[#bfdbfe]">
+                Done
+              </div>
+            </div>
+
+            <!-- Task 1: Active -->
+            <div id="task1-active"
+              class="border-2 border-[#93adeb] bg-[#eef3ff] rounded-2xl p-5 sm:p-7 flex flex-col gap-5 shadow-sm shadow-[#4a7df2]/10 relative overflow-hidden">
+              <div
+                class="absolute -top-10 -right-10 w-32 h-32 bg-[#4a7df2]/20 rounded-full blur-[40px] pointer-events-none">
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div class="flex gap-4 sm:gap-5 items-start z-10">
+                  <div
+                    class="w-10 h-10 rounded-full bg-[#1b3482] flex-shrink-0 flex items-center justify-center text-white shadow-lg shadow-[#1b3482]/20 ring-4 ring-white">
+                    <span class="text-base font-bold">1</span>
+                  </div>
+                  <div class="pt-1">
+                    <h3 class="text-[#0e1d4d] text-[18px] sm:text-[20px] font-extrabold leading-tight">Self Discovery -
+                      Video</h3>
+                    <p class="text-[#3d70eb] text-[13px] font-bold mt-1.5 tracking-wide flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-[14px]">play_circle</span> Video · 15 mins · Active
+                      now
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="bg-[#1b3482] text-white px-4 py-1.5 rounded-full text-[11px] font-extrabold shrink-0 tracking-widest uppercase shadow-sm z-10 self-start sm:self-auto ml-[56px] sm:ml-0">
+                  In Progress
+                </div>
+              </div>
+              <div class="ml-0 sm:ml-[60px] space-y-6 z-10">
+                <p class="text-[#2d3133] text-[15px] leading-relaxed max-w-xl font-medium">
+                  Watch the video module to discover your hidden potentials. This is the first building block of your
+                  career direction.
+                </p>
+                <div class="flex flex-wrap items-center gap-3">
+                  <a href="my-course.html"
+                    class="inline-block bg-[#1b3482] hover:bg-[#132763] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-[#1b3482]/20 transition-all active:scale-[0.98]">
+                    Play Video
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task 2: Done -->
+            <div id="task2-done"
+              class="border border-[#e0e3e5] bg-[#f8f9fb] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center transition-all hidden">
+              <div
+                class="w-10 h-10 rounded-full bg-[#4a7df2] flex-shrink-0 flex items-center justify-center text-white shadow-md shadow-[#4a7df2]/20">
+                <span class="material-symbols-outlined text-[20px] font-bold"
+                  style="font-variation-settings: 'FILL' 1;">check</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3
+                  class="text-[16px] sm:text-[17px] font-bold text-[#454652] line-through decoration-[#c5c5d4] decoration-2">
+                  Write 5 things you like doing (no thinking too much)</h3>
+              </div>
+              <div
+                class="bg-[#e6f0ff] text-[#1e40af] px-4 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest shrink-0 self-start sm:self-auto border border-[#bfdbfe]">
+                Done
+              </div>
+            </div>
+
+            <!-- Task 2: Active -->
+            <div id="task2-active"
+              class="border-2 border-[#93adeb] bg-[#eef3ff] rounded-2xl p-5 sm:p-7 flex flex-col gap-5 shadow-sm shadow-[#4a7df2]/10 relative overflow-hidden hidden">
+              <div
+                class="absolute -top-10 -right-10 w-32 h-32 bg-[#4a7df2]/20 rounded-full blur-[40px] pointer-events-none">
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div class="flex gap-4 sm:gap-5 items-start z-10">
+                  <div
+                    class="w-10 h-10 rounded-full bg-[#1b3482] flex-shrink-0 flex items-center justify-center text-white shadow-lg shadow-[#1b3482]/20 ring-4 ring-white">
+                    <span class="text-base font-bold">2</span>
+                  </div>
+                  <div class="pt-1">
+                    <h3 class="text-[#0e1d4d] text-[18px] sm:text-[20px] font-extrabold leading-tight">Write 5 things
+                      you like doing (no thinking too much)</h3>
+                    <p class="text-[#3d70eb] text-[13px] font-bold mt-1.5 tracking-wide flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-[14px]">edit_document</span> Worksheet · 15 mins ·
+                      Active now
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="bg-[#1b3482] text-white px-4 py-1.5 rounded-full text-[11px] font-extrabold shrink-0 tracking-widest uppercase shadow-sm z-10 self-start sm:self-auto ml-[56px] sm:ml-0">
+                  Active
+                </div>
+              </div>
+              <div class="ml-0 sm:ml-[60px] space-y-6 z-10">
+                <p class="text-[#2d3133] text-[15px] leading-relaxed max-w-xl font-medium">
+                  Identify fields and roles that excite you — the first building block of your career direction. Use
+                  this map to outline potentials.
+                </p>
+                <div class="flex flex-wrap items-center gap-3">
+                  <button
+                    class="bg-[#1b3482] hover:bg-[#132763] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-[#1b3482]/20 transition-all active:scale-[0.98]">
+                    Open worksheet
+                  </button>
+                  <button
+                    class="bg-white hover:bg-[#f8f9fb] border border-[#d8dadc] text-[#1b3482] px-6 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all active:scale-[0.98]">
+                    Download PDF
+                  </button>
+                  <button onclick="markTaskComplete(2)"
+                    class="text-[#3d70eb] hover:text-[#1b3482] text-sm font-bold px-4 py-2 flex items-center gap-1.5 mt-2 sm:mt-0 sm:ml-auto transition-colors group">
+                    Mark complete <span
+                      class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task 2: Locked -->
+            <div id="task2-locked"
+              class="border border-[#e0e3e5] bg-white rounded-2xl p-4 sm:p-5 flex gap-4 sm:gap-5 items-center opacity-60">
+              <div
+                class="w-10 h-10 rounded-full bg-[#f2f4f6] flex-shrink-0 flex items-center justify-center text-[#757684]">
+                <span class="material-symbols-outlined text-[18px]">lock</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3 class="text-[15px] sm:text-[16px] font-bold text-[#454652]">Write 5 things you like doing (no
+                  thinking too much)</h3>
+                <p class="text-[12px] sm:text-[13px] text-[#757684] mt-0.5 font-semibold">~15 mins · Unlocks after Task
+                  1</p>
+              </div>
+              <div
+                class="bg-[#f2f4f6] text-[#454652] px-3.5 py-1.5 rounded-full text-[10px] sm:text-[11px] font-extrabold uppercase shrink-0">
+                Locked
+              </div>
+            </div>
+
+            <!-- Task 3: Done -->
+            <div id="task3-done"
+              class="border border-[#e0e3e5] bg-[#f8f9fb] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center transition-all hidden">
+              <div
+                class="w-10 h-10 rounded-full bg-[#4a7df2] flex-shrink-0 flex items-center justify-center text-white shadow-md shadow-[#4a7df2]/20">
+                <span class="material-symbols-outlined text-[20px] font-bold"
+                  style="font-variation-settings: 'FILL' 1;">check</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3
+                  class="text-[16px] sm:text-[17px] font-bold text-[#454652] line-through decoration-[#c5c5d4] decoration-2 text-wrap">
+                  Ask 3 people: “What am I good at?”</h3>
+              </div>
+              <div
+                class="bg-[#e6f0ff] text-[#1e40af] px-4 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest shrink-0 self-start sm:self-auto border border-[#bfdbfe]">
+                Done
+              </div>
+            </div>
+
+            <!-- Task 3: Active -->
+            <div id="task3-active"
+              class="border-2 border-[#93adeb] bg-[#eef3ff] rounded-2xl p-5 sm:p-7 flex flex-col gap-5 shadow-sm shadow-[#4a7df2]/10 relative overflow-hidden hidden">
+              <div
+                class="absolute -top-10 -right-10 w-32 h-32 bg-[#4a7df2]/20 rounded-full blur-[40px] pointer-events-none">
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div class="flex gap-4 sm:gap-5 items-start z-10">
+                  <div
+                    class="w-10 h-10 rounded-full bg-[#1b3482] flex-shrink-0 flex items-center justify-center text-white shadow-lg shadow-[#1b3482]/20 ring-4 ring-white">
+                    <span class="text-base font-bold">3</span>
+                  </div>
+                  <div class="pt-1">
+                    <h3 class="text-[#0e1d4d] text-[18px] sm:text-[20px] font-extrabold leading-tight">Ask 3 people
+                      (parent/friend/teacher):<br>“What am I good at?”</h3>
+                    <p class="text-[#3d70eb] text-[13px] font-bold mt-1.5 tracking-wide flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-[14px]">psychology</span> Interviews · 15 mins ·
+                      Active now
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="bg-[#1b3482] text-white px-4 py-1.5 rounded-full text-[11px] font-extrabold shrink-0 tracking-widest uppercase shadow-sm z-10 self-start sm:self-auto ml-[56px] sm:ml-0">
+                  Active
+                </div>
+              </div>
+              <div class="ml-0 sm:ml-[60px] space-y-6 z-10">
+                <p class="text-[#2d3133] text-[15px] leading-relaxed max-w-xl font-medium">
+                  Gather external perspectives on your natural talents. This helps validate your self-assessment and
+                  uncover blind spots in your career discovery.
+                </p>
+                <div class="flex flex-wrap items-center gap-3">
+                  <button onclick="markTaskComplete(3)"
+                    class="bg-[#1b3482] hover:bg-[#132763] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-[#1b3482]/20 transition-all active:scale-[0.98]">
+                    Record insights
+                  </button>
+                  <button onclick="markTaskComplete(3)"
+                    class="text-[#3d70eb] hover:text-[#1b3482] text-sm font-bold px-4 py-2 flex items-center gap-1.5 mt-2 sm:mt-0 sm:ml-auto transition-colors group">
+                    Mark complete <span
+                      class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task 3: Locked -->
+            <div id="task3-locked"
+              class="border border-[#e0e3e5] bg-white rounded-2xl p-4 sm:p-5 flex gap-4 sm:gap-5 items-center opacity-60">
+              <div
+                class="w-10 h-10 rounded-full bg-[#f2f4f6] flex-shrink-0 flex items-center justify-center text-[#757684]">
+                <span class="material-symbols-outlined text-[18px]">lock</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3 class="text-[15px] sm:text-[16px] font-bold text-[#454652]">Ask 3 people
+                  (parent/friend/teacher):<br>“What am I good at?”</h3>
+                <p class="text-[12px] sm:text-[13px] text-[#757684] mt-0.5 font-semibold">~15 mins · Unlocks after Task
+                  2</p>
+              </div>
+              <div
+                class="bg-[#f2f4f6] text-[#454652] px-3.5 py-1.5 rounded-full text-[10px] sm:text-[11px] font-extrabold uppercase shrink-0">
+                Locked
+              </div>
+            </div>
+
+            <!-- Task 4: Done -->
+            <div id="task4-done"
+              class="border border-[#e0e3e5] bg-[#f8f9fb] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center transition-all hidden">
+              <div
+                class="w-10 h-10 rounded-full bg-[#4a7df2] flex-shrink-0 flex items-center justify-center text-white shadow-md shadow-[#4a7df2]/20">
+                <span class="material-symbols-outlined text-[20px] font-bold"
+                  style="font-variation-settings: 'FILL' 1;">check</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3
+                  class="text-[16px] sm:text-[17px] font-bold text-[#454652] line-through decoration-[#c5c5d4] decoration-2">
+                  “My Top 3 Strengths + Why”</h3>
+              </div>
+              <div
+                class="bg-[#e6f0ff] text-[#1e40af] px-4 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest shrink-0 self-start sm:self-auto border border-[#bfdbfe]">
+                Done
+              </div>
+            </div>
+
+            <!-- Task 4: Active -->
+            <div id="task4-active"
+              class="border-2 border-[#93adeb] bg-[#eef3ff] rounded-2xl p-5 sm:p-7 flex flex-col gap-5 shadow-sm shadow-[#4a7df2]/10 relative overflow-hidden hidden">
+              <div
+                class="absolute -top-10 -right-10 w-32 h-32 bg-[#4a7df2]/20 rounded-full blur-[40px] pointer-events-none">
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div class="flex gap-4 sm:gap-5 items-start z-10">
+                  <div
+                    class="w-10 h-10 rounded-full bg-[#1b3482] flex-shrink-0 flex items-center justify-center text-white shadow-lg shadow-[#1b3482]/20 ring-4 ring-white">
+                    <span class="text-base font-bold">4</span>
+                  </div>
+                  <div class="pt-1">
+                    <h3 class="text-[#0e1d4d] text-[18px] sm:text-[20px] font-extrabold leading-tight">“My Top 3
+                      Strengths + Why”</h3>
+                    <p class="text-[#3d70eb] text-[13px] font-bold mt-1.5 tracking-wide flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-[14px]">stars</span> Analysis · 15 mins · Active now
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="bg-[#1b3482] text-white px-4 py-1.5 rounded-full text-[11px] font-extrabold shrink-0 tracking-widest uppercase shadow-sm z-10 self-start sm:self-auto ml-[56px] sm:ml-0">
+                  Active
+                </div>
+              </div>
+              <div class="ml-0 sm:ml-[60px] space-y-6 z-10">
+                <p class="text-[#2d3133] text-[15px] leading-relaxed max-w-xl font-medium">
+                  Synthesize your self-reflection and peer feedback into a core strength profile. This defines your
+                  unique value proposition in any industry.
+                </p>
+                <div class="flex flex-wrap items-center gap-3">
+                  <button onclick="markTaskComplete(4)"
+                    class="bg-[#1b3482] hover:bg-[#132763] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-[#1b3482]/20 transition-all active:scale-[0.98]">
+                    Record analysis
+                  </button>
+                  <button onclick="markTaskComplete(4)"
+                    class="text-[#3d70eb] hover:text-[#1b3482] text-sm font-bold px-4 py-2 flex items-center gap-1.5 mt-2 sm:mt-0 sm:ml-auto transition-colors group">
+                    Mark complete <span
+                      class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task 4: Locked -->
+            <div id="task4-locked"
+              class="border border-[#e0e3e5] bg-white rounded-2xl p-4 sm:p-5 flex gap-4 sm:gap-5 items-center opacity-60">
+              <div
+                class="w-10 h-10 rounded-full bg-[#f2f4f6] flex-shrink-0 flex items-center justify-center text-[#757684]">
+                <span class="material-symbols-outlined text-[18px]">lock</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3 class="text-[15px] sm:text-[16px] font-bold text-[#454652]">“My Top 3 Strengths + Why”</h3>
+                <p class="text-[12px] sm:text-[13px] text-[#757684] mt-0.5 font-semibold">~15 mins · Unlocks after Task
+                  3</p>
+              </div>
+              <div
+                class="bg-[#f2f4f6] text-[#454652] px-3.5 py-1.5 rounded-full text-[10px] sm:text-[11px] font-extrabold uppercase shrink-0">
+                Locked
+              </div>
+            </div>
+
+            <!-- Task 5: Done (Premium Only) -->
+            <div id="task5-done"
+              class="premium-only-task border border-[#e0e3e5] bg-[#f8f9fb] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center transition-all hidden">
+              <div
+                class="w-10 h-10 rounded-full bg-[#4a7df2] flex-shrink-0 flex items-center justify-center text-white shadow-md shadow-[#4a7df2]/20">
+                <span class="material-symbols-outlined text-[20px] font-bold"
+                  style="font-variation-settings: 'FILL' 1;">check</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3
+                  class="text-[16px] sm:text-[17px] font-bold text-[#454652] line-through decoration-[#c5c5d4] decoration-2">
+                  Personal Brand Statement</h3>
+              </div>
+              <div
+                class="bg-[#e6f0ff] text-[#1e40af] px-4 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest shrink-0 self-start sm:self-auto border border-[#bfdbfe]">
+                Done
+              </div>
+            </div>
+
+            <!-- Task 5: Active (Premium Only) -->
+            <div id="task5-active"
+              class="premium-only-task border-2 border-[#93adeb] bg-[#eef3ff] rounded-2xl p-5 sm:p-7 flex flex-col gap-5 shadow-sm shadow-[#4a7df2]/10 relative overflow-hidden hidden">
+              <div
+                class="absolute -top-10 -right-10 w-32 h-32 bg-[#4a7df2]/20 rounded-full blur-[40px] pointer-events-none">
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div class="flex gap-4 sm:gap-5 items-start z-10">
+                  <div
+                    class="w-10 h-10 rounded-full bg-[#1b3482] flex-shrink-0 flex items-center justify-center text-white shadow-lg shadow-[#1b3482]/20 ring-4 ring-white">
+                    <span class="text-base font-bold">5</span>
+                  </div>
+                  <div class="pt-1">
+                    <h3 class="text-[#0e1d4d] text-[18px] sm:text-[20px] font-extrabold leading-tight">Personal Brand Statement</h3>
+                    <p class="text-[#3d70eb] text-[13px] font-bold mt-1.5 tracking-wide flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-[14px]">badge</span> Branding · 40 mins ·
+                      Active now
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="bg-[#1b3482] text-white px-4 py-1.5 rounded-full text-[11px] font-extrabold shrink-0 tracking-widest uppercase shadow-sm z-10 self-start sm:self-auto ml-[56px] sm:ml-0">
+                  Active
+                </div>
+              </div>
+              <div class="ml-0 sm:ml-[60px] space-y-6 z-10">
+                <p class="text-[#2d3133] text-[15px] leading-relaxed max-w-xl font-medium">
+                  Draft a compelling 30-word personal brand statement that highlights your core value and career goals.
+                </p>
+                <div class="flex flex-wrap items-center gap-3">
+                  <button onclick="markTaskComplete(5)"
+                    class="bg-[#1b3482] hover:bg-[#132763] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-[#1b3482]/20 transition-all active:scale-[0.98]">
+                    Open assignment
+                  </button>
+                  <button onclick="markTaskComplete(5)"
+                    class="text-[#3d70eb] hover:text-[#1b3482] text-sm font-bold px-4 py-2 flex items-center gap-1.5 mt-2 sm:mt-0 sm:ml-auto transition-colors group">
+                    Mark complete <span
+                      class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task 5: Locked (Premium Only) -->
+            <div id="task5-locked"
+              class="premium-only-task border border-[#e0e3e5] bg-white rounded-2xl p-4 sm:p-5 flex gap-4 sm:gap-5 items-center opacity-60">
+              <div
+                class="w-10 h-10 rounded-full bg-[#f2f4f6] flex-shrink-0 flex items-center justify-center text-[#757684]">
+                <span class="material-symbols-outlined text-[18px]">lock</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3 class="text-[15px] sm:text-[16px] font-bold text-[#454652]">Personal Brand Statement</h3>
+                <p class="text-[12px] sm:text-[13px] text-[#757684] mt-0.5 font-semibold">~40 mins · Unlocks after Task
+                  4</p>
+              </div>
+              <div
+                class="bg-[#f2f4f6] text-[#454652] px-3.5 py-1.5 rounded-full text-[10px] sm:text-[11px] font-extrabold uppercase shrink-0">
+                Locked
+              </div>
+            </div>
+
+            <!-- Task 6: Done (Premium Only) -->
+            <div id="task6-done"
+              class="premium-only-task border border-[#e0e3e5] bg-[#f8f9fb] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center transition-all hidden">
+              <div
+                class="w-10 h-10 rounded-full bg-[#4a7df2] flex-shrink-0 flex items-center justify-center text-white shadow-md shadow-[#4a7df2]/20">
+                <span class="material-symbols-outlined text-[20px] font-bold"
+                  style="font-variation-settings: 'FILL' 1;">check</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3
+                  class="text-[16px] sm:text-[17px] font-bold text-[#454652] line-through decoration-[#c5c5d4] decoration-2">
+                  Weekly Milestone Recap</h3>
+              </div>
+              <div
+                class="bg-[#e6f0ff] text-[#1e40af] px-4 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest shrink-0 self-start sm:self-auto border border-[#bfdbfe]">
+                Done
+              </div>
+            </div>
+
+            <!-- Task 6: Active (Premium Only) -->
+            <div id="task6-active"
+              class="premium-only-task border-2 border-[#93adeb] bg-[#eef3ff] rounded-2xl p-5 sm:p-7 flex flex-col gap-5 shadow-sm shadow-[#4a7df2]/10 relative overflow-hidden hidden">
+              <div
+                class="absolute -top-10 -right-10 w-32 h-32 bg-[#4a7df2]/20 rounded-full blur-[40px] pointer-events-none">
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div class="flex gap-4 sm:gap-5 items-start z-10">
+                  <div
+                    class="w-10 h-10 rounded-full bg-[#1b3482] flex-shrink-0 flex items-center justify-center text-white shadow-lg shadow-[#1b3482]/20 ring-4 ring-white">
+                    <span class="text-base font-bold">6</span>
+                  </div>
+                  <div class="pt-1">
+                    <h3 class="text-[#0e1d4d] text-[18px] sm:text-[20px] font-extrabold leading-tight">Weekly Milestone Recap</h3>
+                    <p class="text-[#3d70eb] text-[13px] font-bold mt-1.5 tracking-wide flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-[14px]">flag</span> Review · 30 mins ·
+                      Active now
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="bg-[#1b3482] text-white px-4 py-1.5 rounded-full text-[11px] font-extrabold shrink-0 tracking-widest uppercase shadow-sm z-10 self-start sm:self-auto ml-[56px] sm:ml-0">
+                  Active
+                </div>
+              </div>
+              <div class="ml-0 sm:ml-[60px] space-y-6 z-10">
+                <p class="text-[#2d3133] text-[15px] leading-relaxed max-w-xl font-medium">
+                  Reflect on your Week 1 achievements and insights before advancing to Week 2 content.
+                </p>
+                <div class="flex flex-wrap items-center gap-3">
+                  <button onclick="markTaskComplete(6)"
+                    class="bg-[#1b3482] hover:bg-[#132763] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-[#1b3482]/20 transition-all active:scale-[0.98]">
+                    Start review
+                  </button>
+                  <button onclick="markTaskComplete(6)"
+                    class="text-[#3d70eb] hover:text-[#1b3482] text-sm font-bold px-4 py-2 flex items-center gap-1.5 mt-2 sm:mt-0 sm:ml-auto transition-colors group">
+                    Mark complete <span
+                      class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task 6: Locked (Premium Only) -->
+            <div id="task6-locked"
+              class="premium-only-task border border-[#e0e3e5] bg-white rounded-2xl p-4 sm:p-5 flex gap-4 sm:gap-5 items-center opacity-60">
+              <div
+                class="w-10 h-10 rounded-full bg-[#f2f4f6] flex-shrink-0 flex items-center justify-center text-[#757684]">
+                <span class="material-symbols-outlined text-[18px]">lock</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3 class="text-[15px] sm:text-[16px] font-bold text-[#454652]">Weekly Milestone Recap</h3>
+                <p class="text-[12px] sm:text-[13px] text-[#757684] mt-0.5 font-semibold">~30 mins · Unlocks after Task
+                  5</p>
+              </div>
+              <div
+                class="bg-[#f2f4f6] text-[#454652] px-3.5 py-1.5 rounded-full text-[10px] sm:text-[11px] font-extrabold uppercase shrink-0">
+                Locked
+              </div>
+            </div>
+
+            <!-- Task 7: Done (Premium Only) -->
+            <div id="task7-done"
+              class="premium-only-task border border-[#e0e3e5] bg-[#f8f9fb] rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row gap-5 items-start sm:items-center transition-all hidden">
+              <div
+                class="w-10 h-10 rounded-full bg-[#4a7df2] flex-shrink-0 flex items-center justify-center text-white shadow-md shadow-[#4a7df2]/20">
+                <span class="material-symbols-outlined text-[20px] font-bold"
+                  style="font-variation-settings: 'FILL' 1;">check</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3
+                  class="text-[16px] sm:text-[17px] font-bold text-[#454652] line-through decoration-[#c5c5d4] decoration-2">
+                  Final Synthesis</h3>
+              </div>
+              <div
+                class="bg-[#e6f0ff] text-[#1e40af] px-4 py-1.5 rounded-full text-[11px] font-extrabold uppercase tracking-widest shrink-0 self-start sm:self-auto border border-[#bfdbfe]">
+                Done
+              </div>
+            </div>
+
+            <!-- Task 7: Active (Premium Only) -->
+            <div id="task7-active"
+              class="premium-only-task border-2 border-[#93adeb] bg-[#eef3ff] rounded-2xl p-5 sm:p-7 flex flex-col gap-5 shadow-sm shadow-[#4a7df2]/10 relative overflow-hidden hidden">
+              <div
+                class="absolute -top-10 -right-10 w-32 h-32 bg-[#4a7df2]/20 rounded-full blur-[40px] pointer-events-none">
+              </div>
+              <div class="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                <div class="flex gap-4 sm:gap-5 items-start z-10">
+                  <div
+                    class="w-10 h-10 rounded-full bg-[#1b3482] flex-shrink-0 flex items-center justify-center text-white shadow-lg shadow-[#1b3482]/20 ring-4 ring-white">
+                    <span class="text-base font-bold">7</span>
+                  </div>
+                  <div class="pt-1">
+                    <h3 class="text-[#0e1d4d] text-[18px] sm:text-[20px] font-extrabold leading-tight">Final Synthesis</h3>
+                    <p class="text-[#3d70eb] text-[13px] font-bold mt-1.5 tracking-wide flex items-center gap-1.5">
+                      <span class="material-symbols-outlined text-[14px]">psychology</span> Capstone · 60 mins ·
+                      Active now
+                    </p>
+                  </div>
+                </div>
+                <div
+                  class="bg-[#1b3482] text-white px-4 py-1.5 rounded-full text-[11px] font-extrabold shrink-0 tracking-widest uppercase shadow-sm z-10 self-start sm:self-auto ml-[56px] sm:ml-0">
+                  Active
+                </div>
+              </div>
+              <div class="ml-0 sm:ml-[60px] space-y-6 z-10">
+                <p class="text-[#2d3133] text-[15px] leading-relaxed max-w-xl font-medium">
+                  Compile your learnings into a cohesive career document and submit for final mentor review.
+                </p>
+                <div class="flex flex-wrap items-center gap-3">
+                  <button onclick="markTaskComplete(7)"
+                    class="bg-[#1b3482] hover:bg-[#132763] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-[#1b3482]/20 transition-all active:scale-[0.98]">
+                    Submit capstone
+                  </button>
+                  <button onclick="markTaskComplete(7)"
+                    class="text-[#3d70eb] hover:text-[#1b3482] text-sm font-bold px-4 py-2 flex items-center gap-1.5 mt-2 sm:mt-0 sm:ml-auto transition-colors group">
+                    Mark complete <span
+                      class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task 7: Locked (Premium Only) -->
+            <div id="task7-locked"
+              class="premium-only-task border border-[#e0e3e5] bg-white rounded-2xl p-4 sm:p-5 flex gap-4 sm:gap-5 items-center opacity-60">
+              <div
+                class="w-10 h-10 rounded-full bg-[#f2f4f6] flex-shrink-0 flex items-center justify-center text-[#757684]">
+                <span class="material-symbols-outlined text-[18px]">lock</span>
+              </div>
+              <div class="flex-grow pt-0.5">
+                <h3 class="text-[15px] sm:text-[16px] font-bold text-[#454652]">Final Synthesis</h3>
+                <p class="text-[12px] sm:text-[13px] text-[#757684] mt-0.5 font-semibold">~60 mins · Unlocks after Task
+                  6</p>
+              </div>
+              <div
+                class="bg-[#f2f4f6] text-[#454652] px-3.5 py-1.5 rounded-full text-[10px] sm:text-[11px] font-extrabold uppercase shrink-0">
+                Locked
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <!-- End Unified Today's Task Section Container -->
+
+      </div>
+
+      <!-- Right Column: Secondary Content (4/12 spanning) -->
+      <div class="lg:col-span-4 flex flex-col gap-6 lg:gap-8 pt-0 lg:pt-[34px]">
+
+        <!-- NEW Streak Card -->
+        <div
+          class="hidden lg:flex bg-gradient-to-br from-[#ffdcbe] to-[#ff9800] rounded-[24px] p-6 lg:p-7 shadow-xl shadow-[#ff9800]/20 relative overflow-hidden items-center lg:items-start xl:items-center gap-5 sm:gap-6 border border-[#ffb870]/30 transform hover:-translate-y-1 transition-transform cursor-default freemium-section-blur">
+          
+          <!-- Lock Message for Freemium -->
+          <div class="lock-message text-center">
+            <span class="material-symbols-outlined text-[#24389c] text-3xl mb-3" style="font-variation-settings: 'FILL' 1;">lock</span>
+            <div class="bg-[#24389c] text-white px-6 py-2 rounded-xl text-[11px] font-black uppercase tracking-[0.15em] shadow-lg shadow-[#24389c]/20">
+              Available in Premium
+            </div>
+          </div>
+
+          <!-- decorative bright flare -->
+          <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/30 rounded-full blur-[40px] pointer-events-none">
+          </div>
+
+          <div
+            class="w-14 h-14 sm:w-16 sm:h-16 bg-white/95 text-[#e06414] rounded-full flex flex-shrink-0 items-center justify-center shadow-md">
+            <span class="material-symbols-outlined text-[28px] sm:text-[32px]"
+              style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
+          </div>
+          <div class="z-10 pt-1">
+            <h3
+              class="text-[22px] font-extrabold font-['Plus_Jakarta_Sans'] text-[#5c3000] leading-tight drop-shadow-sm tracking-tight">
+              3 Day Streak!</h3>
+            <p class="text-[13px] leading-snug text-[#7a4200] font-bold mt-1.5 opacity-90">Fantastic momentum. Keep
+              exploring today to light up your career map!</p>
+          </div>
+        </div>
+
+        <!-- Enhanced Vibrant Webinar Card -->
+        <div
+          class="bg-gradient-to-br from-[#121c4f] via-[#24389c] to-[#4355b9] rounded-[24px] p-7 lg:p-8 shadow-2xl shadow-[#24389c]/20 flex flex-col gap-5 relative overflow-hidden group border border-[#bac3ff]/20">
+          <!-- Neon Cyan Glow behind the icon -->
+          <div
+            class="absolute -top-16 -right-16 w-52 h-52 bg-[#55e4fd] rounded-full blur-[60px] opacity-30 group-hover:opacity-40 transition-opacity pointer-events-none">
+          </div>
+
+          <div
+            class="w-14 h-14 bg-white/10 text-[#a1efff] backdrop-blur-md rounded-2xl flex items-center justify-center mb-1 border border-white/10 shadow-inner align-self-start">
+            <span class="material-symbols-outlined text-3xl"
+              style="font-variation-settings: 'FILL' 1;">ondemand_video</span>
+          </div>
+
+          <div class="z-10 mt-2">
+            <span class="text-[10px] font-extrabold text-[#a1efff] uppercase tracking-[0.2em] mb-3 block">Expert
+              Guidance</span>
+            <h3 class="text-[22px] font-extrabold font-['Plus_Jakarta_Sans'] text-white leading-tight tracking-tight">
+              Live Mentor Demo</h3>
+            <p class="text-[14px] text-[#bac3ff] font-medium mt-3 mb-2 leading-relaxed">
+              Preview the premium psychometric mapping process. Join interactive counselors to discuss how our roadmap
+              accelerates your career growth.
+            </p>
+          </div>
+
+          <button
+            class="w-full bg-gradient-to-r from-[#55e4fd] to-[#a1efff] hover:opacity-90 text-[#001f25] font-extrabold py-3.5 mt-auto rounded-xl text-sm transition-all shadow-lg active:scale-[0.98] z-10 flex items-center justify-center gap-2 tracking-wide">
+            Book your free spot <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+          </button>
+        </div>
+
+        <!-- New Upcoming Webinar Sessions Card -->
+        <div class="bg-white border border-[#e0e3e5]/80 rounded-[28px] p-6 sm:p-7 shadow-sm shadow-[#24389c]/5 flex flex-col gap-5 relative overflow-hidden freemium-section-lock">
+          
+          <!-- Simplified Lock Message for Freemium -->
+          <div class="lock-message text-center">
+            <span class="material-symbols-outlined text-[#24389c] text-3xl mb-3" style="font-variation-settings: 'FILL' 1;">lock</span>
+            <div class="bg-[#24389c] text-white px-6 py-2 rounded-xl text-[11px] font-black uppercase tracking-[0.15em] shadow-lg shadow-[#24389c]/20">
+              Available in Premium
+            </div>
+          </div>
+
+          <h3 class="text-lg font-extrabold font-['Plus_Jakarta_Sans'] text-[#00105c]">Upcoming Webinar Sessions</h3>
+
+          <div class="flex flex-col gap-3.5">
+            <!-- Session 1 -->
+            <div
+              class="flex items-center justify-between p-4 bg-[#f8f9fb] rounded-2xl border border-[#e0e3e5]/60 hover:border-[#4a7df2]/40 transition-colors">
+              <div>
+                <p class="text-[14px] font-extrabold text-[#454652]">Decoding Your Psychometric Report</p>
+                <p class="text-[12px] font-bold text-[#757684] mt-1 flex items-center gap-1.5"><span
+                    class="material-symbols-outlined text-[13px]">schedule</span> April 10, 6:00 PM IST</p>
+              </div>
+              <button
+                class="bg-[#e6f0ff] text-[#24389c] hover:bg-[#24389c] hover:text-white px-5 py-2.5 rounded-xl text-[13px] font-bold transition-all shadow-sm active:scale-[0.98]">
+                Join
+              </button>
+            </div>
+            <!-- Session 2 -->
+            <div
+              class="flex items-center justify-between p-4 bg-[#f8f9fb] rounded-2xl border border-[#e0e3e5]/60 hover:border-[#4a7df2]/40 transition-colors">
+              <div>
+                <p class="text-[14px] font-extrabold text-[#454652]">Beyond JEE & NEET: 2026 Careers</p>
+                <p class="text-[12px] font-bold text-[#757684] mt-1 flex items-center gap-1.5"><span
+                    class="material-symbols-outlined text-[13px]">schedule</span> April 15, 5:00 PM IST</p>
+              </div>
+              <button
+                class="bg-white border border-[#d8dadc] text-[#454652] hover:bg-[#24389c] hover:text-white hover:border-[#24389c] px-5 py-2.5 rounded-xl text-[13px] font-bold transition-all shadow-sm active:scale-[0.98]">
+                Join
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Full-width Upgrade Banner (Bottom Position) spanning all 12 columns naturally -->
+    <div
+      class="bg-gradient-to-br from-[#131627] to-[#24389c] text-white rounded-[28px] p-8 lg:p-10 shadow-xl shadow-[#24389c]/20 flex flex-col sm:flex-row items-center justify-between gap-8 relative overflow-hidden group w-full freemium-only">
+      <div
+        class="absolute top-1/2 -translate-y-1/2 left-0 w-[400px] h-[400px] bg-[#4a7df2] rounded-full blur-[100px] opacity-30 group-hover:opacity-50 transition-opacity pointer-events-none">
+      </div>
+      <div
+        class="absolute bottom-[-100px] right-[-50px] w-64 h-64 bg-[#a1efff] rounded-full blur-[80px] opacity-20 pointer-events-none">
+      </div>
+
+      <div class="flex-grow z-10 w-full sm:w-auto text-center sm:text-left max-w-2xl">
+        <span class="text-[11px] font-extrabold text-[#a1efff] uppercase tracking-[0.2em] mb-3 block">Premium
+          Experience</span>
+        <h3 class="text-[24px] lg:text-[28px] font-extrabold font-['Plus_Jakarta_Sans'] leading-tight tracking-tight">
+          Upgrade to premium to unlock the complete schedule</h3>
+        <p class="text-[14px] text-white/80 font-medium mt-3 tracking-wide leading-relaxed">Join thousands advancing
+          their professional careers. Get immediate access to 6 full weeks, complete psychometrics, and exclusive
+          monthly mentorship webinars.</p>
+      </div>
+      <button
+        class="z-10 w-full sm:w-auto shrink-0 bg-gradient-to-r from-[#ffd700] to-[#ffaa00] hover:from-[#ffcf00] hover:to-[#ff9100] hover:scale-[1.03] text-[#4a2600] font-black py-5 px-12 rounded-2xl text-[17px] transition-all shadow-2xl shadow-[#ff9800]/40 ring-4 ring-[#ffb870]/30 active:scale-95 flex items-center justify-center gap-2">
+        See premium plans <span class="material-symbols-outlined text-[20px] font-bold">arrow_forward</span>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Decorative Element -->
+  <div class="fixed bottom-0 left-0 p-8 pointer-events-none opacity-[0.03] z-[-1]">
+    <svg fill="none" height="300" viewbox="0 0 100 100" width="300" xmlns="http://www.w3.org/2000/svg">
+      <circle class="text-primary" cx="10" cy="90" r="40" stroke="currentColor" stroke-width="0.5"></circle>
+      <path class="text-primary" d="M10 50L90 50M50 10L50 90" stroke="currentColor" stroke-width="0.5"></path>
+    </svg>
+  </div>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('sidebar-hidden');
+      document.getElementById('sidebar-overlay').classList.toggle('hidden');
+    }
+    window.addEventListener('resize', () => {
+      if (window.innerWidth >= 1024) document.getElementById('sidebar-overlay').classList.add('hidden');
+    });
+
+    // Video Completion Keys
+    function getVideoKey() {
+      return 'svastrino_week1_video_done';
+    }
+
+    function markTaskComplete(num) {
+      localStorage.setItem(getTaskKey(num), 'true');
+      applyTaskState();
+      
+      // Optional: Add a small toast or celebration effect
+      alert(`Task ${num} Completed! 🎉`);
+    }
+
+    function getTaskKey(num) {
+      return `svastrino_task_week1_${num}_done`;
+    }
+
+    function applyTaskState() {
+      const isFreemium = localStorage.getItem('isFreemium') === 'true';
+      const videoCompleted = localStorage.getItem(getVideoKey()) === 'true';
+      
+      const totalTasks = isFreemium ? 4 : 7;
+      let doneCount = 0;
+      let activeCount = 0;
+      let lockedCount = 0;
+
+      // Task 1 (Video)
+      if (videoCompleted) {
+        document.getElementById('task1-done')?.classList.remove('hidden');
+        document.getElementById('task1-active')?.classList.add('hidden');
+        doneCount++;
+      } else {
+        document.getElementById('task1-done')?.classList.add('hidden');
+        document.getElementById('task1-active')?.classList.remove('hidden');
+        activeCount++;
+      }
+
+      // Tasks 2-7
+      let chainUnbroken = videoCompleted;
+      let activeTaskFound = false;
+
+      for (let i = 2; i <= 7; i++) {
+        const isDone = localStorage.getItem(getTaskKey(i)) === 'true';
+        const doneEl = document.getElementById(`task${i}-done`);
+        const activeEl = document.getElementById(`task${i}-active`);
+        const lockedEl = document.getElementById(`task${i}-locked`);
+
+        if (isDone && chainUnbroken && !activeTaskFound) {
+          if (i <= totalTasks) doneCount++;
+          doneEl?.classList.remove('hidden');
+          activeEl?.classList.add('hidden');
+          lockedEl?.classList.add('hidden');
+          // chainUnbroken remains true
+        } else if (chainUnbroken && !activeTaskFound) {
+          if (i <= totalTasks) activeCount++;
+          doneEl?.classList.add('hidden');
+          activeEl?.classList.remove('hidden');
+          lockedEl?.classList.add('hidden');
+          activeTaskFound = true;
+          chainUnbroken = false;
+        } else {
+          if (i <= totalTasks) lockedCount++;
+          doneEl?.classList.add('hidden');
+          activeEl?.classList.add('hidden');
+          lockedEl?.classList.remove('hidden');
+          chainUnbroken = false;
+        }
+      }
+
+      // Update UI elements
+      const progressRing = document.querySelector('path.text-\\[\\#4a7df2\\]');
+      if (progressRing) {
+        const pct = (doneCount / totalTasks) * 100;
+        progressRing.setAttribute('stroke-dasharray', `${pct}, 100`);
+      }
+
+      const progressText = document.querySelector('.absolute.inset-0 span');
+      if (progressText) {
+        progressText.textContent = `${doneCount} / ${totalTasks}`;
+      }
+
+      const statusText = document.querySelector('.text-white\\/70');
+      if (statusText) {
+        if (doneCount === totalTasks) {
+          statusText.textContent = "Week complete! You've successfully finished all assignments. 🚀";
+        } else if (activeCount > 0) {
+          let activeName = "the next task";
+          if (!videoCompleted) {
+            activeName = "Self Discovery Video";
+          } else {
+            for (let i = 2; i <= totalTasks; i++) {
+              if (localStorage.getItem(getTaskKey(i)) !== 'true') {
+                const activeCard = document.getElementById(`task${i}-active`);
+                const title = activeCard?.querySelector('h3')?.textContent.trim();
+                if (title) activeName = title;
+                break;
+              }
+            }
+          }
+          statusText.textContent = `${activeName} is active and waiting for you.`;
+        }
+      }
+
+      // Update 'X of Y remaining' label
+      const tasksRemaining = document.getElementById('tasks-remaining');
+      if (tasksRemaining) {
+        tasksRemaining.textContent = Math.max(0, totalTasks - doneCount);
+      }
+      
+      const tasksRemainingTotal = tasksRemaining?.parentElement?.lastChild;
+      if (tasksRemainingTotal && tasksRemainingTotal.nodeType === Node.TEXT_NODE) {
+        tasksRemainingTotal.textContent = ` of ${totalTasks} remaining`;
+      }
+      
+      const dotsContainer = document.querySelector('.flex.flex-wrap.xl\\:flex-nowrap');
+      if (dotsContainer) {
+        dotsContainer.innerHTML = `
+          <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#4a7df2] shadow-sm shadow-[#4a7df2]/50"></span> ${doneCount} done</span>
+          <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-[#1b3482] border-[2.5px] border-[#4a7df2]"></span> ${activeCount} active</span>
+          <span class="flex items-center gap-2"><span class="w-2.5 h-2.5 rounded-full bg-white/10"></span> ${lockedCount} locked</span>
+        `;
+      }
+
+      const planIndicator = document.getElementById('plan-indicator');
+      if (planIndicator) {
+        planIndicator.textContent = isFreemium ? 'Week 1 — Free preview' : 'Week 1 — Premium Curriculum';
+      }
+    }
+
+    // Re-apply task state when mode is toggled
+    const origToggle = window.toggleFreemiumMode;
+    window.toggleFreemiumMode = function(checkbox) {
+      if (origToggle) origToggle(checkbox);
+      applyTaskState();
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      applyTaskState();
+    });
+  </script>
+</body>
+
+</html>
