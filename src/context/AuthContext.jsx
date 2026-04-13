@@ -16,9 +16,9 @@ const MOCK_SESSION = {
 
 const MOCK_PROFILE = {
   id: 'mock-user',
-  name: 'Demo Student',
-  class: '12th',
-  city: 'Mumbai',
+  name: '',
+  class: '',
+  city: '',
   role: 'student',
   plan: 'free',
   phone: '+919999999999',

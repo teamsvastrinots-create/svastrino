@@ -1,5 +1,5 @@
 // src/pages/Dashboard.jsx
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet-async'
 import ProtectedLayout from '../layouts/ProtectedLayout'
@@ -24,6 +24,11 @@ function RadialRing({ pct, color, size = 80, label }) {
 
 // --- Streak Modal ---
 function StreakModal({ onClose }) {
+  useEffect(() => {
+    const handleEsc = (e) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', handleEsc)
+    return () => window.removeEventListener('keydown', handleEsc)
+  }, [onClose])
   const today = new Date()
   const month = today.getMonth(); const year = today.getFullYear()
   const firstDay = new Date(year, month, 1).getDay()
@@ -104,12 +109,229 @@ function StreakModal({ onClose }) {
   )
 }
 
-// --- Sample Report Modal removed, feature is now inline ---
+function ProfileCompletionModal({ onClose, onComplete }) {
+  const { profile, setProfile } = useAuth()
+  const [name, setName] = useState(profile?.name || '')
+  const [cls, setCls] = useState(profile?.class || 'Class 11')
+  const [city, setCity] = useState(profile?.city || '')
+
+  useEffect(() => {
+    const handleEsc = (e) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', handleEsc)
+    return () => window.removeEventListener('keydown', handleEsc)
+  }, [onClose])
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (!name || !cls || !city) return
+    setProfile(p => ({ ...p, name, class: cls, city }))
+    onComplete()
+  }
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl p-6 relative" onClick={e => e.stopPropagation()}>
+        <button onClick={onClose} className="absolute right-4 top-4 text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100 flex items-center justify-center">
+          <span className="material-symbols-outlined text-[20px]">close</span>
+        </button>
+        <h3 className="font-black text-xl mb-2 text-[#0e1d4d] pr-8">Complete Your Profile</h3>
+        <p className="text-sm text-slate-500 mb-6">We need a few details to generate your personalized sample report.</p>
+        
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">Full Name</label>
+            <input required value={name} onChange={e => setName(e.target.value)} type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:border-[#4a7df2] outline-none" />
+          </div>
+          <div>
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">Class</label>
+            <select required value={cls} onChange={e => setCls(e.target.value)} className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:border-[#4a7df2] outline-none">
+              <option>Class 10</option><option>Class 11</option><option>Class 12</option><option>Undergrad</option><option>Graduate</option>
+            </select>
+          </div>
+          <div>
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">City</label>
+            <input required value={city} onChange={e => setCity(e.target.value)} type="text" className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:border-[#4a7df2] outline-none" />
+          </div>
+          <button type="submit" className="w-full py-3 mt-4 bg-[#1b3482] text-white font-bold rounded-xl active:scale-95 transition-transform">
+            Save & View Report
+          </button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
+function SampleReportModal({ onClose }) {
+  const { profile } = useAuth()
+
+  useEffect(() => {
+    const handleEsc = (e) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', handleEsc)
+    return () => window.removeEventListener('keydown', handleEsc)
+  }, [onClose])
+  
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/40 backdrop-blur-[24px] w-full h-screen left-0 top-0 transition-opacity p-4 sm:p-8" onClick={onClose}>
+      
+      {/* Modal Container */}
+      <div className="bg-zinc-800/60 flex flex-col w-full max-w-5xl max-h-[93vh] rounded-[20px] overflow-hidden shadow-[0_20px_60px_rgba(0,0,0,0.6)] border border-white/10 relative" onClick={e => e.stopPropagation()}>
+        
+        {/* Top actions bar */}
+        <div className="w-full flex flex-col sm:flex-row items-center justify-between p-4 sm:px-6 bg-zinc-900/90 gap-4 shrink-0 shadow-sm z-10">
+          <div className="flex items-center gap-4 text-white">
+            <div className="bg-red-600 font-extrabold text-[10px] tracking-wider text-white rounded px-2 py-1.5 flex items-center justify-center select-none shadow-sm">
+              PDF
+            </div>
+            <div>
+              <h4 className="font-[600] text-[14px] tracking-wide m-0 text-white leading-tight">Psychometric_Report_Sample.pdf</h4>
+              <p className="text-[11px] text-white/50 m-0 mt-0.5 tracking-wider uppercase font-bold">1 Apr 2026 &middot; Svastrino Career Intelligence</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+            <button className="bg-white/10 hover:bg-white/20 text-white/90 px-4 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 flex-shrink-0">
+              <span className="material-symbols-outlined text-[18px]">download</span> Download
+            </button>
+            <button className="bg-white/10 hover:bg-white/20 text-white/90 px-4 py-2 rounded-lg text-sm font-bold transition-colors flex items-center gap-2 flex-shrink-0">
+              <span className="material-symbols-outlined text-[18px]">share</span> Share
+            </button>
+            <button onClick={onClose} className="text-white hover:text-white/70 transition-colors ml-4 p-2">
+              <span className="material-symbols-outlined text-[24px]">close</span>
+            </button>
+          </div>
+        </div>
+
+        {/* PDF Canvas wrapper (Scrollable area) */}
+        <div className="overflow-y-auto flex-grow w-full py-6 px-4 flex justify-center items-start">
+          {/* The Mock Document */}
+          <div style={{ background: '#fff', width: '794px', minWidth: '794px', fontFamily: "'Inter', sans-serif", color: '#191c1e', display: 'flex', flexDirection: 'column', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}>
+            
+            {/* Inner content padded area */}
+            <div style={{ padding: '48px 56px', display: 'flex', flexDirection: 'column', flex: 1, userSelect: 'none' }}>
+            
+              {/* Header */}
+              <div style={{ borderLeft: '4px solid #24389c', paddingLeft: '16px', marginBottom: '28px' }}>
+                <p style={{ fontSize: '10px', fontWeight: 800, letterSpacing: '0.2em', color: '#757684', textTransform: 'uppercase', margin: '0 0 4px 0' }}>SVASTRINO CAREER INTELLIGENCE REPORT</p>
+                <p style={{ fontSize: '14px', fontWeight: 600, color: '#191c1e', margin: 0 }}>{profile?.name || 'Sample User'} &middot; {profile?.class || 'Class 11'} &middot; {profile?.city || 'India'} &middot; Assessed: 1 Apr 2026</p>
+              </div>
+
+              {/* Profile Title & Score */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '28px', paddingBottom: '28px', borderBottom: '1px solid #e8e8f0', gap: '24px' }}>
+                <div style={{ maxWidth: '420px' }}>
+                  <p style={{ fontSize: '10px', fontWeight: 700, color: '#757684', textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 8px 0' }}>YOUR PERSONALITY TYPE</p>
+                  <h1 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '36px', fontWeight: 800, color: '#24389c', margin: '0 0 10px 0', lineHeight: 1.15 }}>The Explorer</h1>
+                  <p style={{ fontSize: '14px', fontWeight: 700, color: '#191c1e', margin: '0 0 10px 0' }}>Creative Problem-Solver &middot; Right-Brain Dominant</p>
+                  <p style={{ fontSize: '13px', color: '#454652', lineHeight: 1.65, margin: 0 }}>You think in big ideas, connect dots others miss, and thrive when given freedom to create. You bring originality to everything you touch.</p>
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', flexShrink: 0 }}>
+                  <p style={{ fontSize: '10px', fontWeight: 700, color: '#757684', textTransform: 'uppercase', letterSpacing: '0.12em', margin: '0 0 4px 0' }}>PROFILE SCORE</p>
+                  <div style={{ display: 'flex', alignItems: 'baseline', color: '#6060c5' }}>
+                    <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '56px', fontWeight: 900, letterSpacing: '-2px', lineHeight: 1 }}>78</span>
+                    <span style={{ fontSize: '16px', fontWeight: 700, color: '#9a9ab0', marginLeft: '8px' }}>/ 100</span>
+                  </div>
+                  <div style={{ marginTop: '10px', background: '#f0f2ff', border: '1px solid rgba(36,56,156,0.2)', color: '#6060c5', fontSize: '10px', textTransform: 'uppercase', fontWeight: 700, padding: '5px 12px', borderRadius: '999px', whiteSpace: 'nowrap' }}>Top 8% of students</div>
+                </div>
+              </div>
+
+              {/* Dimensions */}
+              <div className="mb-8">
+                 <h6 className="text-[10px] font-bold text-[var(--color-outline-variant)] uppercase tracking-widest mb-5 border-b border-[var(--color-outline-variant)]/20 pb-2 block">PERSONALITY DIMENSIONS</h6>
+                 <div className="space-y-5">
+                   {[
+                     { label: 'Creativity', val: 91, col: '#6060c5', colBg: '#6060c5', text: 'Ideas come naturally — you generate what others cannot imagine' },
+                     { label: 'Empathy', val: 82, col: '#006471', colBg: '#008f86', text: 'You read people and situations with rare accuracy' },
+                     { label: 'Resilience', val: 77, col: '#523da1', colBg: '#523da1', text: 'You recover fast and keep moving under pressure' },
+                     { label: 'Logical Thinking', val: 74, col: '#2563eb', colBg: '#3b82f6', text: 'You back your instincts with structured reasoning' },
+                     { label: 'Leadership', val: 68, col: '#f97316', colBg: '#f97316', text: 'You naturally step up when direction is needed' }
+                   ].map(d => (
+                     <div key={d.label}>
+                       <div className="flex justify-between items-center mb-1">
+                         <span className="font-[600] text-sm text-[var(--color-on-surface)]">{d.label}</span>
+                         <span className="font-bold text-xs" style={{ color: d.col }}>{d.val}%</span>
+                       </div>
+                       <div className="w-full bg-[var(--color-surface-container)] rounded-full overflow-hidden mb-1" style={{ height: '10px' }}>
+                         <div className="h-full rounded-full" style={{ width: `${d.val}%`, backgroundColor: d.colBg }}></div>
+                       </div>
+                       <p className="text-[11px] text-[var(--color-on-surface-variant)]">{d.text}</p>
+                     </div>
+                   ))}
+                 </div>
+              </div>
+
+              {/* Top Career Matches */}
+              <div className="mb-8">
+                 <h6 className="text-[10px] font-bold text-[var(--color-outline-variant)] uppercase tracking-widest border-b border-[var(--color-outline-variant)]/20 pb-2 mb-5 block">TOP CAREER MATCHES</h6>
+                 <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)', gap: '16px' }}>
+                   {[
+                     { match: '94%', title: 'Design & Creative Media', desc: 'Visual thinking and originality in top 5%', col: '#6060c5', bg: '#f0f0ff' },
+                     { match: '88%', title: 'Entrepreneurship & Business', desc: 'Independence and risk appetite are exceptional', col: '#008f86', bg: '#f0fffe' },
+                     { match: '81%', title: 'Psychology & Counselling', desc: 'Empathy score higher than 90% of students', col: '#2978a3', bg: '#eef5ff' }
+                   ].map(m => (
+                     <div key={m.title} className="bg-white border border-[var(--color-outline-variant)]/30 rounded-xl overflow-hidden shadow-sm">
+                       <div style={{ height: '6px', width: '100%', backgroundColor: m.col }}></div>
+                       <div style={{ padding: '14px' }}>
+                         <span className="border text-[10px] px-2.5 py-1 rounded-full font-bold inline-block" style={{ marginBottom: '10px', backgroundColor: m.bg, color: m.col, borderColor: m.col + '4d' }}>{m.match} match</span>
+                         <h5 className="text-sm font-[700] text-[var(--color-on-surface)]" style={{ marginBottom: '6px' }}>{m.title}</h5>
+                         <p className="text-[11px] text-[var(--color-on-surface-variant)] leading-relaxed">{m.desc}</p>
+                       </div>
+                     </div>
+                   ))}
+                 </div>
+              </div>
+
+              {/* Strengths */}
+              <div className="mb-6">
+                 <h6 className="text-[10px] font-bold text-[var(--color-outline-variant)] uppercase tracking-widest inline-block pb-1 mb-4">TOP STRENGTHS</h6>
+                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px 24px' }}>
+                   {['Originality', 'Empathy', 'Pattern Recognition', 'Adaptability', 'Visual Thinking', 'Communication'].map(s => (
+                     <span key={s} className="text-xs font-[600] text-[var(--color-on-surface)]">{s}</span>
+                   ))}
+                 </div>
+              </div>
+
+              {/* Locked Section */}
+              <div className="relative overflow-hidden flex flex-col items-center justify-center bg-zinc-100 rounded-xl text-center" style={{ marginTop: '24px', padding: '48px 32px' }}>
+                 <h6 className="text-[10px] font-bold text-[var(--color-outline)] uppercase tracking-widest opacity-80" style={{ position: 'absolute', top: '16px', left: '16px' }}>STREAM RECOMMENDATION & 12-WEEK ROADMAP</h6>
+                 <p className="text-[14px] font-[600] text-[var(--color-on-surface)]" style={{ marginBottom: '4px', marginTop: '16px' }}>Your personalised career roadmap is locked</p>
+                 <p className="text-xs text-[var(--color-on-surface-variant)]" style={{ marginBottom: '16px' }}>Available with Career Pro plan</p>
+                 <button className="bg-[#5c5cce] hover:bg-[var(--color-primary)] text-white font-bold text-sm px-6 py-2.5 rounded-full shadow-md transition-all active:scale-95">
+                    Upgrade to unlock
+                 </button>
+              </div>
+
+            </div>
+            
+             {/* Bottom Action Bar */}
+             <div className="bg-[#f2efff] border-t border-[#e2dfff]" style={{ padding: '20px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', margin: '12px', marginTop: '0', borderRadius: '0 0 12px 12px' }}>
+               <div>
+                 <p className="font-bold text-[14px] text-[var(--color-on-surface)]" style={{ marginBottom: '4px' }}>Unlock your complete career report</p>
+                 <p className="text-[11px] text-[#5c5cce] font-[600]">Stream guide &middot; College roadmap &middot; 12-week plan &middot; 1-on-1 session</p>
+               </div>
+               <button className="bg-[#5c5cce] hover:bg-[var(--color-primary)] text-white font-bold text-sm px-7 py-3 rounded-xl shadow-md transition-all active:scale-95 whitespace-nowrap">
+                 Upgrade to Career Pro
+               </button>
+             </div>
+             
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export default function Dashboard() {
   const { profile, isPremium } = useAuth()
   const navigate = useNavigate()
   const [showStreak, setShowStreak] = useState(false)
+  const [showReport, setShowReport] = useState(false)
+  const [showProfilePrompt, setShowProfilePrompt] = useState(false)
+  
+  const handleViewReport = () => {
+    if (!profile?.name || !profile?.class || !profile?.city) {
+      setShowProfilePrompt(true)
+    } else {
+      setShowReport(true)
+    }
+  }
 
 
   const hour = new Date().getHours()
@@ -128,8 +350,13 @@ export default function Dashboard() {
     <ProtectedLayout>
       <Helmet><title>Dashboard | Svastrino</title></Helmet>
       {showStreak && <StreakModal onClose={() => setShowStreak(false)} />}
-
-
+      {showProfilePrompt && (
+        <ProfileCompletionModal 
+          onClose={() => setShowProfilePrompt(false)} 
+          onComplete={() => { setShowProfilePrompt(false); setShowReport(true); }} 
+        />
+      )}
+      {showReport && <SampleReportModal onClose={() => setShowReport(false)} />}
       <div className="p-6 pt-6 lg:p-10 max-w-[1240px]">
         {/* ── Header ─────────────────────────────────────── */}
         <header className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
@@ -155,41 +382,34 @@ export default function Dashboard() {
         {/* ── FREE PLAN VIEW ──────────────────────────────── */}
         {!isPremium && (
           <div className="space-y-10">
-            {/* Sample Report Hero - Inline Blurred Premium Feature */}
-            <div className="bg-[var(--color-surface-container-lowest)] rounded-2xl border border-[var(--color-outline-variant)]/20 shadow-sm relative overflow-hidden">
-              <div className="p-6 lg:p-8">
-                <div className="flex justify-between items-start mb-6">
-                  <div>
-                    <span className="inline-block px-3 py-1 bg-[var(--color-primary)]/10 text-[var(--color-primary)] rounded-full text-[10px] font-bold uppercase tracking-wider mb-2">Sample Report</span>
-                    <h2 className="text-2xl font-bold text-[var(--color-on-surface)]">Analytical Leader</h2>
-                  </div>
-                  <div className="w-16 h-16 rounded-full border-2 border-[var(--color-primary)] text-[var(--color-primary)] flex items-center justify-center relative">
-                    <span className="text-2xl font-black">72<span className="text-sm font-bold opacity-80">%</span></span>
-                  </div>
-                </div>
-
-                <div className="relative">
-                  {/* Fake blurred traits content behind the overlay */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 blur-sm opacity-60 select-none pb-8 pt-4">
-                    {TRAITS.slice(0, 4).map((t, i) => (
-                      <div key={i} className="flex flex-col items-center p-4 bg-[var(--color-surface-container)] rounded-2xl">
-                        <span className="text-xs font-bold text-[var(--color-on-surface)] mb-2">{t.label}</span>
-                        <div className="w-16 h-16 rounded-full border-[6px] border-[var(--color-outline-variant)]/30" />
-                      </div>
+            {/* Sample Report Hero (Classic HTML format) */}
+            <div className="bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-container)] text-white rounded-xl p-6 lg:p-8 relative overflow-hidden shadow-xl">
+              <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none" />
+              <div className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase mb-5 border border-white/10">Your sample report</div>
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative z-10">
+                <div className="flex-1 max-w-2xl">
+                  <h2 className="text-3xl lg:text-4xl font-extrabold mb-3 tracking-tight">Analytical Leader</h2>
+                  <p className="text-white/80 text-sm lg:text-base leading-relaxed mb-6">
+                    You show strong logical reasoning and a natural drive to structure and lead. You thrive in goal-oriented environments that reward clarity of thought.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mb-8">
+                    {TRAITS.map(t => (
+                      <span key={t.label} className="inline-flex items-center px-3 py-1.5 bg-[var(--color-surface-container-lowest)] rounded-full text-[11px] font-bold text-[var(--color-primary)] uppercase tracking-wide shadow-sm">
+                        <span className="w-2 h-2 rounded-full mr-2" style={{ background: t.color }} />
+                        {t.label} <span className="text-[var(--color-outline)] ml-1.5 font-semibold">{t.level}</span>
+                      </span>
                     ))}
                   </div>
-                  
-                  {/* Absolute locked glass overlay */}
-                  <div className="absolute inset-x-0 -bottom-8 top-0 flex flex-col items-center justify-center bg-gradient-to-t from-[var(--color-surface-container-lowest)] via-[var(--color-surface-container-lowest)]/80 to-transparent">
-                    <div className="bg-white/80 dark:bg-black/80 backdrop-blur-md p-6 rounded-2xl shadow-xl flex flex-col items-center text-center max-w-sm mt-8 border border-[var(--color-outline-variant)]/20">
-                      <span className="material-symbols-outlined text-[var(--color-primary)] text-4xl mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
-                      <h4 className="font-bold text-[var(--color-on-surface)] text-lg mb-1">Premium Feature</h4>
-                      <p className="text-sm text-[var(--color-on-surface-variant)] mb-5">Unlock your full 500+ career match analysis & detailed psychometric sub-traits.</p>
-                      <button onClick={() => navigate('/test-results')} className="w-full py-3 sapphire-gradient text-white font-bold rounded-xl active:scale-95 transition-transform shadow-md text-sm">
-                        Unlock Full Report
-                      </button>
-                    </div>
+                  <button onClick={handleViewReport} className="w-full sm:w-auto px-8 py-3.5 bg-white text-[var(--color-primary)] font-extrabold rounded-xl transition-all active:scale-95 text-sm shadow-lg hover:shadow-xl">
+                    View sample report
+                  </button>
+                </div>
+                {/* Score ring */}
+                <div className="shrink-0 flex flex-col items-center">
+                  <div className="w-28 h-28 lg:w-36 lg:h-36 rounded-full border border-white/20 bg-white/10 flex items-center justify-center relative">
+                    <span className="text-4xl lg:text-5xl font-black text-white">72<span className="text-2xl font-bold opacity-80">%</span></span>
                   </div>
+                  <span className="text-[10px] tracking-widest uppercase opacity-70 font-black mt-4 text-center leading-tight">You<br />scored</span>
                 </div>
               </div>
             </div>
