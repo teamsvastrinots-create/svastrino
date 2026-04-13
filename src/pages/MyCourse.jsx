@@ -21,7 +21,7 @@ function WeekChip({ week, activeWeek, ongoingWeek, onClick }) {
   const isCompleted = week < ongoingWeek
   const isOngoing = week === ongoingWeek
   const isActive = week === activeWeek
-  const canClick = week === 1
+  const canClick = isCompleted || isOngoing
 
   let dotBg = 'bg-white border-2 border-[var(--color-outline-variant)] text-[var(--color-outline)]'
   if (isCompleted) dotBg = 'bg-green-500 text-white border-2 border-green-600'
@@ -83,8 +83,9 @@ export default function MyCourse() {
   const [uploadedFile, setUploadedFile] = useState(null)
   const [submitted, setSubmitted] = useState({})
   const [lockedModal, setLockedModal] = useState(null)
+  const [expandedWeekDrawer, setExpandedWeekDrawer] = useState(null)
 
-  const ongoingWeek = 1
+  const ongoingWeek = 2 // Hardcode to 2 so Week 1 is past, and Week 2 is ongoing for testing the drawer!
   const TOTAL_DAYS = isPremium ? 7 : 2
   const task = TASK_DATA[activeDay] || TASK_DATA[2]
   const weekProgress = Math.round((unlockedDays.length / 6) * 100)
@@ -165,7 +166,7 @@ export default function MyCourse() {
             <div className="flex flex-row items-center justify-between mb-5 gap-4">
               <div>
                 <p className="text-xs font-bold text-[var(--color-outline)] uppercase tracking-widest mb-1">24-Week Journey</p>
-                <h1 className="text-lg md:text-2xl font-bold text-[var(--color-on-surface)]">Week {activeWeek} — Self Discovery</h1>
+                <h1 className="text-lg md:text-2xl font-bold text-[var(--color-on-surface)]">Week {activeWeek} — {activeWeek === 1 ? 'Self Discovery' : 'Values & Strengths'}</h1>
               </div>
               <div className="flex items-center gap-2">
                 <div className="hidden md:flex items-center gap-2 bg-[var(--color-surface-container)] px-4 py-2 rounded-full border border-[var(--color-outline-variant)]/20">
@@ -179,12 +180,43 @@ export default function MyCourse() {
                 </button>
               </div>
             </div>
-            <div ref={scrollRef} className="flex gap-2 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+            <div ref={scrollRef} className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
               {Array.from({ length: 24 }, (_, i) => i + 1).map(w => (
-                <WeekChip key={w} week={w} activeWeek={activeWeek} ongoingWeek={ongoingWeek} onClick={setActiveWeek} />
+                <WeekChip key={w} week={w} activeWeek={activeWeek} ongoingWeek={ongoingWeek} onClick={(w) => {
+                  if (w < ongoingWeek) {
+                    setExpandedWeekDrawer(expandedWeekDrawer === w ? null : w)
+                  } else {
+                    setActiveWeek(w)
+                    setExpandedWeekDrawer(null)
+                  }
+                }} />
               ))}
             </div>
+
+            {/* Inline Drawer for Past Weeks */}
+            {expandedWeekDrawer && (
+              <div className="mt-4 p-5 bg-amber-50 border border-amber-200 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 animate-in slide-in-from-top-2">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-amber-200 text-amber-800 rounded-full flex items-center justify-center font-black">W{expandedWeekDrawer}</div>
+                  <div>
+                    <h4 className="font-bold text-amber-900 leading-tight">Week {expandedWeekDrawer} Completed</h4>
+                    <p className="text-amber-700 text-sm mt-0.5">You've successfully completed this module. Need a refresher?</p>
+                  </div>
+                </div>
+                <button onClick={() => { setActiveWeek(expandedWeekDrawer); setExpandedWeekDrawer(null) }} className="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white font-bold rounded-lg text-sm transition-colors w-full md:w-auto">
+                  Review Week {expandedWeekDrawer}
+                </button>
+              </div>
+            )}
           </div>
+
+          {/* Amber Reviewing Banner */}
+          {activeWeek < ongoingWeek && (
+            <div className="bg-amber-100 border border-amber-300 text-amber-800 px-5 py-3 rounded-xl flex items-center gap-3 font-medium text-sm shadow-sm">
+              <span className="material-symbols-outlined text-amber-600" style={{ fontVariationSettings: "'FILL' 1" }}>history</span>
+              You are currently reviewing a past week. Return to <button onClick={() => setActiveWeek(ongoingWeek)} className="font-bold underline underline-offset-2 ml-1">Week {ongoingWeek}</button> to continue your progress.
+            </div>
+          )}
 
           {/* ── Row 1: Video + Need Help ─────────────────────── */}
           <div className="grid grid-cols-12 gap-6">

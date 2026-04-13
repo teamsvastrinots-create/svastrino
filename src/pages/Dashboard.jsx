@@ -104,84 +104,12 @@ function StreakModal({ onClose }) {
   )
 }
 
-// --- Sample Report Modal (free plan) ---
-function SampleReportModal({ onClose }) {
-  const traits = [
-    { name: 'Analytical', pct: 88, color: '#24389c', icon: 'psychology_alt', level: 'Very High' },
-    { name: 'Creative',   pct: 64, color: '#006471', icon: 'palette',        level: 'High' },
-    { name: 'Social',     pct: 42, color: '#757684', icon: 'group',          level: 'Moderate' },
-    { name: 'Leadership', pct: 76, color: '#24389c', icon: 'military_tech',  level: 'High' },
-  ]
-  return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-[var(--color-surface-container-lowest)] w-full max-w-lg rounded-3xl shadow-2xl border border-[var(--color-outline-variant)]/20 overflow-hidden" onClick={e => e.stopPropagation()}>
-        {/* Header */}
-        <div className="sapphire-gradient px-6 py-5 flex items-center justify-between relative overflow-hidden">
-          <div className="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full blur-2xl" />
-          <div className="relative z-10">
-            <span className="text-white/70 text-[10px] font-black uppercase tracking-widest">Sample Report</span>
-            <h3 className="text-white font-black text-xl leading-tight">Analytical Leader</h3>
-          </div>
-          <div className="relative z-10 flex items-center gap-3">
-            <div className="w-16 h-16 rounded-full bg-white/10 border border-white/20 flex items-center justify-center">
-              <span className="text-3xl font-black text-white">72<span className="text-base">%</span></span>
-            </div>
-            <button onClick={onClose} className="text-white/70 hover:text-white bg-black/10 hover:bg-black/20 p-2 rounded-full transition-colors">
-              <span className="material-symbols-outlined text-xl">close</span>
-            </button>
-          </div>
-        </div>
-        {/* Summary */}
-        <div className="px-6 py-4 bg-[var(--color-primary)]/5 border-b border-[var(--color-outline-variant)]/10">
-          <p className="text-sm text-[var(--color-on-surface-variant)] leading-relaxed">
-            You show strong logical reasoning and a natural drive to structure and lead. You thrive in goal-oriented environments that reward clarity of thought.
-          </p>
-        </div>
-        {/* Traits */}
-        <div className="p-6">
-          <p className="text-[10px] font-black uppercase tracking-widest text-[var(--color-outline)] mb-4">Your Trait Scores</p>
-          <div className="grid grid-cols-2 gap-3">
-            {traits.map(t => (
-              <div key={t.name} className="flex flex-col items-center bg-[var(--color-surface-container-low)] rounded-2xl p-4">
-                <div className="flex justify-between w-full mb-3">
-                  <span className="text-xs font-bold text-[var(--color-on-surface)]">{t.name}</span>
-                  <span className="text-xs font-extrabold" style={{ color: t.color }}>{t.pct}%</span>
-                </div>
-                <div className="relative w-20 h-20">
-                  <svg className="w-full h-full -rotate-90" viewBox="0 0 36 36">
-                    <path d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke="currentColor" strokeWidth="3" className="text-[var(--color-outline-variant)]/20" />
-                    <path d="M18 2 a 16 16 0 1 1 0 32 a 16 16 0 1 1 0 -32" fill="none" stroke={t.color} strokeWidth="3" strokeLinecap="round" style={{ strokeDasharray: `${t.pct}, 100` }} />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="material-symbols-outlined text-2xl" style={{ color: t.color, fontVariationSettings: "'FILL' 1" }}>{t.icon}</span>
-                  </div>
-                </div>
-                <div className="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full mt-3 uppercase tracking-widest" style={{ color: t.color, background: t.color + '18' }}>{t.level}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-        {/* Upgrade CTA */}
-        <div className="px-6 pb-6">
-          <div className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-container)] p-5 rounded-2xl text-white text-center">
-            <p className="text-sm font-black mb-1">🔒 This is just a preview</p>
-            <p className="text-white/70 text-xs mb-4">Upgrade to Premium to get your full psychometric analysis, career matches, and personalized growth plan.</p>
-            <button onClick={onClose} className="px-8 py-2.5 bg-white text-[var(--color-primary)] font-black rounded-xl text-sm hover:shadow-xl transition-all active:scale-95">
-              Upgrade to Unlock
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
+// --- Sample Report Modal removed, feature is now inline ---
 
 export default function Dashboard() {
   const { profile, isPremium } = useAuth()
   const navigate = useNavigate()
   const [showStreak, setShowStreak] = useState(false)
-  const [showReport, setShowReport] = useState(false)
 
 
   const hour = new Date().getHours()
@@ -200,7 +128,7 @@ export default function Dashboard() {
     <ProtectedLayout>
       <Helmet><title>Dashboard | Svastrino</title></Helmet>
       {showStreak && <StreakModal onClose={() => setShowStreak(false)} />}
-      {showReport && <SampleReportModal onClose={() => setShowReport(false)} />}
+
 
       <div className="p-6 pt-6 lg:p-10 max-w-[1240px]">
         {/* ── Header ─────────────────────────────────────── */}
@@ -227,34 +155,41 @@ export default function Dashboard() {
         {/* ── FREE PLAN VIEW ──────────────────────────────── */}
         {!isPremium && (
           <div className="space-y-10">
-            {/* Sample Report Hero */}
-            <div className="bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-container)] text-white rounded-xl p-6 lg:p-8 relative overflow-hidden shadow-xl">
-              <div className="absolute -right-10 -top-10 w-64 h-64 bg-white/5 rounded-full blur-3xl pointer-events-none" />
-              <div className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-[10px] font-bold tracking-widest uppercase mb-5 border border-white/10">Your sample report</div>
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-8 relative z-10">
-                <div className="flex-1 max-w-2xl">
-                  <h2 className="text-3xl lg:text-4xl font-extrabold mb-3 tracking-tight">Analytical Leader</h2>
-                  <p className="text-white/80 text-sm lg:text-base leading-relaxed mb-6">
-                    You show strong logical reasoning and a natural drive to structure and lead. You thrive in goal-oriented environments that reward clarity of thought.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mb-8">
-                    {TRAITS.map(t => (
-                      <span key={t.label} className="inline-flex items-center px-3 py-1.5 bg-[var(--color-surface-container-lowest)] rounded-full text-[11px] font-bold text-[var(--color-primary)] uppercase tracking-wide shadow-sm">
-                        <span className="w-2 h-2 rounded-full mr-2" style={{ background: t.color }} />
-                        {t.label} <span className="text-[var(--color-outline)] ml-1.5 font-semibold">{t.level}</span>
-                      </span>
+            {/* Sample Report Hero - Inline Blurred Premium Feature */}
+            <div className="bg-[var(--color-surface-container-lowest)] rounded-2xl border border-[var(--color-outline-variant)]/20 shadow-sm relative overflow-hidden">
+              <div className="p-6 lg:p-8">
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <span className="inline-block px-3 py-1 bg-[var(--color-primary)]/10 text-[var(--color-primary)] rounded-full text-[10px] font-bold uppercase tracking-wider mb-2">Sample Report</span>
+                    <h2 className="text-2xl font-bold text-[var(--color-on-surface)]">Analytical Leader</h2>
+                  </div>
+                  <div className="w-16 h-16 rounded-full border-2 border-[var(--color-primary)] text-[var(--color-primary)] flex items-center justify-center relative">
+                    <span className="text-2xl font-black">72<span className="text-sm font-bold opacity-80">%</span></span>
+                  </div>
+                </div>
+
+                <div className="relative">
+                  {/* Fake blurred traits content behind the overlay */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 blur-sm opacity-60 select-none pb-8 pt-4">
+                    {TRAITS.slice(0, 4).map((t, i) => (
+                      <div key={i} className="flex flex-col items-center p-4 bg-[var(--color-surface-container)] rounded-2xl">
+                        <span className="text-xs font-bold text-[var(--color-on-surface)] mb-2">{t.label}</span>
+                        <div className="w-16 h-16 rounded-full border-[6px] border-[var(--color-outline-variant)]/30" />
+                      </div>
                     ))}
                   </div>
-                  <button onClick={() => setShowReport(true)} className="w-full sm:w-auto px-8 py-3.5 bg-white text-[var(--color-primary)] font-extrabold rounded-xl transition-all active:scale-95 text-sm shadow-lg hover:shadow-xl">
-                    Unlock full report
-                  </button>
-                </div>
-                {/* Score ring */}
-                <div className="shrink-0 flex flex-col items-center">
-                  <div className="w-28 h-28 lg:w-36 lg:h-36 rounded-full border border-white/20 bg-white/10 flex items-center justify-center relative">
-                    <span className="text-4xl lg:text-5xl font-black text-white">72<span className="text-2xl font-bold opacity-80">%</span></span>
+                  
+                  {/* Absolute locked glass overlay */}
+                  <div className="absolute inset-x-0 -bottom-8 top-0 flex flex-col items-center justify-center bg-gradient-to-t from-[var(--color-surface-container-lowest)] via-[var(--color-surface-container-lowest)]/80 to-transparent">
+                    <div className="bg-white/80 dark:bg-black/80 backdrop-blur-md p-6 rounded-2xl shadow-xl flex flex-col items-center text-center max-w-sm mt-8 border border-[var(--color-outline-variant)]/20">
+                      <span className="material-symbols-outlined text-[var(--color-primary)] text-4xl mb-2" style={{ fontVariationSettings: "'FILL' 1" }}>lock</span>
+                      <h4 className="font-bold text-[var(--color-on-surface)] text-lg mb-1">Premium Feature</h4>
+                      <p className="text-sm text-[var(--color-on-surface-variant)] mb-5">Unlock your full 500+ career match analysis & detailed psychometric sub-traits.</p>
+                      <button onClick={() => navigate('/test-results')} className="w-full py-3 sapphire-gradient text-white font-bold rounded-xl active:scale-95 transition-transform shadow-md text-sm">
+                        Unlock Full Report
+                      </button>
+                    </div>
                   </div>
-                  <span className="text-[10px] tracking-widest uppercase opacity-70 font-black mt-4 text-center leading-tight">You<br />scored</span>
                 </div>
               </div>
             </div>

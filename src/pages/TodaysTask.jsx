@@ -11,32 +11,44 @@ const FREE_TASKS = [
   {
     id: 1, title: 'Self Discovery - Video', type: 'Video', meta: '15 mins · Active now', icon: 'play_circle',
     desc: 'Watch the video module to discover your hidden potentials. This is the first building block of your career direction.',
+    why: 'Building a strong foundation of self-awareness is the first step before choosing any career path.',
     action: 'Play Video', link: '/my-course',
   },
   {
     id: 2, title: 'Write 5 things you like doing', type: 'Worksheet', meta: '15 mins · ~15 mins',
-    icon: 'edit_document', desc: 'Identify fields and roles that excite you — the first building block of your career direction.', action: 'Open worksheet',
+    icon: 'edit_document', desc: 'Identify fields and roles that excite you — the first building block of your career direction.',
+    why: 'Reflecting on what naturally engages you points toward intrinsic motivators—crucial for career satisfaction.',
+    action: 'Open worksheet',
   },
   {
     id: 3, title: 'Ask 3 people: “What am I good at?”', type: 'Interviews', meta: '~15 mins · Unlocks after Task 2',
-    icon: 'psychology', desc: 'Gather external perspectives on your natural talents. This helps validate your self-assessment.', action: 'Record insights',
+    icon: 'psychology', desc: 'Gather external perspectives on your natural talents. This helps validate your self-assessment.',
+    why: 'External validation helps uncover blind spots about your own strengths that you might take for granted.',
+    action: 'Record insights',
   },
   {
     id: 4, title: '“My Top 3 Strengths + Why”', type: 'Analysis', meta: '~15 mins · Unlocks after Task 3',
-    icon: 'stars', desc: 'Synthesize your self-reflection and peer feedback into a core strength profile.', action: 'Record analysis',
+    icon: 'stars', desc: 'Synthesize your self-reflection and peer feedback into a core strength profile.',
+    why: 'Distilling down to top 3 strengths creates a focused lens for matching with future job requirements.',
+    action: 'Record analysis',
   },
 ]
 
 const PREMIUM_TASKS = [
   {
     id: 5, title: 'Personal Brand Statement', type: 'Branding', meta: '~40 mins · Unlocks after Task 4',
-    icon: 'badge', desc: 'Draft a compelling 30-word personal brand statement that highlights your core value and career goals.', action: 'Open assignment',
+    icon: 'badge', desc: 'Draft a compelling 30-word personal brand statement that highlights your core value and career goals.',
+    why: 'A concise brand statement is essential for networking, resumes, and elevator pitches.',
+    action: 'Open assignment',
   },
   {
     id: 6, title: 'Weekly Milestone Recap', type: 'Review', meta: '~30 mins · Unlocks after Task 5',
-    icon: 'flag', desc: "Reflect on your Week 1 achievements and insights before advancing to Week 2 content.", action: 'Start review',
+    icon: 'flag', desc: "Reflect on your Week 1 achievements and insights before advancing to Week 2 content.",
+    why: 'Spaced repetition and reflection significantly improve retention of behavioral insights.',
+    action: 'Start review',
   },
 ]
+
 
 // ── Task Row Component ────────────────────────────────────────
 function TaskRow({ task, state, onComplete, onNavigate }) {
@@ -75,20 +87,53 @@ function TaskRow({ task, state, onComplete, onNavigate }) {
           <div className="bg-[#1b3482] text-white px-4 py-1.5 rounded-full text-[11px] font-extrabold shrink-0 tracking-widest uppercase shadow-sm z-10 self-start sm:self-auto ml-14 sm:ml-0">Active</div>
         </div>
         <div className="ml-0 sm:ml-[60px] space-y-5 z-10">
+          {/* WHY THIS TASK strip */}
+          <div className="bg-[#1b3482]/5 border-l-4 border-[#1b3482] overflow-hidden rounded-r-xl p-4 mr-4 shadow-sm flex items-start gap-3">
+            <span className="material-symbols-outlined text-[#1b3482] mt-0.5" style={{fontVariationSettings: "'FILL' 1"}}>info</span>
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#1b3482]/70 block mb-1">Why this task?</span>
+              <p className="text-[#132763] text-sm font-medium leading-relaxed">{task.why}</p>
+            </div>
+          </div>
+          
           <p className="text-[#2d3133] text-sm leading-relaxed max-w-xl font-medium">{task.desc}</p>
-          <div className="flex flex-wrap items-center gap-3">
+          
+          {/* Worksheet UI with Answer Inputs */}
+          {task.type !== 'Video' && (
+            <div className="bg-white rounded-xl border border-[#93adeb]/40 overflow-hidden shadow-sm mr-4">
+              <div className="bg-[#f8f9fb] px-4 py-3 border-b border-[#e0e3e5] flex items-center gap-2">
+                <span className="material-symbols-outlined text-[#4a7df2] text-lg">edit_square</span>
+                <span className="text-xs font-bold uppercase tracking-widest text-[#454652]">Your Workspace</span>
+              </div>
+              <div className="p-4">
+                <textarea 
+                  placeholder="Type your answer here... (MOCK_MODE: Saves locally to state)"
+                  className="w-full h-32 p-3 bg-white border border-[#e0e3e5] rounded-xl text-sm resize-y focus:outline-none focus:ring-2 focus:ring-[#4a7df2] focus:border-transparent transition-all placeholder:text-slate-400"
+                />
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-wrap items-center gap-3 mt-2">
             {task.link ? (
               <button onClick={() => onNavigate(task.link)} className="bg-[#1b3482] hover:bg-[#132763] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all active:scale-[0.98]">
                 {task.action}
               </button>
             ) : (
-              <button onClick={() => onComplete(task.id)} className="bg-[#1b3482] hover:bg-[#132763] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all active:scale-[0.98]">
-                {task.action}
+              <div className="flex gap-3">
+                <button onClick={() => onComplete(task.id)} className="bg-[#1b3482] hover:bg-[#132763] text-white px-6 py-2.5 rounded-xl text-sm font-bold shadow-md transition-all active:scale-[0.98]">
+                  Submit & Complete
+                </button>
+                <button onClick={() => alert('Progress saved locally!')} className="bg-white text-[#1b3482] border border-[#1b3482]/20 px-6 py-2.5 rounded-xl text-sm font-bold hover:bg-slate-50 transition-all active:scale-[0.98]">
+                  Save Progress
+                </button>
+              </div>
+            )}
+            {task.link && (
+               <button onClick={() => onComplete(task.id)} className="text-[#3d70eb] hover:text-[#1b3482] text-sm font-bold px-4 py-2 flex items-center gap-1.5 sm:ml-auto transition-colors group">
+                Mark module complete <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
               </button>
             )}
-            <button onClick={() => onComplete(task.id)} className="text-[#3d70eb] hover:text-[#1b3482] text-sm font-bold px-4 py-2 flex items-center gap-1.5 sm:ml-auto transition-colors group">
-              Mark complete <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>
-            </button>
           </div>
         </div>
       </div>

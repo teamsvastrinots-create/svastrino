@@ -7,6 +7,7 @@ import SignIn           from './pages/SignIn'
 import OTPRequest       from './pages/OTPRequest'
 import OTPVerify        from './pages/OTPVerify'
 import LoginUsername    from './pages/LoginUsername'
+import FreeTest         from './pages/FreeTest'
 
 // ── Protected pages (Flows 3 & 4) ───────────────────────────
 import Dashboard        from './pages/Dashboard'
@@ -27,8 +28,10 @@ export default function App() {
       {/* ── Guest-only routes ────────────────────────────── */}
       <Route path="/signin"         element={<GuestGuard><SignIn /></GuestGuard>} />
       <Route path="/otp-request"    element={<GuestGuard><OTPRequest /></GuestGuard>} />
+      <Route path="/opt-verify"     element={<GuestGuard><OTPVerify /></GuestGuard>} />
       <Route path="/otp-verify"     element={<GuestGuard><OTPVerify /></GuestGuard>} />
       <Route path="/login-username" element={<GuestGuard><LoginUsername /></GuestGuard>} />
+      <Route path="/free-test"      element={<GuestGuard><FreeTest /></GuestGuard>} />
 
       {/* ── Protected routes (Flow 3) ────────────────────── */}
       <Route path="/dashboard"         element={<AuthGuard><Dashboard /></AuthGuard>} />
