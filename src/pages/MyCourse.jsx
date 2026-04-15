@@ -30,7 +30,7 @@ function WeekChip({ week, activeWeek, ongoingWeek, onClick }) {
   return (
     <div
       onClick={canClick ? () => onClick(week) : undefined}
-      className={`flex flex-col items-center gap-1.5 shrink-0 px-1.5 py-2 rounded-xl transition-all ${isActive ? 'bg-[var(--color-surface-container)]' : ''} ${canClick ? 'cursor-pointer hover:-translate-y-0.5' : 'cursor-not-allowed opacity-60'}`}
+      className={`flex flex-col items-center gap-1.5 shrink-0 px-3 py-2.5 rounded-xl transition-all ${isActive ? 'bg-[var(--color-surface-container)]' : ''} ${canClick ? 'cursor-pointer hover:-translate-y-0.5' : 'cursor-not-allowed opacity-60'}`}
     >
       <div className={`w-10 h-10 rounded-full flex items-center justify-center text-[11px] font-extrabold shadow-sm transition-transform ${dotBg} ${isActive ? 'scale-110 shadow-md' : ''}`}>
         {isCompleted ? '✓' : week}
@@ -45,7 +45,7 @@ function NotesModal({ onClose }) {
   const [notes, setNotes] = useState('')
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
+      <div className="bg-white w-full max-w-md rounded-xl shadow-2xl overflow-hidden" onClick={e => e.stopPropagation()}>
         <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="material-symbols-outlined text-[var(--color-primary)]">edit_note</span>
@@ -147,7 +147,7 @@ export default function MyCourse() {
       {showNotes && <NotesModal onClose={() => setShowNotes(false)} />}
       {lockedModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setLockedModal(null)}>
-          <div className="bg-white rounded-2xl p-8 max-w-xs w-full text-center shadow-2xl" onClick={e => e.stopPropagation()}>
+          <div className="bg-white rounded-xl p-8 max-w-xs w-full text-center shadow-2xl" onClick={e => e.stopPropagation()}>
             <div className="w-14 h-14 bg-[var(--color-primary)]/10 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="material-symbols-outlined text-3xl text-[var(--color-primary)]">lock</span>
             </div>
@@ -162,7 +162,7 @@ export default function MyCourse() {
         <div className="max-w-6xl mx-auto space-y-6">
 
           {/* ── Journey Bar ─────────────────────────────────── */}
-          <div className="bg-[var(--color-surface-container-lowest)] rounded-2xl p-5 md:p-6 shadow-sm border border-[var(--color-outline-variant)]/20">
+          <div className="bg-[var(--color-surface-container-lowest)] rounded-xl p-5 md:p-6 shadow-sm border border-[var(--color-outline-variant)]/20">
             <div className="flex flex-row items-center justify-between mb-5 gap-4">
               <div>
                 <p className="text-xs font-bold text-[var(--color-outline)] uppercase tracking-widest mb-1">24-Week Journey</p>
@@ -180,7 +180,7 @@ export default function MyCourse() {
                 </button>
               </div>
             </div>
-            <div ref={scrollRef} className="flex gap-2 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
+            <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
               {Array.from({ length: 24 }, (_, i) => i + 1).map(w => (
                 <WeekChip key={w} week={w} activeWeek={activeWeek} ongoingWeek={ongoingWeek} onClick={(w) => {
                   if (w < ongoingWeek) {
@@ -226,7 +226,7 @@ export default function MyCourse() {
                 <span className="w-8 h-8 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-bold text-xs flex items-center justify-center shadow-sm">D1</span>
                 <span className="text-[17px] font-bold text-[var(--color-on-surface)] tracking-tight">Week {activeWeek} – Video Lecture</span>
               </div>
-              <div className="bg-[var(--color-surface-container-lowest)] rounded-2xl overflow-hidden shadow-sm border border-[var(--color-outline-variant)]/20 group">
+              <div className="bg-[var(--color-surface-container-lowest)] rounded-xl overflow-hidden shadow-sm border border-[var(--color-outline-variant)]/20 group">
                 <div className="relative aspect-video w-full bg-[#3c3f44] cursor-pointer" onClick={handlePlayPause}>
                   {/* Play / Pause button */}
                   <div className="absolute inset-0 flex items-center justify-center z-10">
@@ -265,7 +265,7 @@ export default function MyCourse() {
 
             {/* Need Help */}
             <div className="hidden lg:flex col-span-12 xl:col-span-4 flex-col pt-[36px]">
-              <div className="bg-[var(--color-surface-container-lowest)] rounded-2xl shadow-sm border border-[var(--color-outline-variant)]/20 pt-14 px-6 pb-6 flex flex-col h-full">
+              <div className="bg-[var(--color-surface-container-lowest)] rounded-xl shadow-sm border border-[var(--color-outline-variant)]/20 pt-14 px-6 pb-6 flex flex-col h-full">
                 <div className="w-20 h-20 mx-auto rounded-[1.75rem] bg-orange-200/70 flex items-center justify-center text-amber-700 mb-5">
                   <span className="material-symbols-outlined text-[40px]" style={{ fontVariationSettings: "'FILL' 1" }}>forum</span>
                 </div>
@@ -291,7 +291,7 @@ export default function MyCourse() {
                 <span className="min-w-8 h-8 px-2 rounded-lg bg-[var(--color-primary)]/10 text-[var(--color-primary)] font-bold text-xs flex items-center justify-center shadow-sm">D2–D7</span>
                 <span className="text-[17px] font-bold text-[var(--color-on-surface)] tracking-tight">Week {activeWeek} – Weekly Tasks</span>
               </div>
-              <div className="bg-[var(--color-surface-container-lowest)] rounded-2xl shadow-sm border border-[var(--color-outline-variant)]/20 overflow-hidden">
+              <div className="bg-[var(--color-surface-container-lowest)] rounded-xl shadow-sm border border-[var(--color-outline-variant)]/20 overflow-hidden">
                 {/* Day Tabs */}
                 <div className="flex border-b border-[var(--color-outline-variant)]/20 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
                   {dayTabs.map(day => {
@@ -396,7 +396,7 @@ export default function MyCourse() {
             {/* Sidebar: Overview + Milestone */}
             <div className="col-span-12 xl:col-span-4 flex flex-col gap-6 pt-[36px]">
               {/* Week Overview Ring */}
-              <div className="hidden lg:block bg-[var(--color-surface-container-lowest)] rounded-2xl shadow-sm border border-[var(--color-outline-variant)]/20 p-6">
+              <div className="hidden lg:block bg-[var(--color-surface-container-lowest)] rounded-xl shadow-sm border border-[var(--color-outline-variant)]/20 p-6">
                 <div className="flex items-center justify-between mb-4">
                   <p className="text-[10px] font-black uppercase tracking-widest text-[var(--color-outline)]">Week 1 Overview</p>
                   <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full">In Progress</span>
@@ -420,7 +420,7 @@ export default function MyCourse() {
               </div>
 
               {/* Milestone Card */}
-              <div className="bg-gradient-to-br from-[#24389c] to-[#4355b9] rounded-2xl p-6 shadow-xl relative overflow-hidden">
+              <div className="bg-gradient-to-br from-[#24389c] to-[#4355b9] rounded-xl p-6 shadow-xl relative overflow-hidden">
                 <div className="absolute -right-6 -bottom-6 w-28 h-28 bg-white/5 rounded-full" />
                 <div className="relative z-10">
                   <p className="text-white/50 text-[10px] font-black uppercase tracking-widest">Next Milestone</p>
@@ -440,7 +440,7 @@ export default function MyCourse() {
 
           {/* ── Upgrade Banner (free plan) ─────────────────── */}
           {!isPremium && (
-            <div className="bg-gradient-to-r from-orange-500 to-amber-500 p-8 rounded-2xl shadow-xl relative overflow-hidden group">
+            <div className="bg-gradient-to-r from-orange-500 to-amber-500 p-8 rounded-xl shadow-xl relative overflow-hidden group">
               <div className="absolute right-0 top-0 w-56 h-56 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-700" />
               <div className="relative z-10 flex flex-col sm:flex-row items-center justify-between gap-6 w-full">
                 <div className="text-center sm:text-left">
