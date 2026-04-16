@@ -22,8 +22,8 @@ import TestResults      from './pages/TestResults'
 export default function App() {
   return (
     <Routes>
-      {/* Root */}
-      <Route path="/" element={<Navigate to="/signin" replace />} />
+      {/* Root - Landing Page */}
+      <Route path="/" element={<GuestGuard><FreeTest /></GuestGuard>} />
 
       {/* ── Guest-only routes ────────────────────────────── */}
       <Route path="/signin"         element={<GuestGuard><SignIn /></GuestGuard>} />
