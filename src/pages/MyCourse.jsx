@@ -180,7 +180,7 @@ export default function MyCourse() {
                 </button>
               </div>
             </div>
-            <div ref={scrollRef} className="flex gap-4 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
+            <div ref={scrollRef} className="flex gap-0 overflow-x-auto pb-2" style={{ scrollbarWidth: 'none' }}>
               {Array.from({ length: 24 }, (_, i) => i + 1).map(w => (
                 <WeekChip key={w} week={w} activeWeek={activeWeek} ongoingWeek={ongoingWeek} onClick={(w) => {
                   if (w < ongoingWeek) {
